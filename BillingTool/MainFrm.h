@@ -50,6 +50,10 @@ protected:
 	afx_msg void OnUpdateViewProperty(CCmdUI* pCmdUI);
 	
 	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
+	afx_msg LRESULT OnWriteMsg2StatusBar(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnWriteMsg2ListView(WPARAM wParam, LPARAM lParam);
+
+
 	DECLARE_MESSAGE_MAP()
 
 	BOOL CreateDockingWindows();

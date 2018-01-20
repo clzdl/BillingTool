@@ -63,7 +63,8 @@ static CString StringToCString(const std::string& src, UINT codepage)
 
 void BusiFunc::TriggerStartUp(ModuleContext *ctx,void *ptr)
 {
-	CBillingToolView *pView = dynamic_cast<CBillingToolView*>(dynamic_cast<CMainFrame*>(ctx->m_theApp->GetMainWnd())->GetActiveView());
+	ListViewData resultViewData(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("触发信控开机"));
+	resultViewData.m_result = _TEXT("触发成功.");
 	try{
 		std::string sql = "insert into ACC_JFTOCREDIT(acc_id, "
 			"	user_id, "
@@ -96,13 +97,13 @@ void BusiFunc::TriggerStartUp(ModuleContext *ctx,void *ptr)
 		char strExp[4096] = { 0 };
 		sprintf_s(strExp,"code:%d,msg:%s,var_info:%s,stm_text:%s\n", e.code, e.msg, e.var_info, e.stm_text);
 		CString exp = ctx->m_funcString2CString(strExp , CP_ACP);
-
-		(ctx->m_theApp->*(ctx->m_funcWriteString2StatusBar))(exp);
-		(pView->*(ctx->m_funcAddResult2List))(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("触发信控开机"), _TEXT("触发失败."));
-		return;
+		ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)exp.GetBuffer());
+		exp.ReleaseBuffer();
+		
+		resultViewData.m_result = _TEXT("触发失败.");
 	}
 	 
-	(pView->*(ctx->m_funcAddResult2List))(_TEXT("XXXXXXXXXXXXXXXXX"),_TEXT("触发信控开机"),_TEXT("触发成功."));
+	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 
 }
 
@@ -150,15 +151,17 @@ static int SendCreditPkg(ModuleContext *ctx,std::string srvIp , UINT port , std:
 		if (retCode != SUCCESS)
 		{
 			Poco::Dynamic::Var errMsg = object->get("ERRORMSG");
-			CString errMsg1 = ctx->m_funcString2CString(errMsg.toString(), CP_UTF8);
-			(ctx->m_theApp->*(ctx->m_funcWriteString2StatusBar))(errMsg1);
+			CString text = StringToCString(errMsg.toString(), CP_UTF8);
+			ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
+			text.ReleaseBuffer();
 			return FAILURE;
 		}
 	}
 
 	catch (Poco::Exception &e)
 	{
-		(ctx->m_theApp->*(ctx->m_funcWriteString2StatusBar))(StringToCString(e.message(), CP_ACP));
+		CString text = StringToCString(e.message(), CP_ACP);
+		ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
 		return FAILURE;
 	}
 
@@ -168,7 +171,8 @@ static int SendCreditPkg(ModuleContext *ctx,std::string srvIp , UINT port , std:
 
 void BusiFunc::TriggerStop(ModuleContext *ctx, void *ptr)
 {
-	CBillingToolView *pView = dynamic_cast<CBillingToolView*>(dynamic_cast<CMainFrame*>(ctx->m_theApp->GetMainWnd())->GetActiveView());
+	ListViewData resultViewData(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("触发信控开机"));
+	resultViewData.m_result = _TEXT("触发成功.");
 
 	std::string jsonString = CreateCreditJsonData(ctx->m_funcGetProperty(0, _TEXT("账户ID")) ,
 												ctx->m_funcGetProperty(0, _TEXT("用户ID")),
@@ -182,10 +186,9 @@ void BusiFunc::TriggerStop(ModuleContext *ctx, void *ptr)
 
 	if (SUCCESS != result)
 	{
-		(pView->*(ctx->m_funcAddResult2List))(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("触发信控停机"), _TEXT("触发失败."));
-		return;
+		resultViewData.m_result = _TEXT("触发失败.");
 	}
 
-	(pView->*(ctx->m_funcAddResult2List))(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("触发信控停机"), _TEXT("触发成功."));
+	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 
 }

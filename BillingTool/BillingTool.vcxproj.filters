@@ -63,6 +63,15 @@
     <ClInclude Include="SplashWindow.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="LoadingDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UPDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="InitCommonControls.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BillingTool.cpp">
@@ -96,6 +105,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SplashWindow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadingDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UPDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -181,6 +196,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\Splash.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\progress.gif">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

@@ -225,13 +225,6 @@ void CBillingToolApp::SaveCustomState()
 }
 
 // CBillingToolApp 消息处理程序
-void CBillingToolApp::WriteString2StatusBar(CString str)
-{
-	CMainFrame *pMainFrm = dynamic_cast<CMainFrame*>( theApp.GetMainWnd());
-	pMainFrm->WriteString2StatusBar(str);
-}
-
-
 
 
 BOOL CBillingToolApp::PreTranslateMessage(MSG* pMsg)

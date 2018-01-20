@@ -191,6 +191,8 @@
     <ClInclude Include="BillingTool.h" />
     <ClInclude Include="BillingToolDoc.h" />
     <ClInclude Include="BillingToolView.h" />
+    <ClInclude Include="InitCommonControls.h" />
+    <ClInclude Include="LoadingDlg.h" />
     <ClInclude Include="ModuleView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="ModuleContext.h" />
@@ -201,6 +203,7 @@
     <ClInclude Include="SplashWindow.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="UPDialog.h" />
     <ClInclude Include="ViewTree.h" />
     <ClInclude Include="PluginInterface.h" />
   </ItemGroup>
@@ -208,6 +211,7 @@
     <ClCompile Include="BillingTool.cpp" />
     <ClCompile Include="BillingToolDoc.cpp" />
     <ClCompile Include="BillingToolView.cpp" />
+    <ClCompile Include="LoadingDlg.cpp" />
     <ClCompile Include="ModuleView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="ModuleContext.cpp" />
@@ -220,6 +224,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UPDialog.cpp" />
     <ClCompile Include="ViewTree.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -242,6 +247,7 @@
     <Image Include="res\menuimages_hc.bmp" />
     <Image Include="res\output_wnd.ico" />
     <Image Include="res\output_wnd_hc.ico" />
+    <Image Include="res\progress.gif" />
     <Image Include="res\properties.bmp" />
     <Image Include="res\properties_hc.bmp" />
     <Image Include="res\properties_wnd.ico" />

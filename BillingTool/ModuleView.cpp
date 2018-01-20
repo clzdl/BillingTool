@@ -5,6 +5,7 @@
 #include "BillingTool.h"
 #include "PluginInterface.h"
 #include "BillingToolView.h"
+#include "LoadingDlg.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -201,16 +202,26 @@ void CModuleView::OnChangeVisualStyle()
 	m_wndModuleView.SetImageList(&m_moduleViewImages, TVSIL_NORMAL);
 }
 
+bool ALongRightProcessProc(const CUPDUPDATA* pCUPDUPData)
+{
+	ITEM_FUNC ptrFunc = (ITEM_FUNC)pCUPDUPData->GetAppData();
+	
+	ptrFunc(gModuleContext, nullptr);
+
+	return true;	// Return true to indicate everything has completed successfully
+}
 
 void CModuleView::OnWndFileTreeViewClick(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	HTREEITEM hCurItem = m_wndModuleView.GetSelectedItem();//获得当前选中ID  
 	ITEM_FUNC func = (ITEM_FUNC)(m_wndModuleView.GetItemData(hCurItem));
-	CMainFrame *mainFrm = dynamic_cast<CMainFrame*>(GetParent());
-	if (nullptr != func)
-	{
-		func(gModuleContext,nullptr);
-	}
+	if (nullptr == func)
+		return;
+	LoadingDlg Dlg(AfxGetMainWnd()->GetSafeHwnd(), ALongRightProcessProc, func, _TEXT("请等待..."), false, true);
+	// Use My custom dialog template
+	Dlg.SetDialogTemplate(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDD_DLG_LOADING), NULL, IDC_PROGRESS_LOADING, NULL);
+	Dlg.DoModal();
+	
 	*pResult = 0;
 }
 
@@ -218,12 +229,14 @@ void CModuleView::OnWndFileTreeViewClick(NMHDR *pNMHDR, LRESULT *pResult)
 
 void CModuleView::ConnectDb(ModuleContext *ctx, void *ptr)
 {
-	CBillingToolView *pView = dynamic_cast<CBillingToolView*>(dynamic_cast<CMainFrame*>(ctx->m_theApp->GetMainWnd())->GetActiveView());
+	ListViewData data(_TEXT("XXXXXXXXXXX") , _TEXT("基础功能"));
+	data.m_result = _TEXT("连接数据库成功");
 	if (SUCCESS != ctx->ConnectDb("billtest1/BILLTEST1@FXZN"))
 	{
-		pView->AddResult2ListCtrl(_TEXT(""),_TEXT("基础功能"),_TEXT("连接数据库失败"));
-		return;
+		data.m_result = _TEXT("连接数据库失败");
 	}
-	pView->AddResult2ListCtrl(_TEXT(""), _TEXT("基础功能"), _TEXT("连接数据库成功"));
+	
+	theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&data);
 
 }
+

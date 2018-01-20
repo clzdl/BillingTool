@@ -7,10 +7,6 @@
 
 class CBillingToolApp;
 class CBillingToolView;
-///输出信息到状态栏
-typedef void (CBillingToolApp::*BILLINGAPP_FUNC)(CString);
-///输出信息到视图列表
-typedef void (CBillingToolView::*ADDRESULT)(CString, CString , CString);
 
 ///宽字符转换成多字节字符
 typedef std::string (*CSTRING2STRING)(const CString&, UINT);
@@ -36,9 +32,6 @@ private:
 public:
 	otl_connect *m_dbConn;
 	CBillingToolApp *m_theApp;
-
-	BILLINGAPP_FUNC m_funcWriteString2StatusBar;
-	ADDRESULT	m_funcAddResult2List;
 
 	CSTRING2STRING m_funcCString2String;
 	STRING2CSTRING m_funcString2CString;

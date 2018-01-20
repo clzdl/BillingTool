@@ -14,6 +14,26 @@
 // 有关此类的实现，请参阅 BillingTool.cpp
 //
 
+#define  MSG_WRITE_MSG2_STATUSBAR		WM_USER+1000
+#define  MSG_WRITE_MSG2_LISTVIEW		WM_USER+1001
+
+
+class ListViewData
+{
+public:
+	ListViewData(CString phone, CString sence)
+		:m_phone(phone),
+		m_sence(sence)
+	{
+	}
+	~ListViewData()
+	{
+	}
+	CString m_phone;
+	CString m_sence;
+	CString m_result;
+};
+
 class CBillingToolApp : public CWinAppEx
 {
 public:
@@ -34,8 +54,6 @@ public:
 	virtual void PreLoadState();
 	virtual void LoadCustomState();
 	virtual void SaveCustomState();
-
-	void WriteString2StatusBar(CString str);
 
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()

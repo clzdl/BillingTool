@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "BillingTool.h"
-
+#include "BillingToolView.h"
 #include "MainFrm.h"
 #include "SplashWindow.h"
+
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -25,6 +27,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
 	ON_WM_SETTINGCHANGE()
+	ON_MESSAGE(MSG_WRITE_MSG2_STATUSBAR , OnWriteMsg2StatusBar)
+	ON_MESSAGE(MSG_WRITE_MSG2_LISTVIEW, OnWriteMsg2ListView)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -349,6 +353,9 @@ void CMainFrame::OnUpdateViewModule(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(theApp.m_menuViewModule);
 }
+
+
+
 void CMainFrame::OnViewProperty()
 {
 	theApp.m_menuViewProperty = theApp.m_menuViewProperty == TRUE ? FALSE : TRUE;
@@ -360,6 +367,7 @@ void CMainFrame::OnViewProperty()
 	{
 		m_wndProperties.ShowPane(FALSE, FALSE, FALSE);
 	}
+
 }
 
 void CMainFrame::OnUpdateViewProperty(CCmdUI* pCmdUI)
@@ -378,4 +386,20 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 	if (CSplashWindow::PreTranslateAppMessage(pMsg))
 		return TRUE;
 	return CFrameWndEx::PreTranslateMessage(pMsg);
+}
+
+LRESULT CMainFrame::OnWriteMsg2StatusBar(WPARAM wParam, LPARAM lParam)
+{
+	m_wndStatusBar.SetPaneText(ID_SEPARATOR, (TCHAR*)lParam);
+
+	return 0;
+}
+
+LRESULT CMainFrame::OnWriteMsg2ListView(WPARAM wParam, LPARAM lParam)
+{
+	ListViewData *pViewData = (ListViewData*)lParam;
+	dynamic_cast<CBillingToolView*>(GetActiveView())->AddResult2ListCtrl(pViewData->m_phone, 
+																			pViewData->m_sence, 
+																			pViewData->m_result);
+	return 0;
 }

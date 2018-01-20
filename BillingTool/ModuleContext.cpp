@@ -13,8 +13,6 @@ ModuleContext::ModuleContext(CBillingToolApp *app)
  m_funcString2CString(StringToCString),
  m_funcGetProperty(GetProperty)
 {
-	m_funcWriteString2StatusBar = &CBillingToolApp::WriteString2StatusBar;
-	m_funcAddResult2List = &CBillingToolView::AddResult2ListCtrl;
 }
 ModuleContext::~ModuleContext()
 {
@@ -25,8 +23,12 @@ ModuleContext::~ModuleContext()
 	}
 	catch (otl_exception &e) 
 	{
-		CString text;
-		text.Format(_TEXT("code:%d,msg:%s,var_info:%s,stm_text:%s\n"), e.code, e.msg, e.var_info, e.stm_text);
+		char errMsg[4096] = { 0 };
+		sprintf_s(errMsg, "code:%d,msg:%s,var_info:%s,stm_text:%s", e.code, e.msg, e.var_info, e.stm_text);
+		CString text = StringToCString(errMsg, CP_ACP);
+		theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
+		text.ReleaseBuffer();
+
 	}
 	
 }
@@ -43,10 +45,12 @@ int ModuleContext::ConnectDb(std::string dbString)
 	}
 	catch (otl_exception &e)
 	{
-		CString text;
 		char errMsg[4096] = { 0 };
 		sprintf_s(errMsg , "code:%d,msg:%s,var_info:%s,stm_text:%s", e.code, e.msg, e.var_info, e.stm_text);
-		theApp.WriteString2StatusBar(StringToCString(errMsg,CP_ACP));
+		CString text = StringToCString(errMsg, CP_ACP);
+		theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
+		text.ReleaseBuffer();
+
 		return FAILURE;
 	}
 
