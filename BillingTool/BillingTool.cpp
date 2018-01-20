@@ -11,6 +11,7 @@
 #include "BillingToolDoc.h"
 #include "BillingToolView.h"
 
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -63,6 +64,7 @@ ModuleContext *gModuleContext = new ModuleContext(&theApp);
 
 BOOL CBillingToolApp::InitInstance()
 {
+	
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要
 	// 使用 ComCtl32.dll 版本 6 或更高版本来启用可视化方式，
 	//则需要 InitCommonControlsEx()。  否则，将无法创建窗口。
@@ -85,11 +87,12 @@ BOOL CBillingToolApp::InitInstance()
 
 	AfxEnableControlContainer();
 
+	
+	
 	EnableTaskbarInteraction(FALSE);
 
 	// 使用 RichEdit 控件需要 AfxInitRichEdit2()	
 	// AfxInitRichEdit2();
-
 	// 标准初始化
 	// 如果未使用这些功能并希望减小
 	// 最终可执行文件的大小，则应移除下列
@@ -110,6 +113,8 @@ BOOL CBillingToolApp::InitInstance()
 	ttParams.m_bVislManagerTheme = TRUE;
 	theApp.GetTooltipManager()->SetTooltipParams(AFX_TOOLTIP_TYPE_ALL,
 		RUNTIME_CLASS(CMFCToolTipCtrl), &ttParams);
+
+	
 
 	// 注册应用程序的文档模板。  文档模板
 	// 将用作文档、框架窗口和视图之间的连接
@@ -134,9 +139,16 @@ BOOL CBillingToolApp::InitInstance()
 	if (!ProcessShellCommand(cmdInfo))
 		return FALSE;
 
+
 	// 唯一的一个窗口已初始化，因此显示它并对其进行更新
 	m_pMainWnd->ShowWindow(SW_SHOW);
 	m_pMainWnd->UpdateWindow();
+	
+	
+	
+	
+	
+
 	return TRUE;
 }
 
@@ -220,3 +232,11 @@ void CBillingToolApp::WriteString2StatusBar(CString str)
 }
 
 
+
+
+BOOL CBillingToolApp::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	
+	return CWinAppEx::PreTranslateMessage(pMsg);
+}

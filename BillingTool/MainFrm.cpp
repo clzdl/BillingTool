@@ -2,7 +2,7 @@
 #include "BillingTool.h"
 
 #include "MainFrm.h"
-
+#include "SplashWindow.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -52,7 +52,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CFrameWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-
+	CSplashWindow::ShowSplashScreen(NULL, _TEXT(" starting application."));
+	
 	if (!m_wndMenuBar.Create(this))
 	{
 		TRACE0("未能创建菜单栏\n");
@@ -132,6 +133,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	CMFCToolBar::SetBasicCommands(lstBasicCommands);
 
+	CSplashWindow::ShowSplashScreen(NULL, _TEXT("application  started."), 1000);
 	return 0;
 }
 
@@ -368,4 +370,12 @@ void CMainFrame::OnUpdateViewProperty(CCmdUI* pCmdUI)
 void CMainFrame::WriteString2StatusBar(CString str)
 {
 	m_wndStatusBar.SetPaneText(ID_SEPARATOR, str);
+}
+
+BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	if (CSplashWindow::PreTranslateAppMessage(pMsg))
+		return TRUE;
+	return CFrameWndEx::PreTranslateMessage(pMsg);
 }

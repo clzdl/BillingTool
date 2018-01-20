@@ -112,6 +112,8 @@ IDB_PROPERTIES_HC       BITMAP                  "res\\properties_hc.bmp"
 
 IDB_FILE_VIEW           BITMAP                  "res\\fileview.bmp"
 
+IDB_SPLASH              BITMAP                  "res\\Splash.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

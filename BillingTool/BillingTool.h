@@ -39,6 +39,7 @@ public:
 
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 extern CBillingToolApp theApp;

@@ -60,6 +60,9 @@
     <ClInclude Include="PubFunc.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SplashWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BillingTool.cpp">
@@ -90,6 +93,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="PubFunc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SplashWindow.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -172,6 +178,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\Toolbar256.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\Splash.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

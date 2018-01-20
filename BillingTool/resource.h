@@ -79,8 +79,9 @@
 #define IDS_EXPLORER                    305
 #define IDS_EDIT_MENU                   306
 #define IDD_DIALOG1                     310
-#define IDB_FILE_VIEW_24                312
 #define IDB_FILE_VIEW                   312
+#define IDB_BITMAP1                     314
+#define IDB_SPLASH                      314
 #define ID_Menu                         32771
 #define ID_VIEW_MODULES                 32772
 #define ID_VIEW_PROPERTIES              32773
@@ -91,7 +92,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        314
+#define _APS_NEXT_RESOURCE_VALUE        315
 #define _APS_NEXT_COMMAND_VALUE         32776
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310
