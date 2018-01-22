@@ -79,12 +79,17 @@ void Initilize(CWnd *mainWnd,CViewTree *viewTree)
 	HTREEITEM tmpItem = viewTree->InsertItem(_T("触发开机"), 1, 2, hRoot);
 	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerStartUp));
 	
-	tmpItem = viewTree->InsertItem(_T("触发停机"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerStop));
+	tmpItem = viewTree->InsertItem(_T("触发停机【NET】"), 1, 2, hRoot);
+	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerStopByNet));
 
-	tmpItem = viewTree->InsertItem(_T("触发提醒"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerStartUp));
+	tmpItem = viewTree->InsertItem(_T("触发停机【FILE】"), 1, 2, hRoot);
+	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerStopByFile));
+
+	tmpItem = viewTree->InsertItem(_T("触发提醒【NET】"), 1, 2, hRoot);
+	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerRemindByNet));
 	
+	tmpItem = viewTree->InsertItem(_T("触发提醒【FILE】"), 1, 2, hRoot);
+	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerRemindByFile));
 
 	viewTree->Expand(hRoot, TVE_EXPAND);
 	

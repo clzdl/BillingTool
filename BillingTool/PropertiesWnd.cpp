@@ -22,7 +22,10 @@ std::map<int , std::map<CString, CString> > gProperties = {
 				{ _TEXT("测试号码"),_TEXT("17001818555") },
 				{ _TEXT("账户ID"),_TEXT("320150105718968") },
 				{ _TEXT("用户ID"),_TEXT("120150105199770") },
-				{ _TEXT("数据库连接串"),_TEXT("cmcc/CMCC@fxzn") }
+				{ _TEXT("数据库连接串"),_TEXT("cmcc/CMCC@fxzn") },
+				{ _TEXT("用户名"),_TEXT("chengl") },
+				{ _TEXT("密码"),_TEXT("chengl123") }
+				
 			} 
 	},
 
@@ -32,7 +35,8 @@ std::map<int , std::map<CString, CString> > gProperties = {
 				{ _TEXT("话单费用"),_TEXT("1000") },
 				{ _TEXT("话单使用量"),_TEXT("10") },
 				{ _TEXT("截止本条话单前的总是用量"),_TEXT("100") },
-				{ _TEXT("用户总的基础量"),_TEXT("200") } 
+				{ _TEXT("用户总的基础量"),_TEXT("200") },
+				{ _TEXT("信控分发文件入口"),_TEXT("/home/chengl/src/soCreditDispatch/data/in") },
 			} 
 	} };
 

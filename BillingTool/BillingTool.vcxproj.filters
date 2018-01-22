@@ -72,6 +72,9 @@
     <ClInclude Include="InitCommonControls.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SshCmddExecutor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BillingTool.cpp">
@@ -111,6 +114,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="UPDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SshCmdExecutor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

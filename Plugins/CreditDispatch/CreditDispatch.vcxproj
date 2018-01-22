@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\workspace\opensource\poco-1.7.8-all\JSON\include;C:\workspace\opensource\poco-1.7.8-all\Net\include;C:\workspace\opensource\poco-1.7.8-all\Foundation\include;C:\software\oraclient11\sdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\software\oraclient11\sdk\lib\msvc;C:\workspace\opensource\poco-1.7.8-all\lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\workspace\opensource\poco-1.7.8-all\JSON\include;C:\workspace\opensource\poco-1.7.8-all\Net\include;C:\workspace\opensource\poco-1.7.8-all\Foundation\include;C:\software\oraclient11\sdk\include;C:\workspace\opensource\libssh2-1.8.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\workspace\opensource\libssh2-1.8.0\win32\Debug_dll;C:\software\oraclient11\sdk\lib\msvc;C:\workspace\opensource\poco-1.7.8-all\lib64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -120,7 +120,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <ModuleDefinitionFile>.\CreditDispatch.def</ModuleDefinitionFile>
-      <AdditionalDependencies>oci.lib;PocoFoundation.lib;PocoJSONd.lib;PocoNetd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>oci.lib;PocoFoundation.lib;libssh2.lib;PocoJSONd.lib;PocoNetd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>

@@ -5,14 +5,20 @@
 #include "BillingToolView.h"
 #include "MainFrm.h"
 #include "PubFunc.h"
+#include "SshCmddExecutor.h"
+
 
 ModuleContext::ModuleContext(CBillingToolApp *app)
-:m_dbConn(new otl_connect()),
- m_theApp(app),
- m_funcCString2String(CStringToString),
- m_funcString2CString(StringToCString),
- m_funcGetProperty(GetProperty)
+	:m_dbConn(new otl_connect()),
+	m_theApp(app),
+	m_funcCString2String(CStringToString),
+	m_funcString2CString(StringToCString),
+	m_funcGetProperty(GetProperty),
+	m_objSshCmdExecutor(new SshCmdExecutor())
 {
+	m_funcSshConnectAndInit = &SshCmdExecutor::ConnectAndInit;
+	m_funcSshExecuteCmd = &SshCmdExecutor::ExecuteCmd;
+	m_funcSshDisconnectAndFree = &SshCmdExecutor::DisconnectAndFree;
 }
 ModuleContext::~ModuleContext()
 {
