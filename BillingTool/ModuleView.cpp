@@ -134,8 +134,10 @@ void CModuleView::InitializeModules()
 		if (NULL == lib)
 		{
 			DWORD  err = GetLastError();
-			MessageBox(_TEXT("LoadLibrary fail"));
-			return;
+			CString text;
+			text.Format(_TEXT("LoadLibrary %s fail"), it.path);
+			TRACE(text);
+			continue;
 		}
 		((INIT_FUNC)GetProcAddress(lib, "Initilize"))(GetParent(), &m_wndModuleView);
 	}
