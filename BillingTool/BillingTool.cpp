@@ -57,6 +57,7 @@ CBillingToolApp::CBillingToolApp()
 // 唯一的一个 CBillingToolApp 对象
 
 CBillingToolApp theApp;
+otl_connect gDbConn;
 ModuleContext *gModuleContext = new ModuleContext(&theApp);
 
 

@@ -36,14 +36,14 @@ protected:
 // й╣ож
 public:
 	virtual ~CPropertiesWnd();
-
+	afx_msg void OnCbnSelChanged();
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
 	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
-	afx_msg void OnCbnSelChanged();
+	
 	afx_msg LRESULT OnPropertyChanged(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 

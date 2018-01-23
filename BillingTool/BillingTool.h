@@ -9,6 +9,7 @@
 
 #include "resource.h"       // 主符号
 #include "ModuleContext.h"
+#include "database/otlv4.h"
 
 // CBillingToolApp:
 // 有关此类的实现，请参阅 BillingTool.cpp
@@ -61,3 +62,4 @@ public:
 };
 
 extern CBillingToolApp theApp;
+extern  otl_connect gDbConn;

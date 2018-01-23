@@ -5,6 +5,8 @@
 #include "MainFrm.h"
 #include "BillingTool.h"
 #include <map>
+#include "PubFunc.h"
+
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -13,47 +15,95 @@ static char THIS_FILE[]=__FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
+static void cbTestPhoneChg(CPropertiesWnd *propWnd,std::map<CString, PropertyInfo> &modProp, CString newValue)
+{
+	if (!gDbConn.connected)
+	{
+		CString text;
+		text.Format(_TEXT("数据库未连接"));
+		theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
+		text.ReleaseBuffer();
+		return;
+	}
+	newValue.Trim();
+
+	char strUserId[30] = {0}, strAcctId[30] = { 0 };
+	try {
+		std::string sql = "select to_char(t1.user_id), to_char(t2.acct_id) "
+						" from cs_user_info t1, cs_user_payrelation t2 "
+						" where t1.user_id = t2.user_id "
+						"	and t2.default_tag = '1' "
+						"	and t2.state = '0' "
+						"	and sysdate between t2.start_date and t2.end_date "
+						"	and serial_number = :v1<char[32]>";
+
+
+		otl_stream otlStm;
+		otlStm.open(1, sql.c_str(), gDbConn);
+		otlStm.set_commit(0);
+
+		otlStm << CStringToString(newValue, CP_ACP).c_str();
+
+		otlStm >> strUserId >> strAcctId;
+
+		modProp.at(_TEXT("账户ID")).propertyValue = StringToCString(strAcctId,CP_ACP);
+		modProp.at(_TEXT("用户ID")).propertyValue = StringToCString(strUserId, CP_ACP);
+	}
+	catch (otl_exception &e)
+	{
+		char strExp[4096] = { 0 };
+		sprintf_s(strExp, "code:%d,msg:%s,var_info:%s,stm_text:%s\n", e.code, e.msg, e.var_info, e.stm_text);
+		CString exp = StringToCString(strExp, CP_ACP);
+		theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)exp.GetBuffer());
+		exp.ReleaseBuffer();
+	}
+
+
+	
+	propWnd->OnCbnSelChanged();
+}
+
 // CResourceViewBar
-std::map<int , std::map<CString, CString> > gProperties = {
+std::map<int , std::map<CString, PropertyInfo> > gProperties = {
 	{ 0/*公共属性*/,	
 			{ 
-				{_TEXT("IP地址"),_TEXT("192.168.88.150")},
-				{ _TEXT("端口号"),_TEXT("4444") },
-				{ _TEXT("测试号码"),_TEXT("17001818555") },
-				{ _TEXT("账户ID"),_TEXT("320150105718968") },
-				{ _TEXT("用户ID"),_TEXT("120150105199770") },
-				{ _TEXT("数据库连接串"),_TEXT("cmcc/CMCC@fxzn") },
-				{ _TEXT("用户名"),_TEXT("chengl") },
-				{ _TEXT("密码"),_TEXT("chengl123") }
+				{_TEXT("IP地址"),{_TEXT("192.168.88.150"),nullptr} },
+				{ _TEXT("端口号"),{_TEXT("4444"),nullptr} },
+				{ _TEXT("测试号码"),{_TEXT("17001818555"),cbTestPhoneChg } },
+				{ _TEXT("账户ID"),{_TEXT("320150105718968"),nullptr} },
+				{ _TEXT("用户ID"),{_TEXT("120150105199770"),nullptr} },
+				{ _TEXT("数据库连接串"),{_TEXT("cmcc/CMCC@fxzn"),nullptr} },
+				{ _TEXT("用户名"),{_TEXT("chengl"),nullptr} },
+				{ _TEXT("密码"),{_TEXT("chengl123"),nullptr} }
 				
 			} 
 	},
 
 	{ 1/*信控分发属性*/,
 			{ 
-				{ _TEXT("触发停机服务地址"),_TEXT("/creditTrigger") },
-				{ _TEXT("话单费用"),_TEXT("1000") },
-				{ _TEXT("话单使用量"),_TEXT("10") },
-				{ _TEXT("截止本条话单前的总是用量"),_TEXT("100") },
-				{ _TEXT("用户总的基础量"),_TEXT("200") },
-				{ _TEXT("信控分发文件入口"),_TEXT("/home/chengl/src/soCreditDispatch/data/in") },
+				{ _TEXT("触发停机服务地址"),{_TEXT("/creditTrigger"),nullptr} },
+				{ _TEXT("话单费用"), {_TEXT("1000"),nullptr} },
+				{ _TEXT("话单使用量"), {_TEXT("10"),nullptr} },
+				{ _TEXT("截止本条话单前的总是用量"), {_TEXT("100"),nullptr} },
+				{ _TEXT("用户总的基础量"), {_TEXT("200"),nullptr} },
+				{ _TEXT("信控分发文件入口"), {_TEXT("/home/chengl/src/soCreditDispatch/data/in"),nullptr} },
 			} 
 	} ,
 	{ 2/*帐前调账*/,
 		{
-			{ _TEXT("调账金额/比例"),_TEXT("1000") },
-			{ _TEXT("账目编码"),_TEXT("110000") },
-			{ _TEXT("生效标识"),_TEXT("0") }
+			{ _TEXT("调账金额/比例"),{_TEXT("1000"),nullptr} },
+			{ _TEXT("账目编码"),{_TEXT("110000"),nullptr} },
+			{ _TEXT("生效标识"),{_TEXT("0"),nullptr} }
 		}
 	},
 	{ 3/*帐后调账*/,
 		{
-			{ _TEXT("账单ID"),_TEXT("1111111000") },
-			{ _TEXT("调账金额/比例"),_TEXT("1000") },
-			{ _TEXT("账目编码"),_TEXT("110000") },
-			{ _TEXT("账单费用"),_TEXT("10000") },
-			{ _TEXT("账单余额"),_TEXT("100") },
-			{ _TEXT("调减余额处理方式"),_TEXT("0") }
+			{ _TEXT("账单ID"),{_TEXT("1111111000"),nullptr} },
+			{ _TEXT("调账金额/比例"),{_TEXT("1000"),nullptr} },
+			{ _TEXT("账目编码"),{_TEXT("110000"),nullptr} },
+			{ _TEXT("账单费用"),{_TEXT("10000"),nullptr} },
+			{ _TEXT("账单余额"),{_TEXT("100"),nullptr} },
+			{ _TEXT("调减余额处理方式"),{_TEXT("0"),nullptr} }
 		}
 	}
 };
@@ -174,7 +224,7 @@ void CPropertiesWnd::InitCommonPropList()
 	CMFCPropertyGridProperty *pCommonGroup = new CMFCPropertyGridProperty(_T("公共属性"));
 	for (auto comm : gProperties.at(0))
 	{
-		pCommonGroup->AddSubItem(new CMFCPropertyGridProperty(comm.first, comm.second, comm.first));
+		pCommonGroup->AddSubItem(new CMFCPropertyGridProperty(comm.first, comm.second.propertyValue, comm.first));
 	
 	}
 	
@@ -251,7 +301,7 @@ void CPropertiesWnd::InitCreditDispatchPropList()
 	CMFCPropertyGridProperty *pCreditDispatchGroup = new CMFCPropertyGridProperty(_T("信控分发属性"));
 	for (auto comm : gProperties.at(1))
 	{
-		pCreditDispatchGroup->AddSubItem(new CMFCPropertyGridProperty(comm.first, comm.second, comm.first));
+		pCreditDispatchGroup->AddSubItem(new CMFCPropertyGridProperty(comm.first, comm.second.propertyValue, comm.first));
 
 	}
 
@@ -271,7 +321,7 @@ void CPropertiesWnd::InitAdjustPropList()
 	CMFCPropertyGridProperty *pCreditDispatchGroup = new CMFCPropertyGridProperty(_T("帐前调账属性"));
 	for (auto comm : gProperties.at(2))
 	{
-		pCreditDispatchGroup->AddSubItem(new CMFCPropertyGridProperty(comm.first, comm.second, comm.first));
+		pCreditDispatchGroup->AddSubItem(new CMFCPropertyGridProperty(comm.first, comm.second.propertyValue, comm.first));
 
 	}
 
@@ -290,7 +340,7 @@ void CPropertiesWnd::InitAftAdjustPropList()
 	CMFCPropertyGridProperty *pCreditDispatchGroup = new CMFCPropertyGridProperty(_T("账后调账属性"));
 	for (auto comm : gProperties.at(3))
 	{
-		pCreditDispatchGroup->AddSubItem(new CMFCPropertyGridProperty(comm.first, comm.second, comm.first));
+		pCreditDispatchGroup->AddSubItem(new CMFCPropertyGridProperty(comm.first, comm.second.propertyValue, comm.first));
 
 	}
 
@@ -337,9 +387,16 @@ void CPropertiesWnd::SetPropListFont()
 LRESULT CPropertiesWnd::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
 {
 	CMFCPropertyGridProperty* pProp = (CMFCPropertyGridProperty*)lParam;
+
+	std::map<CString, PropertyInfo> &properties = gProperties.at(m_wndObjectCombo.GetItemData(m_wndObjectCombo.GetCurSel()));
+	properties[pProp->GetName()].propertyValue = pProp->GetValue();
+	PropertyInfo &tmpProp = properties[pProp->GetName()];
+	if (tmpProp.callBack != nullptr)
+	{
+		tmpProp.callBack(this,properties,pProp->GetValue());
+	}
 	
-	std::map<CString, CString> &properties = gProperties.at(m_wndObjectCombo.GetItemData(m_wndObjectCombo.GetCurSel()));
-	properties[pProp->GetName()] = pProp->GetValue();
+
 
 	return 0;
 }

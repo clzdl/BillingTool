@@ -8,7 +8,7 @@
 
 
 ModuleContext::ModuleContext(CBillingToolApp *app)
-	:m_dbConn(new otl_connect()),
+	:m_dbConn(&gDbConn),
 	m_theApp(app),
 	m_funcCString2String(CStringToString),
 	m_funcString2CString(StringToCString),
