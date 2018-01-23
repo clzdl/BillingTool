@@ -1,5 +1,5 @@
 #pragma once
-#include "UPDialog.h"
+#include "UniversalProgressDialog/UPDialog.h"
 // LoadingDlg ¶Ô»°¿ò
 
 class LoadingDlg : public CUPDialog

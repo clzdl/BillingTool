@@ -20,7 +20,7 @@
  */
 
 #include "stdafx.h" 
-#include "resource.h"
+#include "../resource.h"
 
 #include "SplashWindow.h"
 
@@ -469,7 +469,7 @@ void CSplashWindow::GetVersionStrings()
 		if ( doThis ) {
 			wcsncpy_s(buf1, (TCHAR *)lplpBuffer, ver);
 			int versionNumbers[4];
-			int numberOfValues = swscanf_s( buf1, _TEXT("%d,%d,%d,%d"), &versionNumbers[0],&versionNumbers[1], &versionNumbers[2], &versionNumbers[3] );
+			int numberOfValues = swscanf_s( buf1, _TEXT("%d.%d.%d.%d"), &versionNumbers[0],&versionNumbers[1], &versionNumbers[2], &versionNumbers[3] );
 			CString number;
 			m_versionNumberString = "";
 			for ( int i=0; i<numberOfValues; i++ ) {

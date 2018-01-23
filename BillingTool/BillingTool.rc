@@ -376,11 +376,11 @@ BEGIN
     BEGIN
         BLOCK "080404b0"
         BEGIN
-            VALUE "CompanyName", "chengl.com"
-            VALUE "FileDescription", "BillingTool"
+            VALUE "CompanyName", "sharingaimi"
+            VALUE "FileDescription", "计费测试工具"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "BillingTool.exe"
-            VALUE "LegalCopyright", "(C)chengl.com 保留所有权利。"
+            VALUE "LegalCopyright", "(C)sharingaimi.com 保留所有权利。"
             VALUE "OriginalFilename", "BillingTool.exe"
             VALUE "ProductName", "测试工具"
             VALUE "ProductVersion", "1.0.0.1"

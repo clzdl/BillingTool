@@ -191,7 +191,6 @@
     <ClInclude Include="BillingTool.h" />
     <ClInclude Include="BillingToolDoc.h" />
     <ClInclude Include="BillingToolView.h" />
-    <ClInclude Include="InitCommonControls.h" />
     <ClInclude Include="LoadingDlg.h" />
     <ClInclude Include="ModuleView.h" />
     <ClInclude Include="MainFrm.h" />
@@ -200,11 +199,12 @@
     <ClInclude Include="PropertiesWnd.h" />
     <ClInclude Include="PubFunc.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="SplashWindow.h" />
+    <ClInclude Include="splashwnd\SplashWindow.h" />
     <ClInclude Include="SshCmddExecutor.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="UPDialog.h" />
+    <ClInclude Include="UniversalProgressDialog\InitCommonControls.h" />
+    <ClInclude Include="UniversalProgressDialog\UPDialog.h" />
     <ClInclude Include="ViewTree.h" />
     <ClInclude Include="PluginInterface.h" />
   </ItemGroup>
@@ -218,7 +218,7 @@
     <ClCompile Include="ModuleContext.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
     <ClCompile Include="PubFunc.cpp" />
-    <ClCompile Include="SplashWindow.cpp" />
+    <ClCompile Include="splashwnd\SplashWindow.cpp" />
     <ClCompile Include="SshCmdExecutor.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -226,7 +226,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="UPDialog.cpp" />
+    <ClCompile Include="UniversalProgressDialog\UPDialog.cpp" />
     <ClCompile Include="ViewTree.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -2,7 +2,7 @@
 #include "BillingTool.h"
 #include "BillingToolView.h"
 #include "MainFrm.h"
-#include "SplashWindow.h"
+#include "splashwnd/SplashWindow.h"
 
 
 #ifdef _DEBUG

@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="splashwnd">
+      <UniqueIdentifier>{73ca7b93-cd27-4a1c-b394-9d783d9d68e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UniversalProgressDialog">
+      <UniqueIdentifier>{b23b379c-24f0-47d4-beeb-d7200541ac42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -60,20 +66,20 @@
     <ClInclude Include="PubFunc.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SplashWindow.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="LoadingDlg.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="UPDialog.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="InitCommonControls.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SshCmddExecutor.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="splashwnd\SplashWindow.h">
+      <Filter>splashwnd</Filter>
+    </ClInclude>
+    <ClInclude Include="UniversalProgressDialog\InitCommonControls.h">
+      <Filter>UniversalProgressDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="UniversalProgressDialog\UPDialog.h">
+      <Filter>UniversalProgressDialog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -107,17 +113,17 @@
     <ClCompile Include="PubFunc.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SplashWindow.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="LoadingDlg.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="UPDialog.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SshCmdExecutor.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="splashwnd\SplashWindow.cpp">
+      <Filter>splashwnd</Filter>
+    </ClCompile>
+    <ClCompile Include="UniversalProgressDialog\UPDialog.cpp">
+      <Filter>UniversalProgressDialog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
