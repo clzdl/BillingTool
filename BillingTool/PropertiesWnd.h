@@ -49,6 +49,8 @@ protected:
 
 	void InitCommonPropList();
 	void InitCreditDispatchPropList();
+	void InitAdjustPropList();
+	void InitAftAdjustPropList();
 	void SetPropListFont();
 
 	int m_nComboHeight;

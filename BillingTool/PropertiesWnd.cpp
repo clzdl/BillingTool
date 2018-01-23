@@ -38,7 +38,21 @@ std::map<int , std::map<CString, CString> > gProperties = {
 				{ _TEXT("用户总的基础量"),_TEXT("200") },
 				{ _TEXT("信控分发文件入口"),_TEXT("/home/chengl/src/soCreditDispatch/data/in") },
 			} 
-	} };
+	} ,
+	{ 2/*帐前调账*/,
+		{
+			{ _TEXT("调账金额/比例"),_TEXT("1000") },
+			{ _TEXT("账目编码"),_TEXT("110000") },
+			{ _TEXT("生效标识"),_TEXT("0") }
+		}
+	},
+	{ 3/*帐后调账*/,
+		{
+			{ _TEXT("账单ID"),_TEXT("1111111000") }
+	
+		}
+	}
+};
 
 CPropertiesWnd::CPropertiesWnd()
 {
@@ -96,6 +110,10 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndObjectCombo.SetItemData(idx, 0);
 	idx = m_wndObjectCombo.AddString(_T("信控分发"));
 	m_wndObjectCombo.SetItemData(idx, 1);
+	idx = m_wndObjectCombo.AddString(_T("帐前调账"));
+	m_wndObjectCombo.SetItemData(idx, 2);
+	idx = m_wndObjectCombo.AddString(_T("帐后调账"));
+	m_wndObjectCombo.SetItemData(idx, 3);
 	m_wndObjectCombo.SetCurSel(0);
 
 	CRect rectCombo;
@@ -131,7 +149,10 @@ void CPropertiesWnd::OnCbnSelChanged()
 		return InitCommonPropList();
 	case 1://信控分发属性
 		return InitCreditDispatchPropList();
-	
+	case 2://帐前调账
+		return InitAdjustPropList();
+	case 3://账后调账
+		return InitAftAdjustPropList();
 	}
 
 }
@@ -233,6 +254,45 @@ void CPropertiesWnd::InitCreditDispatchPropList()
 	m_wndPropList.AddProperty(pCreditDispatchGroup);
 
 }
+
+void CPropertiesWnd::InitAdjustPropList()
+{
+	SetPropListFont();
+
+	m_wndPropList.EnableHeaderCtrl(FALSE);
+	m_wndPropList.EnableDescriptionArea();
+	m_wndPropList.SetVSDotNetLook();
+	m_wndPropList.MarkModifiedProperties();
+
+	CMFCPropertyGridProperty *pCreditDispatchGroup = new CMFCPropertyGridProperty(_T("帐前调账属性"));
+	for (auto comm : gProperties.at(2))
+	{
+		pCreditDispatchGroup->AddSubItem(new CMFCPropertyGridProperty(comm.first, comm.second, comm.first));
+
+	}
+
+	m_wndPropList.AddProperty(pCreditDispatchGroup);
+}
+
+void CPropertiesWnd::InitAftAdjustPropList()
+{
+	SetPropListFont();
+
+	m_wndPropList.EnableHeaderCtrl(FALSE);
+	m_wndPropList.EnableDescriptionArea();
+	m_wndPropList.SetVSDotNetLook();
+	m_wndPropList.MarkModifiedProperties();
+
+	CMFCPropertyGridProperty *pCreditDispatchGroup = new CMFCPropertyGridProperty(_T("账后调账属性"));
+	for (auto comm : gProperties.at(3))
+	{
+		pCreditDispatchGroup->AddSubItem(new CMFCPropertyGridProperty(comm.first, comm.second, comm.first));
+
+	}
+
+	m_wndPropList.AddProperty(pCreditDispatchGroup);
+}
+
 
 
 void CPropertiesWnd::OnSetFocus(CWnd* pOldWnd)
