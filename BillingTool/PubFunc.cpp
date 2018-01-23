@@ -40,3 +40,13 @@ CString GetProperty(int module, CString properyName)
 	return props.at(properyName);
 }
 
+
+
+CString GetFormtSysTime()
+{
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	CString result;
+	result.Format(_TEXT("%04d-%02d-%02d %02d:%02d:%02d"), st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
+	return result;
+}

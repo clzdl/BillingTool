@@ -48,8 +48,12 @@ std::map<int , std::map<CString, CString> > gProperties = {
 	},
 	{ 3/*帐后调账*/,
 		{
-			{ _TEXT("账单ID"),_TEXT("1111111000") }
-	
+			{ _TEXT("账单ID"),_TEXT("1111111000") },
+			{ _TEXT("调账金额/比例"),_TEXT("1000") },
+			{ _TEXT("账目编码"),_TEXT("110000") },
+			{ _TEXT("账单费用"),_TEXT("10000") },
+			{ _TEXT("账单余额"),_TEXT("100") },
+			{ _TEXT("调减余额处理方式"),_TEXT("0") }
 		}
 	}
 };

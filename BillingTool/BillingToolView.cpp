@@ -11,6 +11,7 @@
 
 #include "BillingToolDoc.h"
 #include "BillingToolView.h"
+#include "PubFunc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -144,9 +145,9 @@ int CBillingToolView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	GetListCtrl().ModifyStyle(0, LVS_REPORT| LVS_EX_FULLROWSELECT | LVS_SHOWSELALWAYS | LVS_SORTASCENDING);
 	GetListCtrl().SetExtendedStyle(LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT);
 	GetListCtrl().InsertColumn(0, _TEXT("号码"), LVCFMT_LEFT, 150);
-	GetListCtrl().InsertColumn(1, _TEXT("场景"), LVCFMT_LEFT, 150);
-	GetListCtrl().InsertColumn(2, _TEXT("结果"), LVCFMT_LEFT, 600);
-	GetListCtrl().InsertColumn(2, _TEXT("时间"), LVCFMT_LEFT, 150);
+	GetListCtrl().InsertColumn(1, _TEXT("场景"), LVCFMT_LEFT, 200);
+	GetListCtrl().InsertColumn(2, _TEXT("结果"), LVCFMT_LEFT, 400);
+	GetListCtrl().InsertColumn(3, _TEXT("时间"), LVCFMT_LEFT, 150);
 	
 	return 0;
 }
@@ -158,4 +159,5 @@ void CBillingToolView::AddResult2ListCtrl(CString phone, CString  scene, CString
 	GetListCtrl().SetItemText(i, 0, phone.IsEmpty()?_TEXT("XXXXXXXXXXX"):phone);
 	GetListCtrl().SetItemText(i, 1, scene);
 	GetListCtrl().SetItemText(i, 2, result);
+	GetListCtrl().SetItemText(i, 3, GetFormtSysTime());
 }

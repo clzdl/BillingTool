@@ -3,13 +3,10 @@
 
 #include "stdafx.h"
 #include "CreditOrderSender.h"
-
 #include "../../BillingTool/PluginInterface.h"
 #include "../../BillingTool/ViewTree.h"
 #include "../../BillingTool/ModuleContext.h"
 #include "../../BillingTool/BillingTool.h"
-#include "../../BillingTool/MainFrm.h"
-#include "../../BillingTool/BillingToolView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -223,7 +220,7 @@ bool BuildCreditOrder(ModuleContext *ctx, CString userId, CString tradeTypeCode)
 
 void TriggerStartUp(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("生成开机指令"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("生成开机指令"));
 	resultViewData.m_result = _TEXT("生成成功.");
 	if (!BuildCreditOrder(ctx , ctx->m_funcGetProperty(0, _TEXT("用户ID")) , _TEXT("1100")))
 	{
@@ -236,7 +233,7 @@ void TriggerStartUp(ModuleContext *ctx, void *ptr)
 
 void TriggerOnWayStop(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("生成单停指令"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("生成单停指令"));
 	resultViewData.m_result = _TEXT("生成成功.");
 	if (!BuildCreditOrder(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")), _TEXT("3120")))
 	{
@@ -247,7 +244,7 @@ void TriggerOnWayStop(ModuleContext *ctx, void *ptr)
 }
 void TriggerDoubleStop(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("生成双停指令"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("生成双停指令"));
 	resultViewData.m_result = _TEXT("生成成功.");
 	if (!BuildCreditOrder(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")), _TEXT("3110")))
 	{

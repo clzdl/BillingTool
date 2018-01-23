@@ -127,6 +127,7 @@ std::vector<DllModules> CModuleView::LoadDllModuleInfo()
 
 void CModuleView::InitializeModules()
 {
+	
 	std::vector<DllModules> vecModules = LoadDllModuleInfo();
 	for (auto it : vecModules)
 	{
@@ -139,8 +140,10 @@ void CModuleView::InitializeModules()
 			TRACE(text);
 			continue;
 		}
-		((INIT_FUNC)GetProcAddress(lib, "Initilize"))(GetParent(), &m_wndModuleView);
+		INIT_FUNC fun = (INIT_FUNC)GetProcAddress(lib, "Initilize");
+		fun(GetParent(), &m_wndModuleView);
 	}
+	
 
 }
 

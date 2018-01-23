@@ -5,6 +5,7 @@
 #include "CreditDispatch.h"
 #include "../../BillingTool/PluginInterface.h"
 #include "../../BillingTool/ViewTree.h"
+
 #include "BusiFunc.h"
 
 #ifdef _DEBUG
@@ -56,7 +57,7 @@ CCreditDispatchApp::CCreditDispatchApp()
 
 // 唯一的一个 CCreditDispatchApp 对象
 
-CCreditDispatchApp theApp;
+//CCreditDispatchApp theApp;
 // CCreditDispatchApp 初始化
 
 BOOL CCreditDispatchApp::InitInstance()

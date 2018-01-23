@@ -1,8 +1,8 @@
-// BefAccAjust.cpp : 定义 DLL 的初始化例程。
+// AftAcctAdjust.cpp : 定义 DLL 的初始化例程。
 //
 
 #include "stdafx.h"
-#include "BefAccAjust.h"
+#include "AftAcctAdjust.h"
 #include "../../BillingTool/PluginInterface.h"
 #include "../../BillingTool/ViewTree.h"
 #include "../../BillingTool/ModuleContext.h"
@@ -37,34 +37,37 @@
 //		请参阅 MFC 技术说明 33 和 58。
 //
 
-// CBefAccAjustApp
+// CAftAcctAdjustApp
 
-BEGIN_MESSAGE_MAP(CBefAccAjustApp, CWinApp)
+BEGIN_MESSAGE_MAP(CAftAcctAdjustApp, CWinApp)
 END_MESSAGE_MAP()
 
 
-// CBefAccAjustApp 构造
+// CAftAcctAdjustApp 构造
 
-CBefAccAjustApp::CBefAccAjustApp()
+CAftAcctAdjustApp::CAftAcctAdjustApp()
 {
 	// TODO:  在此处添加构造代码，
 	// 将所有重要的初始化放置在 InitInstance 中
 }
 
 
-// 唯一的一个 CBefAccAjustApp 对象
+// 唯一的一个 CAftAcctAdjustApp 对象
 
-//CBefAccAjustApp theApp;
+//CAftAcctAdjustApp theApp;
 
 
-// CBefAccAjustApp 初始化
+// CAftAcctAdjustApp 初始化
 
-BOOL CBefAccAjustApp::InitInstance()
+BOOL CAftAcctAdjustApp::InitInstance()
 {
 	CWinApp::InitInstance();
 
 	return TRUE;
 }
+
+
+
 
 static CString GetSysTIme()
 {
@@ -119,12 +122,15 @@ void IncrementAjdustByRatio(ModuleContext *ctx, void *ptr);
 void DecrementAjdustByMoney(ModuleContext *ctx, void *ptr);
 void DecrementAjdustByRatio(ModuleContext *ctx, void *ptr);
 
+
+
+
 void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 
-	HTREEITEM hRoot = viewTree->InsertItem(_T("帐前调账功能"), 0, 0);
+	HTREEITEM hRoot = viewTree->InsertItem(_T("帐后调账功能"), 0, 0);
 	viewTree->SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
 
 	HTREEITEM tmpItem = viewTree->InsertItem(_T("按比例调增"), 1, 2, hRoot);
@@ -145,11 +151,12 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 
 
 
-bool BuildBefAccChk(ModuleContext *ctx, CString userId, CString acctId,CString serialNumber,
-											CString adjustType,CString adjustMode,CString itemCode,CString moneyOrRatio,CString activeTag)
+bool BuildAftAccChk(ModuleContext *ctx, CString userId, CString acctId, CString serialNumber,
+	CString adjustType, CString adjustMode,CString billId, CString itemCode, CString moneyOrRatio,
+	CString fee, CString balance,CString recvTag)
 {
 	try {
-		std::string sql = "insert into ACC_ADJUST_BEFOR_CHK("
+		std::string sql = "insert into acc_adjust_after_chk("
 			"	batch_id, "
 			"	serial_number, "
 			"	user_id, "
@@ -157,13 +164,18 @@ bool BuildBefAccChk(ModuleContext *ctx, CString userId, CString acctId,CString s
 			"	cycle_id, "
 			"	adjust_type, "
 			"	adjust_mode, "
-			"	item_code, "
-			"	active_tag, "
 			"	adjust_fee, "
 			"	real_fee, "
 			"	adjust_reson_code, "
 			"	region_code, "
 			"	adjust_value,  "
+			"	bill_id, "
+			"	item_code, "
+			"	fee, "
+			"	balance, "
+			"	pay_tag, "
+			"	can_pay_tag, "
+			"	recv_tag, "
 			"	adjust_time, "
 			"	adjust_depart_id, "
 			"	adjust_staff_id, "
@@ -181,11 +193,14 @@ bool BuildBefAccChk(ModuleContext *ctx, CString userId, CString acctId,CString s
 			"		:v5<char[7]>, "
 			"		:v6<char[2]>, "
 			"		:v7<char[2]>, "
+			"		10000,0, 0, 'test', "
 			"		:v8<char[11]>, "
-			"		:v9<char[2]>, "
-			"		10000,"
-			"		0,0,'test',"
+			"		:v9<char[17]>, "
 			"		:v10<char[11]>, "
+			"		:v11<char[11]>, "
+			"		:v12<char[11]>, "
+			"		'0','0',"
+			"		:v13<char[2]>, "
 			"		sysdate,'test','test','1','0',sysdate,'NN','NN','test',sysdate)";
 
 
@@ -201,9 +216,12 @@ bool BuildBefAccChk(ModuleContext *ctx, CString userId, CString acctId,CString s
 			<< CStringToString(GetSysYMTime(), CP_ACP).c_str()
 			<< CStringToString(adjustType, CP_ACP).c_str()
 			<< CStringToString(adjustMode, CP_ACP).c_str()
+			<< CStringToString(moneyOrRatio, CP_ACP).c_str()
+			<< CStringToString(billId, CP_ACP).c_str()
 			<< CStringToString(itemCode, CP_ACP).c_str()
-			<< CStringToString(activeTag, CP_ACP).c_str()
-			<< CStringToString(moneyOrRatio, CP_ACP).c_str();
+			<< CStringToString(fee, CP_ACP).c_str()
+			<< CStringToString(balance, CP_ACP).c_str()
+			<< CStringToString(recvTag, CP_ACP).c_str();
 
 		ctx->m_dbConn->commit();
 	}
@@ -223,15 +241,18 @@ bool BuildBefAccChk(ModuleContext *ctx, CString userId, CString acctId,CString s
 
 void IncrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("账前调账-按金额调增"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("账后调账-按金额调增"));
 	resultViewData.m_result = _TEXT("调账成功");
-	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
-							ctx->m_funcGetProperty(0, _TEXT("账户ID")),
-							ctx->m_funcGetProperty(0, _TEXT("测试号码")),
-							_TEXT("2"),_TEXT("1"),
-							ctx->m_funcGetProperty(2, _TEXT("账目编码")),
-							ctx->m_funcGetProperty(2, _TEXT("调账金额/比例")),
-							ctx->m_funcGetProperty(2, _TEXT("生效标识"))))
+	if (!BuildAftAccChk(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
+		ctx->m_funcGetProperty(0, _TEXT("账户ID")),
+		ctx->m_funcGetProperty(0, _TEXT("测试号码")),
+		_TEXT("2"), _TEXT("1"),
+		ctx->m_funcGetProperty(3, _TEXT("账单ID")),
+		ctx->m_funcGetProperty(3, _TEXT("账目编码")),
+		ctx->m_funcGetProperty(3, _TEXT("调账金额/比例")),
+		ctx->m_funcGetProperty(3, _TEXT("账单费用")),
+		ctx->m_funcGetProperty(3, _TEXT("账单余额")),
+		ctx->m_funcGetProperty(3, _TEXT("调减余额处理方式"))))
 	{
 		resultViewData.m_result = _TEXT("调账失败.");
 	}
@@ -241,15 +262,18 @@ void IncrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 }
 void IncrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("账前调账-按比例调增"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("账后调账-按比例调增"));
 	resultViewData.m_result = _TEXT("调账成功");
-	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
+	if (!BuildAftAccChk(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
 		ctx->m_funcGetProperty(0, _TEXT("账户ID")),
 		ctx->m_funcGetProperty(0, _TEXT("测试号码")),
 		_TEXT("2"), _TEXT("2"),
-		ctx->m_funcGetProperty(2, _TEXT("账目编码")),
-		ctx->m_funcGetProperty(2, _TEXT("调账金额/比例")),
-		ctx->m_funcGetProperty(2, _TEXT("生效标识"))))
+		ctx->m_funcGetProperty(3, _TEXT("账单ID")),
+		ctx->m_funcGetProperty(3, _TEXT("账目编码")),
+		ctx->m_funcGetProperty(3, _TEXT("调账金额/比例")),
+		ctx->m_funcGetProperty(3, _TEXT("账单费用")),
+		ctx->m_funcGetProperty(3, _TEXT("账单余额")),
+		ctx->m_funcGetProperty(3, _TEXT("调减余额处理方式"))))
 	{
 		resultViewData.m_result = _TEXT("调账失败.");
 	}
@@ -259,15 +283,18 @@ void IncrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 }
 void DecrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("账前调账-按金额调减"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("账后调账-按金额调减"));
 	resultViewData.m_result = _TEXT("调账成功");
-	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
+	if (!BuildAftAccChk(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
 		ctx->m_funcGetProperty(0, _TEXT("账户ID")),
 		ctx->m_funcGetProperty(0, _TEXT("测试号码")),
 		_TEXT("1"), _TEXT("1"),
-		ctx->m_funcGetProperty(2, _TEXT("账目编码")),
-		ctx->m_funcGetProperty(2, _TEXT("调账金额/比例")),
-		ctx->m_funcGetProperty(2, _TEXT("生效标识"))))
+		ctx->m_funcGetProperty(3, _TEXT("账单ID")),
+		ctx->m_funcGetProperty(3, _TEXT("账目编码")),
+		ctx->m_funcGetProperty(3, _TEXT("调账金额/比例")),
+		ctx->m_funcGetProperty(3, _TEXT("账单费用")),
+		ctx->m_funcGetProperty(3, _TEXT("账单余额")),
+		ctx->m_funcGetProperty(3, _TEXT("调减余额处理方式"))))
 	{
 		resultViewData.m_result = _TEXT("调账失败.");
 	}
@@ -277,15 +304,18 @@ void DecrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 }
 void DecrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("账前调账-按比例调减"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("账后调账-按比例调减"));
 	resultViewData.m_result = _TEXT("调账成功");
-	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
+	if (!BuildAftAccChk(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
 		ctx->m_funcGetProperty(0, _TEXT("账户ID")),
 		ctx->m_funcGetProperty(0, _TEXT("测试号码")),
 		_TEXT("1"), _TEXT("2"),
-		ctx->m_funcGetProperty(2, _TEXT("账目编码")),
-		ctx->m_funcGetProperty(2, _TEXT("调账金额/比例")),
-		ctx->m_funcGetProperty(2, _TEXT("生效标识"))))
+		ctx->m_funcGetProperty(3, _TEXT("账单ID")),
+		ctx->m_funcGetProperty(3, _TEXT("账目编码")),
+		ctx->m_funcGetProperty(3, _TEXT("调账金额/比例")),
+		ctx->m_funcGetProperty(3, _TEXT("账单费用")),
+		ctx->m_funcGetProperty(3, _TEXT("账单余额")),
+		ctx->m_funcGetProperty(3, _TEXT("调减余额处理方式"))))
 	{
 		resultViewData.m_result = _TEXT("调账失败.");
 	}

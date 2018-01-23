@@ -2,8 +2,6 @@
 #include "BusiFunc.h"
 #include "../../BillingTool/ModuleContext.h"
 #include "../../BillingTool/BillingTool.h"
-#include "../../BillingTool/MainFrm.h"
-#include "../../BillingTool/BillingToolView.h"
 #include <string>
 
 #include "Poco/Dynamic/Var.h"
@@ -90,7 +88,7 @@ static CString StringToCString(const std::string& src, UINT codepage)
 
 void BusiFunc::TriggerStartUp(ModuleContext *ctx,void *ptr)
 {
-	ListViewData resultViewData(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("触发信控开机"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("触发信控开机"));
 	resultViewData.m_result = _TEXT("触发成功.");
 	try{
 		std::string sql = "insert into ACC_JFTOCREDIT(acc_id, "
@@ -198,7 +196,7 @@ static int SendCreditPkg(ModuleContext *ctx,std::string srvIp , UINT port , std:
 
 void BusiFunc::TriggerStopByNet(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("触发信控停机【NET】"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("触发信控停机【NET】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
 	std::string jsonString = CreateCreditJsonData(ctx->m_funcGetProperty(0, _TEXT("账户ID")) ,
@@ -252,7 +250,7 @@ static std::vector<std::string> BuildCreditFileContents(std::string acctId, std:
 }
 void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("触发信控停机【FILE】"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("触发信控停机【FILE】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
 	std::string hostName = CStringToString(ctx->m_funcGetProperty(0, _TEXT("IP地址")), CP_ACP);
@@ -360,7 +358,7 @@ static std::vector<std::string> BuildRemindFileContents(std::string acctId, std:
 
 void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("触发信控停机【FILE】"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("触发信控停机【FILE】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
 	std::string commandLine = "touch ~/aaaaa.txt";
