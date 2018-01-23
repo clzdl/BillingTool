@@ -5,7 +5,6 @@
 #include "CreditDispatch.h"
 #include "../../BillingTool/PluginInterface.h"
 #include "../../BillingTool/ViewTree.h"
-#include "CreditDispatchDlg.h"
 #include "BusiFunc.h"
 
 #ifdef _DEBUG

@@ -18,18 +18,15 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CreditDispatch.cpp">
+    <ClCompile Include="CreditOrderSender.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="BusiFunc.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CreditDispatch.h">
+    <ClInclude Include="CreditOrderSender.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
@@ -41,20 +38,17 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="BusiFunc.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="CreditDispatch.def">
+    <None Include="CreditOrderSender.def">
       <Filter>源文件</Filter>
     </None>
-    <None Include="res\CreditDispatch.rc2">
+    <None Include="res\CreditOrderSender.rc2">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="CreditDispatch.rc">
+    <ResourceCompile Include="CreditOrderSender.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
   </ItemGroup>
