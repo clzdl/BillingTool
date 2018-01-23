@@ -19,6 +19,9 @@
     <Filter Include="UniversalProgressDialog">
       <UniqueIdentifier>{b23b379c-24f0-47d4-beeb-d7200541ac42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="database">
+      <UniqueIdentifier>{0bb07424-3cfc-49da-9f84-513da8ea8889}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -60,9 +63,6 @@
     <ClInclude Include="ModuleView.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="otlv4.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="PubFunc.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -80,6 +80,9 @@
     </ClInclude>
     <ClInclude Include="UniversalProgressDialog\UPDialog.h">
       <Filter>UniversalProgressDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="database\otlv4.h">
+      <Filter>database</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

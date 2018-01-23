@@ -39,3 +39,4 @@ CString GetProperty(int module, CString properyName)
 
 	return props.at(properyName);
 }
+

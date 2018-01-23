@@ -6,6 +6,9 @@
 #include "PluginInterface.h"
 #include "BillingToolView.h"
 #include "LoadingDlg.h"
+#include "PubFunc.h"
+#include <locale.h>
+#include <fstream>
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -97,16 +100,46 @@ void CModuleView::InitializeCommonModule()
 
 	m_wndModuleView.Expand(hRoot, TVE_EXPAND);
 }
+
+std::vector<DllModules> CModuleView::LoadDllModuleInfo()
+{ 
+	std::string confModule = CStringToString(theApp.GetExePath() + _TEXT("./conf/modules.conf"),CP_ACP);
+	std::ifstream file(confModule.c_str());
+	std::vector<DllModules> result;
+	char buff[1024] = { 0 };
+	while(!file.eof())
+	{
+		file.getline(buff, sizeof(buff));
+		CString line = StringToCString(buff);
+		if (line.GetAt(0) == '#')
+			continue;
+		DllModules module;
+		int pos = 0;
+		module.code = line.Tokenize(_TEXT(","), pos);
+		module.path = line.Tokenize(_TEXT(","), pos);
+
+		result.push_back(module);
+
+	}
+
+	return result;
+}
+
 void CModuleView::InitializeModules()
 {
-	HINSTANCE lib = ::LoadLibrary(TEXT("./CreditDispatch.dll"));
-	if (NULL == lib)
+	std::vector<DllModules> vecModules = LoadDllModuleInfo();
+	for (auto it : vecModules)
 	{
-		DWORD  err = GetLastError();
-		MessageBox(_TEXT("LoadLibrary fail"));
-		return;
+		HINSTANCE lib = ::LoadLibrary(it.path);
+		if (NULL == lib)
+		{
+			DWORD  err = GetLastError();
+			MessageBox(_TEXT("LoadLibrary fail"));
+			return;
+		}
+		((INIT_FUNC)GetProcAddress(lib, "Initilize"))(GetParent(), &m_wndModuleView);
 	}
-	((INIT_FUNC)GetProcAddress(lib, "Initilize"))(GetParent(),&m_wndModuleView);
+
 }
 
 void CModuleView::OnContextMenu(CWnd* pWnd, CPoint point)

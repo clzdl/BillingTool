@@ -233,3 +233,12 @@ BOOL CBillingToolApp::PreTranslateMessage(MSG* pMsg)
 	
 	return CWinAppEx::PreTranslateMessage(pMsg);
 }
+
+CString CBillingToolApp::GetExePath(void)
+{
+	CString strExePath;
+	GetModuleFileName(NULL, strExePath.GetBuffer(MAX_PATH), MAX_PATH);
+	strExePath.ReleaseBuffer();
+	strExePath = strExePath.Left(strExePath.ReverseFind(_TEXT('\\')));
+	return strExePath;
+}

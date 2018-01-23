@@ -84,9 +84,6 @@ void Initilize(CWnd *mainWnd,CViewTree *viewTree)
 
 	tmpItem = viewTree->InsertItem(_T("触发停机【FILE】"), 1, 2, hRoot);
 	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerStopByFile));
-
-	tmpItem = viewTree->InsertItem(_T("触发提醒【NET】"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerRemindByNet));
 	
 	tmpItem = viewTree->InsertItem(_T("触发提醒【FILE】"), 1, 2, hRoot);
 	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerRemindByFile));

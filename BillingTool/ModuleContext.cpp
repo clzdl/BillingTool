@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "ModuleContext.h"
-#include "otlv4.h"
 #include "BillingTool.h"
 #include "BillingToolView.h"
 #include "MainFrm.h"

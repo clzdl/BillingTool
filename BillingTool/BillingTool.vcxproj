@@ -191,11 +191,11 @@
     <ClInclude Include="BillingTool.h" />
     <ClInclude Include="BillingToolDoc.h" />
     <ClInclude Include="BillingToolView.h" />
+    <ClInclude Include="database\otlv4.h" />
     <ClInclude Include="LoadingDlg.h" />
     <ClInclude Include="ModuleView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="ModuleContext.h" />
-    <ClInclude Include="otlv4.h" />
     <ClInclude Include="PropertiesWnd.h" />
     <ClInclude Include="PubFunc.h" />
     <ClInclude Include="Resource.h" />

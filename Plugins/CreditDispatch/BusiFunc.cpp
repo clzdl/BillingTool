@@ -49,11 +49,11 @@ static CString GetSysYMDTime()
 
 static CString GetSerialNo() 
 {
-	static int serial = 0; 
 	CString csSerial;
-	csSerial.Format(_TEXT("%06d"), serial);
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	csSerial.Format(_TEXT("%02d%02d%02d"), st.wHour,st.wMinute,st.wSecond);
 
-	++serial;
 	return csSerial;
 }
 
@@ -223,8 +223,8 @@ void BusiFunc::TriggerStopByNet(ModuleContext *ctx, void *ptr)
 static std::vector<std::string> BuildCreditFileContents(std::string acctId, std::string userId)
 {
 	std::vector<std::string> vec;
-	//320150625837255,120150105193264,0,,20171109120138,20171109120138884948,8003,240,132110,110,1,10240,201711,20171031232505
 	std::string result;
+
 	result += acctId;
 	result += ",";
 
@@ -239,7 +239,7 @@ static std::vector<std::string> BuildCreditFileContents(std::string acctId, std:
 	result += CStringToString(GetSysUtcTime(), CP_ACP);
 	result += ",";
 
-	result += "8003,10,100,10,1100,";
+	result += "8003,10,100,1000,1,1100,";
 
 	result += CStringToString(GetSysYMDTime().Left(6), CP_ACP);
 	result += ",";
@@ -255,8 +255,6 @@ void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("触发信控停机【FILE】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string commandLine = "touch ~/aaaaa.txt";
-	std::string commandLine1 = "echo 111111 >> ~/aaaaa.txt";
 	std::string hostName = CStringToString(ctx->m_funcGetProperty(0, _TEXT("IP地址")), CP_ACP);
 	std::string userName = CStringToString(ctx->m_funcGetProperty(0, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(0, _TEXT("密码")), CP_ACP);
@@ -315,9 +313,54 @@ void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 }
 
 
-void BusiFunc::TriggerRemindByNet(ModuleContext *ctx, void *ptr)
+static std::vector<std::string> BuildRemindFileContents(std::string acctId, std::string userId , std::string curVolume, std::string totalVolume, std::string baseVolume)
 {
-	ListViewData resultViewData(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("触发信控提醒"));
+	std::vector<std::string> vec;
+	//320150625837255,120150105193264,0,,20171109120138,20171109120138884948,8003,240,132110,110,1,10240,201711,20171031232505
+	std::string result;
+	result += acctId;
+	result += ",";
+
+	result += userId;
+	result += ",";
+
+	result += "0,,";
+
+	result += CStringToString(GetSysTIme(), CP_ACP);
+	result += ",";
+
+	result += CStringToString(GetSysUtcTime(), CP_ACP);
+	result += ",";
+
+	result += "8003,";
+
+	result += curVolume;
+	result += ",";
+
+	result += totalVolume;
+	result += ",";
+
+	//费用
+	result += "0,";
+	//触发类型
+	result += "2,";
+
+	result += baseVolume;
+	result += ",";
+
+	result += CStringToString(GetSysYMDTime().Left(6), CP_ACP);
+	result += ",";
+
+	result += CStringToString(GetSysTIme(), CP_ACP);
+
+	vec.push_back(result);
+	return vec;
+
+}
+
+void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
+{
+	ListViewData resultViewData(_TEXT("XXXXXXXXXXXXXXXXX"), _TEXT("触发信控停机【FILE】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
 	std::string commandLine = "touch ~/aaaaa.txt";
@@ -325,32 +368,58 @@ void BusiFunc::TriggerRemindByNet(ModuleContext *ctx, void *ptr)
 	std::string hostName = CStringToString(ctx->m_funcGetProperty(0, _TEXT("IP地址")), CP_ACP);
 	std::string userName = CStringToString(ctx->m_funcGetProperty(0, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(0, _TEXT("密码")), CP_ACP);
+	CString testNumber = ctx->m_funcGetProperty(0, _TEXT("测试号码"));
+	std::string tmpCreditInFile = CStringToString(ctx->m_funcGetProperty(1, _TEXT("信控分发文件入口")), CP_ACP) + "/tempCreditFile.dat";
+	CString csCreditInFile = ctx->m_funcGetProperty(1, _TEXT("信控分发文件入口"))
+		+ _TEXT("/FX_BILL_") + GetSysYMDTime() + _TEXT("_") + GetSerialNo() + _TEXT("_.CCCC") + testNumber.Left(7) + _TEXT(".bill00.bilcredit");
+
+	std::string creditInFile = CStringToString(csCreditInFile, CP_ACP);
+
 	UINT port = 22;
 
 	bool result = true;
-	do{
+	do {
 		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
 		if (!result)
 		{
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))(commandLine) && 
-					(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))(commandLine1);
+		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpCreditInFile);
 		if (!result)
 		{
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		
 
-	}while (false);
+		std::vector<std::string> creditContent = BuildRemindFileContents(
+			CStringToString(ctx->m_funcGetProperty(0, _TEXT("账户ID")), CP_ACP),
+			CStringToString(ctx->m_funcGetProperty(0, _TEXT("用户ID")), CP_ACP),
+			CStringToString(ctx->m_funcGetProperty(1, _TEXT("话单使用量")), CP_ACP), 
+			CStringToString(ctx->m_funcGetProperty(1, _TEXT("截止本条话单前的总是用量")), CP_ACP), 
+			CStringToString(ctx->m_funcGetProperty(1, _TEXT("用户总的基础量")), CP_ACP) );
+
+
+
+		for (auto it : creditContent)
+		{
+			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo \"" + it + "\" >>" + tmpCreditInFile);
+			if (!result)
+			{
+				resultViewData.m_result = _TEXT("触发失败.");
+				break;
+			}
+		}
+
+		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpCreditInFile + " " + creditInFile);
+		if (!result)
+		{
+			resultViewData.m_result = _TEXT("触发失败.");
+			break;
+		}
+
+
+	} while (false);
 	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
-}
-
-void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
-{
-
 }

@@ -1,5 +1,13 @@
 #pragma once
 #include "ViewTree.h"
+#include <vector>
+struct  DllModules
+{
+	DllModules() {}
+	~DllModules() {}
+	CString code; //±àÂë
+	CString path; //dllÂ·¾¶
+};
 
 class CCModuleViewToolBar : public CMFCToolBar
 {
@@ -27,11 +35,11 @@ protected:
 	CViewTree m_wndModuleView;
 	CImageList m_moduleViewImages;
 	CCModuleViewToolBar m_wndToolBar;
-
+	
 protected:
 	void InitializeModules();
 	void InitializeCommonModule();
-
+	std::vector<DllModules> LoadDllModuleInfo();
 // ÊµÏÖ
 public:
 	virtual ~CModuleView();

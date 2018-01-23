@@ -44,7 +44,7 @@ public:
 public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
-
+	CString GetExePath(void);
 // й╣ож
 	UINT  m_nAppLook;
 	BOOL m_menuViewModule;
