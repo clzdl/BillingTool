@@ -83,6 +83,15 @@ std::map<int , std::map<CString, PropertyInfo> > gProperties = {
 				{ _TEXT("用户ID"),
 					{_TEXT("120150105199770"),nullptr , FALSE ,  } 
 				},
+				{ _TEXT("用户IMSI"),
+					{ _TEXT("4600121321301023010"),nullptr , FALSE , }
+				},
+				{ _TEXT("用户IMEI"),
+					{ _TEXT("4600121321301023010"),nullptr , FALSE , }
+				},
+				{ _TEXT("用户归属地"),
+					{ _TEXT("311"),nullptr , FALSE , }
+				},
 				{ _TEXT("客户ID"),
 					{ _TEXT("220150105192242"),nullptr , FALSE , }
 				},
@@ -216,6 +225,28 @@ std::map<int , std::map<CString, PropertyInfo> > gProperties = {
 				{ _TEXT("A"),nullptr , FALSE , }
 			}
 		}
+	},
+	{ 6/*预处理*/,
+	{
+		{ _TEXT("对端号码"),
+			{ _TEXT("18731173110"),nullptr , FALSE , }
+		},
+		{ _TEXT("SESSIONID"),
+			{ _TEXT("Eadfkjla234"),nullptr , FALSE , }
+		},
+		{ _TEXT("文件入口"),
+			{ _TEXT("/home/chengl/src/soPredealBin/data/in"),nullptr , FALSE , }
+		},
+		
+		{ _TEXT("流量话单类型"),
+			{ _TEXT("首单"),nullptr , TRUE , {
+												{ _TEXT("首单"),_TEXT("0") },
+												{ _TEXT("中间单"),_TEXT("1") },
+												{ _TEXT("尾单"),_TEXT("-1") },
+											}
+			}
+		}
+	}
 	}
 };
 
@@ -283,6 +314,8 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndObjectCombo.SetItemData(idx, 4);
 	idx = m_wndObjectCombo.AddString(_T("信用度评估及生失效"));
 	m_wndObjectCombo.SetItemData(idx, 5);
+	idx = m_wndObjectCombo.AddString(_T("预处理"));
+	m_wndObjectCombo.SetItemData(idx, 6);
 	m_wndObjectCombo.SetCurSel(0);
 
 	CRect rectCombo;
@@ -326,6 +359,8 @@ void CPropertiesWnd::OnCbnSelChanged()
 		return InitPrefeeRestorePropList();
 	case 5://信用度评估
 		return InitCreditDegreePropList();
+	case 6://预处理
+		return InitPredealPropList();
 	}
 
 }
@@ -429,6 +464,17 @@ void CPropertiesWnd::InitCreditDegreePropList()
 }
 
 
+void CPropertiesWnd::InitPredealPropList()
+{
+	SetPropListFont();
+
+	m_wndPropList.EnableHeaderCtrl(FALSE);
+	m_wndPropList.EnableDescriptionArea();
+	m_wndPropList.SetVSDotNetLook();
+	m_wndPropList.MarkModifiedProperties();
+
+	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("预处理"), 6));
+}
 
 
 void CPropertiesWnd::OnSetFocus(CWnd* pOldWnd)
