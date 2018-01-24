@@ -87,7 +87,5 @@ void Initilize(CWnd *mainWnd,CViewTree *viewTree)
 	
 	tmpItem = viewTree->InsertItem(_T("´¥·¢ÌáÐÑ¡¾FILE¡¿"), 1, 2, hRoot);
 	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerRemindByFile));
-
-	viewTree->Expand(hRoot, TVE_EXPAND);
 	
 }

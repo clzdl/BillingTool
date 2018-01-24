@@ -67,43 +67,137 @@ static void cbTestPhoneChg(CPropertiesWnd *propWnd,std::map<CString, PropertyInf
 std::map<int , std::map<CString, PropertyInfo> > gProperties = {
 	{ 0/*公共属性*/,	
 			{ 
-				{_TEXT("IP地址"),{_TEXT("192.168.88.150"),nullptr} },
-				{ _TEXT("端口号"),{_TEXT("4444"),nullptr} },
-				{ _TEXT("测试号码"),{_TEXT("17001818555"),cbTestPhoneChg } },
-				{ _TEXT("账户ID"),{_TEXT("320150105718968"),nullptr} },
-				{ _TEXT("用户ID"),{_TEXT("120150105199770"),nullptr} },
-				{ _TEXT("数据库连接串"),{_TEXT("cmcc/CMCC@fxzn"),nullptr} },
-				{ _TEXT("用户名"),{_TEXT("chengl"),nullptr} },
-				{ _TEXT("密码"),{_TEXT("chengl123"),nullptr} }
-				
+				{ _TEXT("IP地址"),
+					{_TEXT("192.168.88.150"),nullptr,FALSE, } 
+				},
+				{ _TEXT("端口号"),
+					{_TEXT("4444"),nullptr,FALSE, } 
+				},
+				{ _TEXT("测试号码"),
+					{_TEXT("17001818555"),cbTestPhoneChg,FALSE, } 
+				},
+				{ _TEXT("账户ID"),
+					{_TEXT("320150105718968"),nullptr , FALSE,  } 
+				},
+				{ _TEXT("用户ID"),
+					{_TEXT("120150105199770"),nullptr , FALSE ,  } 
+				},
+				{ _TEXT("数据库连接串"),
+					{_TEXT("cmcc/CMCC@fxzn"),nullptr, FALSE ,  } 
+				},
+				{ _TEXT("用户名"),
+					{_TEXT("chengl"),nullptr, FALSE , } 
+				},
+				{ _TEXT("密码"),
+					{_TEXT("chengl123"),nullptr , FALSE ,  } 
+				}
 			} 
 	},
 
 	{ 1/*信控分发属性*/,
 			{ 
-				{ _TEXT("触发停机服务地址"),{_TEXT("/creditTrigger"),nullptr} },
-				{ _TEXT("话单费用"), {_TEXT("1000"),nullptr} },
-				{ _TEXT("话单使用量"), {_TEXT("10"),nullptr} },
-				{ _TEXT("截止本条话单前的总是用量"), {_TEXT("100"),nullptr} },
-				{ _TEXT("用户总的基础量"), {_TEXT("200"),nullptr} },
-				{ _TEXT("信控分发文件入口"), {_TEXT("/home/chengl/src/soCreditDispatch/data/in"),nullptr} },
+				{ _TEXT("触发停机服务地址"), 
+					{ _TEXT("/creditTrigger"),nullptr, FALSE, } 
+				},
+				{ _TEXT("话单费用"), 
+					{_TEXT("1000"),nullptr ,FALSE , } 
+				},
+				{ _TEXT("话单使用量"), 
+					{_TEXT("10"),nullptr ,FALSE , } 
+				},
+				{ _TEXT("截止本条话单前的总是用量"), 
+					{_TEXT("100"),nullptr ,FALSE , } 
+				},
+				{ _TEXT("用户总的基础量"), 
+					{_TEXT("200"),nullptr , FALSE , } 
+				},
+				{ _TEXT("信控分发文件入口"), 
+					{_TEXT("/home/chengl/src/soCreditDispatch/data/in"),nullptr , FALSE , } 
+				}
 			} 
 	} ,
+
 	{ 2/*帐前调账*/,
 		{
-			{ _TEXT("调账金额/比例"),{_TEXT("1000"),nullptr} },
-			{ _TEXT("账目编码"),{_TEXT("110000"),nullptr} },
-			{ _TEXT("生效标识"),{_TEXT("0"),nullptr} }
+			{ _TEXT("调账金额/比例"),
+				{_TEXT("1000"),nullptr , FALSE , } 
+			},
+			{ _TEXT("账目编码"),
+				{_TEXT("110000"),nullptr , FALSE , } 
+			},
+			{ _TEXT("生效标识"),
+				{_TEXT("立即生效"),nullptr , TRUE , {
+														{_TEXT("立即生效"),_TEXT("0")} ,
+														{ _TEXT("月末生效"),_TEXT("1") } 
+													}
+				}
+			}
 		}
 	},
 	{ 3/*帐后调账*/,
 		{
-			{ _TEXT("账单ID"),{_TEXT("1111111000"),nullptr} },
-			{ _TEXT("调账金额/比例"),{_TEXT("1000"),nullptr} },
-			{ _TEXT("账目编码"),{_TEXT("110000"),nullptr} },
-			{ _TEXT("账单费用"),{_TEXT("10000"),nullptr} },
-			{ _TEXT("账单余额"),{_TEXT("100"),nullptr} },
-			{ _TEXT("调减余额处理方式"),{_TEXT("0"),nullptr} }
+			{ _TEXT("账单ID"),
+				{_TEXT("1111111000"),nullptr , FALSE , } 
+			},
+			{ _TEXT("调账金额/比例"),
+				{_TEXT("1000"),nullptr , FALSE , } 
+			},
+			{ _TEXT("账目编码"),	
+				{_TEXT("110000"),nullptr , FALSE , } 
+			},
+			{ _TEXT("账单费用"),
+				{_TEXT("10000"),nullptr , FALSE ,} 
+			},
+			{ _TEXT("账单余额"),
+				{_TEXT("100"),nullptr , FALSE ,  } 
+			},
+			{ _TEXT("调减余额处理方式"),
+				{_TEXT("作废"),nullptr , TRUE , { 
+												{_TEXT("作废"),_TEXT("1")},
+												{ _TEXT("转赠款"),_TEXT("2") }
+											}
+				}
+			}
+		}
+	},
+	{ 4/*预存返还*/,
+		{
+			{ _TEXT("活动ID"),
+				{ _TEXT("1111111000"),nullptr , FALSE , }
+			},
+			{ _TEXT("规则类型"),
+				{ _TEXT("均分"),nullptr , TRUE ,{
+													{ _TEXT("均分"),_TEXT("0") },
+													{ _TEXT("自定义"),_TEXT("1") }
+												} 
+				}
+			},
+			{ _TEXT("自定义规则ID"),
+				{ _TEXT("1101111000"),nullptr , FALSE , }
+			},
+			{ _TEXT("返还费用"),
+				{ _TEXT("10000"),nullptr , FALSE , }
+			},
+			{ _TEXT("返还周期"),
+				{ _TEXT("按天"),nullptr , TRUE ,{
+													{ _TEXT("按天"),_TEXT("0") },
+													{ _TEXT("按自然甜"),_TEXT("1") },
+													{ _TEXT("按月"),_TEXT("2") },
+													{ _TEXT("按自然月"),_TEXT("3") }
+												}
+				}
+			},
+			{ _TEXT("校验规则"),
+				{ _TEXT("不校验强制返费"),nullptr , TRUE ,{
+													{ _TEXT("不校验强制返费"),_TEXT("0") },
+													{ _TEXT("校验不通过废弃"),_TEXT("1") },
+													{ _TEXT("校验不通过顺延"),_TEXT("2") }
+												}
+				}
+			},
+			{ _TEXT("预存返还账本"),
+				{ _TEXT("2111111010130"),nullptr , FALSE , }
+			}
 		}
 	}
 };
@@ -168,6 +262,8 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndObjectCombo.SetItemData(idx, 2);
 	idx = m_wndObjectCombo.AddString(_T("帐后调账"));
 	m_wndObjectCombo.SetItemData(idx, 3);
+	idx = m_wndObjectCombo.AddString(_T("预存返还"));
+	m_wndObjectCombo.SetItemData(idx, 4);
 	m_wndObjectCombo.SetCurSel(0);
 
 	CRect rectCombo;
@@ -207,86 +303,47 @@ void CPropertiesWnd::OnCbnSelChanged()
 		return InitAdjustPropList();
 	case 3://账后调账
 		return InitAftAdjustPropList();
+	case 4://预存返还
+		return InitPrefeeRestorePropList();
 	}
 
 }
 
+CMFCPropertyGridProperty* CPropertiesWnd::BuildPropertyGridGroup(CString groupName, UINT module)
+{
+	CMFCPropertyGridProperty *pCreditDispatchGroup = new CMFCPropertyGridProperty(groupName);
+	CMFCPropertyGridProperty *pProp = nullptr;
+	for (auto comm : gProperties.at(module))
+	{
+		pProp = new CMFCPropertyGridProperty(comm.first, comm.second.propertyValue, comm.first);
+
+		if (comm.second.isCombox)
+		{
+			for (auto it : comm.second.comboxValRel)
+			{
+				pProp->AddOption(it.first);
+			}
+			pProp->AllowEdit(FALSE);
+		}
+
+		pCreditDispatchGroup->AddSubItem(pProp);
+	}
+
+	return pCreditDispatchGroup;
+}
 
 void CPropertiesWnd::InitCommonPropList()
 {
-	
 	SetPropListFont();
 
 	m_wndPropList.EnableHeaderCtrl(FALSE);
 	m_wndPropList.EnableDescriptionArea();
 	m_wndPropList.SetVSDotNetLook();
 	m_wndPropList.MarkModifiedProperties();
-	CMFCPropertyGridProperty *pCommonGroup = new CMFCPropertyGridProperty(_T("公共属性"));
-	for (auto comm : gProperties.at(0))
-	{
-		pCommonGroup->AddSubItem(new CMFCPropertyGridProperty(comm.first, comm.second.propertyValue, comm.first));
+
+	m_wndPropList.AddProperty(BuildPropertyGridGroup(_T("公共属性"),0));
 	
-	}
-	
-	
-	m_wndPropList.AddProperty(pCommonGroup);
-
-	/*CMFCPropertyGridProperty* pProp = new CMFCPropertyGridProperty(_T("边框"), _T("对话框外框"), _T("其中之一: “无”、“细”、“可调整大小”或“对话框外框”"));
-	pProp->AddOption(_T("无"));
-	pProp->AddOption(_T("细"));
-	pProp->AddOption(_T("可调整大小"));
-	pProp->AddOption(_T("对话框外框"));
-	pProp->AllowEdit(FALSE);
-
-	pGroup1->AddSubItem(pProp);
-	pGroup1->AddSubItem(new CMFCPropertyGridProperty(_T("标题"), (_variant_t) _T("关于"), _T("指定窗口标题栏中显示的文本")));
-
-	
-
-	CMFCPropertyGridProperty* pSize = new CMFCPropertyGridProperty(_T("窗口大小"), 0, TRUE);
-
-	pProp = new CMFCPropertyGridProperty(_T("高度"), (_variant_t) 250l, _T("指定窗口的高度"));
-	pProp->EnableSpinControl(TRUE, 50, 300);
-	pSize->AddSubItem(pProp);
-
-	pProp = new CMFCPropertyGridProperty( _T("宽度"), (_variant_t) 150l, _T("指定窗口的宽度"));
-	pProp->EnableSpinControl(TRUE, 50, 200);
-	pSize->AddSubItem(pProp);
-
-	m_wndPropList.AddProperty(pSize);
-
-	CMFCPropertyGridProperty* pGroup2 = new CMFCPropertyGridProperty(_T("字体"));
-
-	LOGFONT lf;
-	CFont* font = CFont::FromHandle((HFONT) GetStockObject(DEFAULT_GUI_FONT));
-	font->GetLogFont(&lf);
-
-	_tcscpy_s(lf.lfFaceName, _T("宋体, Arial"));
-
-	pGroup2->AddSubItem(new CMFCPropertyGridFontProperty(_T("字体"), lf, CF_EFFECTS | CF_SCREENFONTS, _T("指定窗口的默认字体")));
-	pGroup2->AddSubItem(new CMFCPropertyGridProperty(_T("使用系统字体"), (_variant_t) true, _T("指定窗口使用“MS Shell Dlg”字体")));
-
-	m_wndPropList.AddProperty(pGroup2);
-
-	CMFCPropertyGridProperty* pGroup3 = new CMFCPropertyGridProperty(_T("杂项"));
-	pProp = new CMFCPropertyGridProperty(_T("(名称)"), _T("应用程序"));
-	pProp->Enable(FALSE);
-	pGroup3->AddSubItem(pProp);
-
-	CMFCPropertyGridColorProperty* pColorProp = new CMFCPropertyGridColorProperty(_T("窗口颜色"), RGB(210, 192, 254), NULL, _T("指定默认的窗口颜色"));
-	pColorProp->EnableOtherButton(_T("其他..."));
-	pColorProp->EnableAutomaticButton(_T("默认"), ::GetSysColor(COLOR_3DFACE));
-	pGroup3->AddSubItem(pColorProp);
-
-	static const TCHAR szFilter[] = _T("图标文件(*.ico)|*.ico|所有文件(*.*)|*.*||");
-	pGroup3->AddSubItem(new CMFCPropertyGridFileProperty(_T("图标"), TRUE, _T(""), _T("ico"), 0, szFilter, _T("指定窗口图标")));
-
-	pGroup3->AddSubItem(new CMFCPropertyGridFileProperty(_T("文件夹"), _T("c:\\")));
-
-	m_wndPropList.AddProperty(pGroup3);
-	*/
 }
-
 
 
 void CPropertiesWnd::InitCreditDispatchPropList()
@@ -297,15 +354,8 @@ void CPropertiesWnd::InitCreditDispatchPropList()
 	m_wndPropList.EnableDescriptionArea();
 	m_wndPropList.SetVSDotNetLook();
 	m_wndPropList.MarkModifiedProperties();
-
-	CMFCPropertyGridProperty *pCreditDispatchGroup = new CMFCPropertyGridProperty(_T("信控分发属性"));
-	for (auto comm : gProperties.at(1))
-	{
-		pCreditDispatchGroup->AddSubItem(new CMFCPropertyGridProperty(comm.first, comm.second.propertyValue, comm.first));
-
-	}
-
-	m_wndPropList.AddProperty(pCreditDispatchGroup);
+	
+	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("信控分发属性"),1));
 
 }
 
@@ -318,14 +368,7 @@ void CPropertiesWnd::InitAdjustPropList()
 	m_wndPropList.SetVSDotNetLook();
 	m_wndPropList.MarkModifiedProperties();
 
-	CMFCPropertyGridProperty *pCreditDispatchGroup = new CMFCPropertyGridProperty(_T("帐前调账属性"));
-	for (auto comm : gProperties.at(2))
-	{
-		pCreditDispatchGroup->AddSubItem(new CMFCPropertyGridProperty(comm.first, comm.second.propertyValue, comm.first));
-
-	}
-
-	m_wndPropList.AddProperty(pCreditDispatchGroup);
+	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("帐前调账属性"), 2));
 }
 
 void CPropertiesWnd::InitAftAdjustPropList()
@@ -337,15 +380,21 @@ void CPropertiesWnd::InitAftAdjustPropList()
 	m_wndPropList.SetVSDotNetLook();
 	m_wndPropList.MarkModifiedProperties();
 
-	CMFCPropertyGridProperty *pCreditDispatchGroup = new CMFCPropertyGridProperty(_T("账后调账属性"));
-	for (auto comm : gProperties.at(3))
-	{
-		pCreditDispatchGroup->AddSubItem(new CMFCPropertyGridProperty(comm.first, comm.second.propertyValue, comm.first));
-
-	}
-
-	m_wndPropList.AddProperty(pCreditDispatchGroup);
+	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("账后调账属性"), 3));
 }
+
+void CPropertiesWnd::InitPrefeeRestorePropList()
+{
+	SetPropListFont();
+
+	m_wndPropList.EnableHeaderCtrl(FALSE);
+	m_wndPropList.EnableDescriptionArea();
+	m_wndPropList.SetVSDotNetLook();
+	m_wndPropList.MarkModifiedProperties();
+
+	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("预存返还属性"), 4));
+}
+
 
 
 
@@ -387,7 +436,6 @@ void CPropertiesWnd::SetPropListFont()
 LRESULT CPropertiesWnd::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
 {
 	CMFCPropertyGridProperty* pProp = (CMFCPropertyGridProperty*)lParam;
-
 	std::map<CString, PropertyInfo> &properties = gProperties.at(m_wndObjectCombo.GetItemData(m_wndObjectCombo.GetCurSel()));
 	properties[pProp->GetName()].propertyValue = pProp->GetValue();
 	PropertyInfo &tmpProp = properties[pProp->GetName()];

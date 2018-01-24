@@ -144,9 +144,6 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 
 	tmpItem = viewTree->InsertItem(_T("°´½ð¶îµ÷¼õ"), 1, 2, hRoot);
 	viewTree->SetItemData(tmpItem, DWORD_PTR(DecrementAjdustByMoney));
-
-	viewTree->Expand(hRoot, TVE_EXPAND);
-
 }
 
 

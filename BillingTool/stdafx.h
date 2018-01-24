@@ -60,5 +60,7 @@ struct PropertyInfo
 {
 	CString propertyValue;
 	PROPERTY_CHG_FUNC callBack;
+	BOOL isCombox;    ///是否下拉框属性
+	std::map<CString, CString> comboxValRel;    ///下拉框的值映射
 };
 

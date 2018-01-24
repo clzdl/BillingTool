@@ -55,6 +55,7 @@ int CModuleView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("未能创建文件视图\n");
 		return -1;      // 未能创建
 	}
+	
 
 	// 加载视图图像: 
 	m_moduleViewImages.Create(IDB_FILE_VIEW, 16, 0, RGB(255, 0, 255));
@@ -277,4 +278,3 @@ void CModuleView::ConnectDb(ModuleContext *ctx, void *ptr)
 	theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&data);
 
 }
-

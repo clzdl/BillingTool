@@ -158,8 +158,6 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 	tmpItem = viewTree->InsertItem(_T("Éú³ÉË«Í£Ö¸Áî"), 1, 2, hRoot);
 	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerDoubleStop));
 
-	viewTree->Expand(hRoot, TVE_EXPAND);
-
 }
 
 

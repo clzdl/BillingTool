@@ -35,9 +35,16 @@ CString StringToCString(const std::string& src, UINT codepage)
 
 CString GetProperty(int module, CString properyName)
 {
-	std::map<CString, PropertyInfo> props =gProperties.at(module);
-
-	return props.at(properyName).propertyValue;
+	std::map<CString, PropertyInfo> props = gProperties.at(module);
+	PropertyInfo &prop = props.at(properyName);
+	if (!prop.isCombox)
+	{
+		return prop.propertyValue;
+	}
+	else
+	{//获取值得映射关系
+		return prop.comboxValRel.at(prop.propertyValue);
+	}
 }
 
 
