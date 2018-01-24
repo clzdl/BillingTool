@@ -227,26 +227,33 @@ std::map<int , std::map<CString, PropertyInfo> > gProperties = {
 		}
 	},
 	{ 6/*预处理*/,
-	{
-		{ _TEXT("对端号码"),
-			{ _TEXT("18731173110"),nullptr , FALSE , }
-		},
-		{ _TEXT("SESSIONID"),
-			{ _TEXT("Eadfkjla234"),nullptr , FALSE , }
-		},
-		{ _TEXT("文件入口"),
-			{ _TEXT("/home/chengl/src/soPredealBin/data/in"),nullptr , FALSE , }
-		},
+		{
+			{ _TEXT("对端号码"),
+				{ _TEXT("18731173110"),nullptr , FALSE , }
+			},
+			{ _TEXT("SESSIONID"),
+				{ _TEXT("Eadfkjla234"),nullptr , FALSE , }
+			},
+			{ _TEXT("文件入口"),
+				{ _TEXT("/home/chengl/src/soPredealBin/data/in"),nullptr , FALSE , }
+			},
 		
-		{ _TEXT("流量话单类型"),
-			{ _TEXT("首单"),nullptr , TRUE , {
-												{ _TEXT("首单"),_TEXT("0") },
-												{ _TEXT("中间单"),_TEXT("1") },
-												{ _TEXT("尾单"),_TEXT("-1") },
-											}
+			{ _TEXT("流量话单类型"),
+				{ _TEXT("首单"),nullptr , TRUE , {
+													{ _TEXT("首单"),_TEXT("0") },
+													{ _TEXT("中间单"),_TEXT("1") },
+													{ _TEXT("尾单"),_TEXT("-1") },
+												}
+				}
 			}
 		}
-	}
+	},
+	{ 7/*短信发送*/,
+		{
+			{ _TEXT("文件入口"),
+				{ _TEXT("/home/chengl/src/soPeriodSmsProcess/data/in"),nullptr , FALSE , }
+			}
+		}
 	}
 };
 
@@ -316,7 +323,10 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndObjectCombo.SetItemData(idx, 5);
 	idx = m_wndObjectCombo.AddString(_T("预处理"));
 	m_wndObjectCombo.SetItemData(idx, 6);
-	m_wndObjectCombo.SetCurSel(0);
+	idx = m_wndObjectCombo.AddString(_T("短信发送"));
+	m_wndObjectCombo.SetItemData(idx, 7);
+
+	m_wndObjectCombo.SetCurSel(1);
 
 	CRect rectCombo;
 	m_wndObjectCombo.GetClientRect (&rectCombo);
@@ -361,6 +371,8 @@ void CPropertiesWnd::OnCbnSelChanged()
 		return InitCreditDegreePropList();
 	case 6://预处理
 		return InitPredealPropList();
+	case 7://短信发送
+		return InitSmsSendPropList();
 	}
 
 }
@@ -474,6 +486,18 @@ void CPropertiesWnd::InitPredealPropList()
 	m_wndPropList.MarkModifiedProperties();
 
 	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("预处理"), 6));
+}
+
+void CPropertiesWnd::InitSmsSendPropList()
+{
+	SetPropListFont();
+
+	m_wndPropList.EnableHeaderCtrl(FALSE);
+	m_wndPropList.EnableDescriptionArea();
+	m_wndPropList.SetVSDotNetLook();
+	m_wndPropList.MarkModifiedProperties();
+
+	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("短信发送"), 7));
 }
 
 

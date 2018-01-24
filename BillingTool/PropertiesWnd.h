@@ -54,6 +54,7 @@ protected:
 	void InitPrefeeRestorePropList();
 	void InitCreditDegreePropList();
 	void InitPredealPropList();
+	void InitSmsSendPropList();
 	void SetPropListFont();
 	CMFCPropertyGridProperty* BuildPropertyGridGroup(CString groupName,UINT module);
 	int m_nComboHeight;

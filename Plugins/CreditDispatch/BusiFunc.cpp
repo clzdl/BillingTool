@@ -361,8 +361,6 @@ void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("触发信控停机【FILE】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string commandLine = "touch ~/aaaaa.txt";
-	std::string commandLine1 = "echo 111111 >> ~/aaaaa.txt";
 	std::string hostName = CStringToString(ctx->m_funcGetProperty(0, _TEXT("IP地址")), CP_ACP);
 	std::string userName = CStringToString(ctx->m_funcGetProperty(0, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(0, _TEXT("密码")), CP_ACP);

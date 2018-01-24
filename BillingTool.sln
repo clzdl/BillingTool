@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreditDegree", "Plugins\Cre
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Predeal", "Plugins\Predeal\Predeal.vcxproj", "{446824EC-EA9D-4186-A7BC-9132FB78259F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SmsSend", "Plugins\SmsSend\SmsSend.vcxproj", "{ADA74BB8-2417-4ECA-944A-FBA504A4F4B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -91,6 +93,14 @@ Global
 		{446824EC-EA9D-4186-A7BC-9132FB78259F}.Release|x64.Build.0 = Release|x64
 		{446824EC-EA9D-4186-A7BC-9132FB78259F}.Release|x86.ActiveCfg = Release|Win32
 		{446824EC-EA9D-4186-A7BC-9132FB78259F}.Release|x86.Build.0 = Release|Win32
+		{ADA74BB8-2417-4ECA-944A-FBA504A4F4B2}.Debug|x64.ActiveCfg = Debug|x64
+		{ADA74BB8-2417-4ECA-944A-FBA504A4F4B2}.Debug|x64.Build.0 = Debug|x64
+		{ADA74BB8-2417-4ECA-944A-FBA504A4F4B2}.Debug|x86.ActiveCfg = Debug|Win32
+		{ADA74BB8-2417-4ECA-944A-FBA504A4F4B2}.Debug|x86.Build.0 = Debug|Win32
+		{ADA74BB8-2417-4ECA-944A-FBA504A4F4B2}.Release|x64.ActiveCfg = Release|x64
+		{ADA74BB8-2417-4ECA-944A-FBA504A4F4B2}.Release|x64.Build.0 = Release|x64
+		{ADA74BB8-2417-4ECA-944A-FBA504A4F4B2}.Release|x86.ActiveCfg = Release|Win32
+		{ADA74BB8-2417-4ECA-944A-FBA504A4F4B2}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
