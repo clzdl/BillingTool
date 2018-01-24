@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AftAccAdjust", "Plugins\Aft
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PrefeeRestore", "Plugins\PrefeeRestore\PrefeeRestore.vcxproj", "{9FAFBFA9-4256-4A80-BBFD-726CF7C8C72E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CreditDegree", "Plugins\CreditDegree\CreditDegree.vcxproj", "{CA83B810-76C7-494E-AF10-1B9953FF68FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -71,6 +73,14 @@ Global
 		{9FAFBFA9-4256-4A80-BBFD-726CF7C8C72E}.Release|x64.Build.0 = Release|x64
 		{9FAFBFA9-4256-4A80-BBFD-726CF7C8C72E}.Release|x86.ActiveCfg = Release|Win32
 		{9FAFBFA9-4256-4A80-BBFD-726CF7C8C72E}.Release|x86.Build.0 = Release|Win32
+		{CA83B810-76C7-494E-AF10-1B9953FF68FA}.Debug|x64.ActiveCfg = Debug|x64
+		{CA83B810-76C7-494E-AF10-1B9953FF68FA}.Debug|x64.Build.0 = Debug|x64
+		{CA83B810-76C7-494E-AF10-1B9953FF68FA}.Debug|x86.ActiveCfg = Debug|Win32
+		{CA83B810-76C7-494E-AF10-1B9953FF68FA}.Debug|x86.Build.0 = Debug|Win32
+		{CA83B810-76C7-494E-AF10-1B9953FF68FA}.Release|x64.ActiveCfg = Release|x64
+		{CA83B810-76C7-494E-AF10-1B9953FF68FA}.Release|x64.Build.0 = Release|x64
+		{CA83B810-76C7-494E-AF10-1B9953FF68FA}.Release|x86.ActiveCfg = Release|Win32
+		{CA83B810-76C7-494E-AF10-1B9953FF68FA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

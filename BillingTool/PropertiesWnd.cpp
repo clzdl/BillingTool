@@ -27,9 +27,9 @@ static void cbTestPhoneChg(CPropertiesWnd *propWnd,std::map<CString, PropertyInf
 	}
 	newValue.Trim();
 
-	char strUserId[30] = {0}, strAcctId[30] = { 0 };
+	char strUserId[30] = { 0 }, strAcctId[30] = { 0 }, strCustId[30] = {0};
 	try {
-		std::string sql = "select to_char(t1.user_id), to_char(t2.acct_id) "
+		std::string sql = "select to_char(t1.user_id), to_char(t2.acct_id),to_char(t1.cust_id) "
 						" from cs_user_info t1, cs_user_payrelation t2 "
 						" where t1.user_id = t2.user_id "
 						"	and t2.default_tag = '1' "
@@ -44,10 +44,11 @@ static void cbTestPhoneChg(CPropertiesWnd *propWnd,std::map<CString, PropertyInf
 
 		otlStm << CStringToString(newValue, CP_ACP).c_str();
 
-		otlStm >> strUserId >> strAcctId;
+		otlStm >> strUserId >> strAcctId >> strCustId;
 
 		modProp.at(_TEXT("账户ID")).propertyValue = StringToCString(strAcctId,CP_ACP);
 		modProp.at(_TEXT("用户ID")).propertyValue = StringToCString(strUserId, CP_ACP);
+		modProp.at(_TEXT("客户ID")).propertyValue = StringToCString(strCustId, CP_ACP);
 	}
 	catch (otl_exception &e)
 	{
@@ -81,6 +82,9 @@ std::map<int , std::map<CString, PropertyInfo> > gProperties = {
 				},
 				{ _TEXT("用户ID"),
 					{_TEXT("120150105199770"),nullptr , FALSE ,  } 
+				},
+				{ _TEXT("客户ID"),
+					{ _TEXT("220150105192242"),nullptr , FALSE , }
 				},
 				{ _TEXT("数据库连接串"),
 					{_TEXT("cmcc/CMCC@fxzn"),nullptr, FALSE ,  } 
@@ -199,6 +203,19 @@ std::map<int , std::map<CString, PropertyInfo> > gProperties = {
 				{ _TEXT("2111111010130"),nullptr , FALSE , }
 			}
 		}
+	},
+	{ 5/*信用度评估、生失效*/,
+		{
+			{ _TEXT("VIP-CLASS"),
+				{ _TEXT("10"),nullptr , FALSE , }
+			},
+			{ _TEXT("信用度值"),
+				{ _TEXT("1000"),nullptr , FALSE , }
+			},
+			{ _TEXT("信用度等级"),
+				{ _TEXT("A"),nullptr , FALSE , }
+			}
+		}
 	}
 };
 
@@ -264,6 +281,8 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndObjectCombo.SetItemData(idx, 3);
 	idx = m_wndObjectCombo.AddString(_T("预存返还"));
 	m_wndObjectCombo.SetItemData(idx, 4);
+	idx = m_wndObjectCombo.AddString(_T("信用度评估及生失效"));
+	m_wndObjectCombo.SetItemData(idx, 5);
 	m_wndObjectCombo.SetCurSel(0);
 
 	CRect rectCombo;
@@ -305,6 +324,8 @@ void CPropertiesWnd::OnCbnSelChanged()
 		return InitAftAdjustPropList();
 	case 4://预存返还
 		return InitPrefeeRestorePropList();
+	case 5://信用度评估
+		return InitCreditDegreePropList();
 	}
 
 }
@@ -393,6 +414,18 @@ void CPropertiesWnd::InitPrefeeRestorePropList()
 	m_wndPropList.MarkModifiedProperties();
 
 	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("预存返还属性"), 4));
+}
+
+void CPropertiesWnd::InitCreditDegreePropList()
+{
+	SetPropListFont();
+
+	m_wndPropList.EnableHeaderCtrl(FALSE);
+	m_wndPropList.EnableDescriptionArea();
+	m_wndPropList.SetVSDotNetLook();
+	m_wndPropList.MarkModifiedProperties();
+
+	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("信用度评估及生失效"), 5));
 }
 
 
