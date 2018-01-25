@@ -252,6 +252,18 @@ std::map<int , std::map<CString, PropertyInfo> > gProperties = {
 		{
 			{ _TEXT("文件入口"),
 				{ _TEXT("/home/chengl/src/soPeriodSmsProcess/data/in"),nullptr , FALSE , }
+			},
+			{ _TEXT("HASTEN_POLICY_ID"),
+				{ _TEXT("40000036"),nullptr , FALSE , }
+			},
+			{ _TEXT("LEAVE_REAL_FEE"),
+				{ _TEXT("1000"),nullptr , FALSE , }
+			},
+			{ _TEXT("REAL_FEE"),
+				{ _TEXT("2000"),nullptr , FALSE , }
+			},
+			{ _TEXT("CREDIT_VALUE"),
+				{ _TEXT("3000"),nullptr , FALSE , }
 			}
 		}
 	}
