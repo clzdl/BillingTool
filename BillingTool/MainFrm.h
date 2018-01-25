@@ -53,7 +53,6 @@ protected:
 	afx_msg LRESULT OnWriteMsg2StatusBar(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnWriteMsg2ListView(WPARAM wParam, LPARAM lParam);
 
-
 	DECLARE_MESSAGE_MAP()
 
 	BOOL CreateDockingWindows();

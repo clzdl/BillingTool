@@ -30,6 +30,7 @@ BEGIN_MESSAGE_MAP(CBillingToolView, CListView)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
 	ON_WM_CREATE()
+	ON_COMMAND(ID_EDIT_CLEAN, OnEditClean)
 END_MESSAGE_MAP()
 
 // CBillingToolView ¹¹Ôì/Îö¹¹
@@ -160,4 +161,13 @@ void CBillingToolView::AddResult2ListCtrl(CString phone, CString  scene, CString
 	GetListCtrl().SetItemText(i, 1, scene);
 	GetListCtrl().SetItemText(i, 2, result);
 	GetListCtrl().SetItemText(i, 3, GetFormtSysTime());
+}
+
+
+void CBillingToolView::OnEditClean()
+{
+	if (GetListCtrl().GetItemCount() > 0) 
+	{
+		GetListCtrl().DeleteAllItems();
+	}
 }
