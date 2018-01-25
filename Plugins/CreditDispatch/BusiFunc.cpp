@@ -196,18 +196,18 @@ static int SendCreditPkg(ModuleContext *ctx,std::string srvIp , UINT port , std:
 
 void BusiFunc::TriggerStopByNet(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("触发信控停机【NET】"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发信控停机【NET】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string jsonString = CreateCreditJsonData(ctx->m_funcGetProperty(0, _TEXT("账户ID")) ,
-												ctx->m_funcGetProperty(0, _TEXT("用户ID")),
-												ctx->m_funcGetProperty(1, _TEXT("话单费用")));
+	std::string jsonString = CreateCreditJsonData(ctx->m_funcGetProperty(_common, _TEXT("账户ID")) ,
+												ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
+												ctx->m_funcGetProperty(_credit_dispatch, _TEXT("话单费用")));
 	
 	TRACE(ctx->m_funcString2CString(jsonString, CP_ACP));
 	
-	int result = SendCreditPkg(ctx, ctx->m_funcCString2String(ctx->m_funcGetProperty(0, _TEXT("IP地址")),CP_ACP),
-					   _wtoi(ctx->m_funcGetProperty(0, _TEXT("端口号"))),
-					   ctx->m_funcCString2String(ctx->m_funcGetProperty(1, _TEXT("触发停机服务地址")), CP_ACP), jsonString);
+	int result = SendCreditPkg(ctx, ctx->m_funcCString2String(ctx->m_funcGetProperty(_common, _TEXT("IP地址")),CP_ACP),
+					   _wtoi(ctx->m_funcGetProperty(_common, _TEXT("端口号"))),
+					   ctx->m_funcCString2String(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("触发停机服务地址")), CP_ACP), jsonString);
 
 	if (SUCCESS != result)
 	{
@@ -250,15 +250,15 @@ static std::vector<std::string> BuildCreditFileContents(std::string acctId, std:
 }
 void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("触发信控停机【FILE】"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发信控停机【FILE】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(0, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(0, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(0, _TEXT("密码")), CP_ACP);
-	CString testNumber = ctx->m_funcGetProperty(0, _TEXT("测试号码"));
-	std::string tmpCreditInFile = CStringToString(ctx->m_funcGetProperty(1, _TEXT("信控分发文件入口")), CP_ACP) + "/tempCreditFile.dat";
-	CString csCreditInFile = ctx->m_funcGetProperty(1, _TEXT("信控分发文件入口"))
+	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
+	std::string tmpCreditInFile = CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口")), CP_ACP) + "/tempCreditFile.dat";
+	CString csCreditInFile = ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口"))
 								+ _TEXT("/FX_BILL_") + GetSysYMDTime()+_TEXT("_") + GetSerialNo() + _TEXT("_.CCCC") + testNumber.Left(7) + _TEXT(".bill00.bilcredit");
 
 	std::string creditInFile = CStringToString(csCreditInFile, CP_ACP);
@@ -281,8 +281,8 @@ void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 		}
 
 		std::vector<std::string> creditContent = BuildCreditFileContents(
-						CStringToString(ctx->m_funcGetProperty(0, _TEXT("账户ID")), CP_ACP),
-						CStringToString(ctx->m_funcGetProperty(0, _TEXT("用户ID")), CP_ACP));
+						CStringToString(ctx->m_funcGetProperty(_common, _TEXT("账户ID")), CP_ACP),
+						CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户ID")), CP_ACP));
 
 		
 
@@ -358,15 +358,15 @@ static std::vector<std::string> BuildRemindFileContents(std::string acctId, std:
 
 void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("触发信控停机【FILE】"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发信控停机【FILE】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(0, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(0, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(0, _TEXT("密码")), CP_ACP);
-	CString testNumber = ctx->m_funcGetProperty(0, _TEXT("测试号码"));
-	std::string tmpCreditInFile = CStringToString(ctx->m_funcGetProperty(1, _TEXT("信控分发文件入口")), CP_ACP) + "/tempCreditFile.dat";
-	CString csCreditInFile = ctx->m_funcGetProperty(1, _TEXT("信控分发文件入口"))
+	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
+	std::string tmpCreditInFile = CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口")), CP_ACP) + "/tempCreditFile.dat";
+	CString csCreditInFile = ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口"))
 		+ _TEXT("/FX_BILL_") + GetSysYMDTime() + _TEXT("_") + GetSerialNo() + _TEXT("_.CCCC") + testNumber.Left(7) + _TEXT(".bill00.bilcredit");
 
 	std::string creditInFile = CStringToString(csCreditInFile, CP_ACP);
@@ -389,11 +389,11 @@ void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
 		}
 
 		std::vector<std::string> creditContent = BuildRemindFileContents(
-			CStringToString(ctx->m_funcGetProperty(0, _TEXT("账户ID")), CP_ACP),
-			CStringToString(ctx->m_funcGetProperty(0, _TEXT("用户ID")), CP_ACP),
-			CStringToString(ctx->m_funcGetProperty(1, _TEXT("话单使用量")), CP_ACP), 
-			CStringToString(ctx->m_funcGetProperty(1, _TEXT("截止本条话单前的总是用量")), CP_ACP), 
-			CStringToString(ctx->m_funcGetProperty(1, _TEXT("用户总的基础量")), CP_ACP) );
+			CStringToString(ctx->m_funcGetProperty(_common, _TEXT("账户ID")), CP_ACP),
+			CStringToString(ctx->m_funcGetProperty(-_common, _TEXT("用户ID")), CP_ACP),
+			CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("话单使用量")), CP_ACP),
+			CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("截止本条话单前的总是用量")), CP_ACP),
+			CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("用户总的基础量")), CP_ACP) );
 
 
 

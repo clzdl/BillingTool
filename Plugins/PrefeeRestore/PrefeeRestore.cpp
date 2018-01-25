@@ -244,16 +244,16 @@ bool BuildPrefee(ModuleContext *ctx, CString userId, CString activityId,CString 
 
 void TriggerPrefee(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("预存返回功能"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("预存返回功能"));
 	resultViewData.m_result = _TEXT("触发成功.");
-	if (!BuildPrefee(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
-						ctx->m_funcGetProperty(4, _TEXT("活动ID")),
-						ctx->m_funcGetProperty(4, _TEXT("规则类型")),
-						ctx->m_funcGetProperty(4, _TEXT("自定义规则ID")),
-						ctx->m_funcGetProperty(4, _TEXT("返还费用")),
-						ctx->m_funcGetProperty(4, _TEXT("返还周期")),
-						ctx->m_funcGetProperty(4, _TEXT("校验规则")),
-						ctx->m_funcGetProperty(4, _TEXT("预存返还账本")) ))
+	if (!BuildPrefee(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
+						ctx->m_funcGetProperty(_prefee_restore, _TEXT("活动ID")),
+						ctx->m_funcGetProperty(_prefee_restore, _TEXT("规则类型")),
+						ctx->m_funcGetProperty(_prefee_restore, _TEXT("自定义规则ID")),
+						ctx->m_funcGetProperty(_prefee_restore, _TEXT("返还费用")),
+						ctx->m_funcGetProperty(_prefee_restore, _TEXT("返还周期")),
+						ctx->m_funcGetProperty(_prefee_restore, _TEXT("校验规则")),
+						ctx->m_funcGetProperty(_prefee_restore, _TEXT("预存返还账本")) ))
 	{
 		resultViewData.m_result = _TEXT("触发失败.");
 	}

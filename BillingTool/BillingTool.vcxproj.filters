@@ -128,6 +128,9 @@
     <ClCompile Include="UniversalProgressDialog\UPDialog.cpp">
       <Filter>UniversalProgressDialog</Filter>
     </ClCompile>
+    <ClCompile Include="PropertyConstans.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BillingTool.rc">

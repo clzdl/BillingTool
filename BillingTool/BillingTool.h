@@ -63,3 +63,16 @@ public:
 
 extern CBillingToolApp theApp;
 extern  otl_connect gDbConn;
+
+
+enum ModulePropType
+{
+	_common = 0,   ///公共组件属性
+	_credit_dispatch = 1,   ///信控分发
+	_bef_adjust = 2,   ///帐前调账
+	_aft_adjust = 3,		///账后调账
+	_prefee_restore = 4,		///预存返还
+	_credit_degree	= 5,  //信用度评估
+	_predeal = 6,     //预处理
+	_sms_send = 7,		//短信发送
+};
