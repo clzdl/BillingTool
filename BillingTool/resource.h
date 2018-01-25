@@ -82,7 +82,6 @@
 #define IDD_DLG_LOADING                 310
 #define IDB_FILE_VIEW                   312
 #define IDB_SPLASH                      314
-#define IDC_PROGRESS1                   1002
 #define IDC_PROGRESS_LOADING            1002
 #define ID_Menu                         32771
 #define ID_VIEW_MODULES                 32772
@@ -94,7 +93,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        316
+#define _APS_NEXT_RESOURCE_VALUE        318
 #define _APS_NEXT_COMMAND_VALUE         32776
 #define _APS_NEXT_CONTROL_VALUE         1003
 #define _APS_NEXT_SYMED_VALUE           310

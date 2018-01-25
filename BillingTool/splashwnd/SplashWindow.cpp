@@ -45,9 +45,9 @@ CString CSplashWindow::m_statusMessage;
 int CSplashWindow::m_millisecondsToDisplay;						// 0 ==> until mouse click or keystroke
 
 // create rectangle that product name has to fit in
-const int CSplashWindow::m_productNameVerticalOffset = 160;		// empty space between top border and Product Name
-const int CSplashWindow::m_productNameVerticalHeight = 70;		// maximum height of Product Name
-const int CSplashWindow::m_productNameLeftMargin = 20;			// distance from left side to place name, company, copyright and version
+const int CSplashWindow::m_productNameVerticalOffset = 200;		// empty space between top border and Product Name
+const int CSplashWindow::m_productNameVerticalHeight = 60;		// maximum height of Product Name
+const int CSplashWindow::m_productNameLeftMargin = 300;			// distance from left side to place name, company, copyright and version
 const int CSplashWindow::m_productNameRightMargin = 20;			// distance from right side to place name, company, copyright and version
 const CString CSplashWindow::m_productNameFontName = _TEXT("Arial");	// name of font for application name
 CSize CSplashWindow::m_productNamePointSize = CSize(-1,-1);		// point size used for the application name, (-1,-1) ==> Calculate point size
@@ -56,25 +56,25 @@ COLORREF CSplashWindow::m_productNameTextColor = RGB(109,140,44);// color used f
 const BOOL CSplashWindow::m_displayCompanyName = TRUE;			// true if displaying companyName
 const BOOL CSplashWindow::m_displayVersion = TRUE;				// true if displaying version
 const BOOL CSplashWindow::m_displayCopyright = TRUE;			// true if displaying copyright
-const BOOL CSplashWindow::m_displayComments = TRUE;				// true if displaying comments
+const BOOL CSplashWindow::m_displayComments = FALSE;				// true if displaying comments
 
 // create rectangle that strings in body have to fit in
-const int CSplashWindow::m_bodyVerticalOffset = 270;			// empty space between top border and top of body
+const int CSplashWindow::m_bodyVerticalOffset = 320;			// empty space between top border and top of body
 const int CSplashWindow::m_bodyVerticalHeight = 120;			// maximum height of body
-const int CSplashWindow::m_bodyLeftMargin = 200;				// distance from left side to place company name, copyright, version and comment
+const int CSplashWindow::m_bodyLeftMargin = 210;				// distance from left side to place company name, copyright, version and comment
 const int CSplashWindow::m_bodyRightMargin = 20;				// distance from right side to place company name, copyright, version and comment
 const CString CSplashWindow::m_bodyFontName = _TEXT("Arial");			// name of font for company name, copyright and version	
 CSize CSplashWindow::m_bodyPointSize = CSize(-1,-1);			// point size used for company name, copyright and version, (-1,-1) ==> Calculate point size	
 COLORREF CSplashWindow::m_bodyTextColor = RGB(109,140,44);		// color used for company name, copyright and version (-1 ==> use application name color)
 
 // create rectangle for status line string
-const int CSplashWindow::m_statusVerticalOffset = 390;			// empty space between top border and top of status string
-const int CSplashWindow::m_statusVerticalHeight = 50;			// maximum height of status string
+const int CSplashWindow::m_statusVerticalOffset = 400;			// empty space between top border and top of status string
+const int CSplashWindow::m_statusVerticalHeight = 40;			// maximum height of status string
 const int CSplashWindow::m_statusLeftMargin = 10;				// distance from left side to place status string
 const int CSplashWindow::m_statusRightMargin = 10;				// distance from right side to place status string
 const CString CSplashWindow::m_statusMessageFontName = _TEXT("Arial");	// name of font for status message while starting	
 CSize CSplashWindow::m_statusMessagePointSize = CSize(-1,-1);	// point size used for status message while starting, (-1,-1) ==> Calculate point size	
-COLORREF CSplashWindow::m_statusMessageTextColor = RGB(0,0,255);// color used for status message while starting (-1 ==> use application name color)
+COLORREF CSplashWindow::m_statusMessageTextColor = RGB(65, 105, 225);// color used for status message while starting (-1 ==> use application name color)
 
 
 CSplashWindow::CSplashWindow()

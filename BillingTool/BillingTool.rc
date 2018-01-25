@@ -376,13 +376,13 @@ BEGIN
     BEGIN
         BLOCK "080404b0"
         BEGIN
-            VALUE "CompanyName", "sharingaimi"
+            VALUE "CompanyName", "北京分享智能"
             VALUE "FileDescription", "计费测试工具"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "BillingTool.exe"
-            VALUE "LegalCopyright", "(C)sharingaimi.com 保留所有权利。"
+            VALUE "LegalCopyright", "(C) sharingaimi.com 保留所有权利。"
             VALUE "OriginalFilename", "BillingTool.exe"
-            VALUE "ProductName", "测试工具"
+            VALUE "ProductName", "计费工具"
             VALUE "ProductVersion", "1.0.0.1"
         END
     END

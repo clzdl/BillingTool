@@ -321,24 +321,31 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;      // 未能创建
 	}
 	int idx = 0;
-	idx = m_wndObjectCombo.AddString(_T("公共属性"));
-	m_wndObjectCombo.SetItemData(idx, 0);
-	idx = m_wndObjectCombo.AddString(_T("信控分发"));
-	m_wndObjectCombo.SetItemData(idx, 1);
-	idx = m_wndObjectCombo.AddString(_T("帐前调账"));
-	m_wndObjectCombo.SetItemData(idx, 2);
-	idx = m_wndObjectCombo.AddString(_T("帐后调账"));
-	m_wndObjectCombo.SetItemData(idx, 3);
-	idx = m_wndObjectCombo.AddString(_T("预存返还"));
-	m_wndObjectCombo.SetItemData(idx, 4);
-	idx = m_wndObjectCombo.AddString(_T("信用度评估及生失效"));
-	m_wndObjectCombo.SetItemData(idx, 5);
-	idx = m_wndObjectCombo.AddString(_T("预处理"));
-	m_wndObjectCombo.SetItemData(idx, 6);
-	idx = m_wndObjectCombo.AddString(_T("短信发送"));
-	m_wndObjectCombo.SetItemData(idx, 7);
+	m_wndObjectCombo.InsertString(idx,_T("公共属性"));
+	m_wndObjectCombo.SetItemData(idx++, 0);
 
-	m_wndObjectCombo.SetCurSel(1);
+	m_wndObjectCombo.InsertString(idx,_T("信控分发"));
+	m_wndObjectCombo.SetItemData(idx++, 1);
+
+	m_wndObjectCombo.InsertString(idx,_T("帐前调账"));
+	m_wndObjectCombo.SetItemData(idx++, 2);
+
+	m_wndObjectCombo.InsertString(idx,_T("帐后调账"));
+	m_wndObjectCombo.SetItemData(idx++, 3);
+
+	m_wndObjectCombo.InsertString(idx,_T("预存返还"));
+	m_wndObjectCombo.SetItemData(idx++, 4);
+
+	m_wndObjectCombo.InsertString(idx,_T("信用度评估及生失效"));
+	m_wndObjectCombo.SetItemData(idx++, 5);
+
+	m_wndObjectCombo.InsertString(idx,_T("预处理"));
+	m_wndObjectCombo.SetItemData(idx++, 6);
+
+	m_wndObjectCombo.InsertString(idx,_T("短信发送"));
+	m_wndObjectCombo.SetItemData(idx++, 7);
+
+	m_wndObjectCombo.SetCurSel(0);
 
 	CRect rectCombo;
 	m_wndObjectCombo.GetClientRect (&rectCombo);
