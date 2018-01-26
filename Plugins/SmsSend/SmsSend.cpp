@@ -139,7 +139,6 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 
 
 	HTREEITEM hRoot = viewTree->InsertItem(_T("短信提醒"), 0, 0);
-	viewTree->SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
 
 	HTREEITEM tmpItem = viewTree->InsertItem(_T("生成短信文件"), 1, 2, hRoot);
 	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerSmsSendFile));
@@ -188,7 +187,7 @@ void TriggerSmsSendFile(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_sms_send, _TEXT("文件入口")), CP_ACP) + "/tmp_smsSendFile";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_sms_send, _TEXT("文件入口")), CP_ACP) + "/../tmp_smsSendFile";
 	CString csInFile = ctx->m_funcGetProperty(_sms_send, _TEXT("文件入口"))
 							+ _TEXT("/smsSendFile") + GetSysYMDTime() + _TEXT(".dat");
 

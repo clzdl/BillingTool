@@ -75,4 +75,5 @@ enum ModulePropType
 	_credit_degree	= 5,  //信用度评估
 	_predeal = 6,     //预处理
 	_sms_send = 7,		//短信发送
+	_sec_price = 8,		//二次批价
 };

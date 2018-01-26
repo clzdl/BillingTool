@@ -92,6 +92,9 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndObjectCombo.InsertString(idx,_T("短信发送"));
 	m_wndObjectCombo.SetItemData(idx++, 7);
 
+	m_wndObjectCombo.InsertString(idx, _T("二次批价"));
+	m_wndObjectCombo.SetItemData(idx++, 8);
+
 	m_wndObjectCombo.SetCurSel(0);
 
 	CRect rectCombo;
@@ -139,6 +142,8 @@ void CPropertiesWnd::OnCbnSelChanged()
 		return InitPredealPropList();
 	case 7://短信发送
 		return InitSmsSendPropList();
+	case 8://二次批价
+		return InitSecPricePropList();
 	}
 
 }
@@ -266,7 +271,17 @@ void CPropertiesWnd::InitSmsSendPropList()
 	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("短信发送"), 7));
 }
 
+void CPropertiesWnd::InitSecPricePropList()
+{
+	SetPropListFont();
 
+	m_wndPropList.EnableHeaderCtrl(FALSE);
+	m_wndPropList.EnableDescriptionArea();
+	m_wndPropList.SetVSDotNetLook();
+	m_wndPropList.MarkModifiedProperties();
+
+	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("二次批价"), 8));
+}
 void CPropertiesWnd::OnSetFocus(CWnd* pOldWnd)
 {
 	CDockablePane::OnSetFocus(pOldWnd);

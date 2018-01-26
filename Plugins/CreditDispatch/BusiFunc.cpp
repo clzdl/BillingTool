@@ -257,7 +257,7 @@ void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpCreditInFile = CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口")), CP_ACP) + "/tempCreditFile.dat";
+	std::string tmpCreditInFile = CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口")), CP_ACP) + "/../tempCreditFile.dat";
 	CString csCreditInFile = ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口"))
 								+ _TEXT("/FX_BILL_") + GetSysYMDTime()+_TEXT("_") + GetSerialNo() + _TEXT("_.CCCC") + testNumber.Left(7) + _TEXT(".bill00.bilcredit");
 
@@ -365,7 +365,7 @@ void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpCreditInFile = CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口")), CP_ACP) + "/tempCreditFile.dat";
+	std::string tmpCreditInFile = CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口")), CP_ACP) + "/../tempCreditFile.dat";
 	CString csCreditInFile = ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口"))
 		+ _TEXT("/FX_BILL_") + GetSysYMDTime() + _TEXT("_") + GetSerialNo() + _TEXT("_.CCCC") + testNumber.Left(7) + _TEXT(".bill00.bilcredit");
 

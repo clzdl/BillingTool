@@ -179,8 +179,7 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 
-	HTREEITEM hRoot = viewTree->InsertItem(_T("预处理功能"), 0, 0);
-	viewTree->SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
+	HTREEITEM hRoot = viewTree->InsertItem(_T("预处理"), 0, 0);
 
 	HTREEITEM secItem = viewTree->InsertItem(_T("电信"), 0, 0 , hRoot);
 	///电信
@@ -469,7 +468,7 @@ void CtccVcCHNCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125" +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -533,7 +532,7 @@ void CtccVcCHNCalled(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125"; +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -597,7 +596,7 @@ void CtccVcInterCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125"; +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -661,7 +660,7 @@ void CtccVcInterRoam(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125"; +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -726,7 +725,7 @@ void CtccSmsCHNCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125"; +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -790,7 +789,7 @@ void CtccSmsCHNCalled(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125"; +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -855,7 +854,7 @@ void CtccSmsInterCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125"; +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -919,7 +918,7 @@ void CtccSmsInterRoam(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125"; +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -984,7 +983,7 @@ void CtccDataCHNCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125"; +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -1045,7 +1044,7 @@ void CtccDataInterCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125"; + _TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -1281,7 +1280,7 @@ void CmccVcCHNCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125.CMCC" +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -1342,7 +1341,7 @@ void CmccVcCHNCalled(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125.CMCC" +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -1406,7 +1405,7 @@ void CmccVcInterCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125.CMCC" +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -1470,7 +1469,7 @@ void CmccVcInterRoam(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125.CMCC" +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -1535,7 +1534,7 @@ void CmccSmsCHNCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125.CMCC" +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -1599,7 +1598,7 @@ void CmccSmsCHNCalled(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125.CMCC" +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -1664,7 +1663,7 @@ void CmccSmsInterCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125.CMCC" +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -1728,7 +1727,7 @@ void CmccSmsInterRoam(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125.CMCC" +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -1793,7 +1792,7 @@ void CmccDataCHNCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125.CMCC" +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -1857,7 +1856,7 @@ void CmccDataInterCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempDCHN01FX03400125";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125.CMCC" +_TEXT(".") + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -2075,7 +2074,7 @@ void CuccVcCHNCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempSOSH0100000SJ";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempSOSH0100000SJ";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/SOSH0100000SJ" + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -2140,7 +2139,7 @@ void CuccVcCHNCalled(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempSOSH0100000SJ";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempSOSH0100000SJ";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/SOSH0100000SJ" + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -2201,7 +2200,7 @@ void CuccVcInterCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempSOSH0100000SJ";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempSOSH0100000SJ";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/SOSH0100000SJ" + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -2262,7 +2261,7 @@ void CuccVcInterRoam(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempSOSH0100000SJ";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempSOSH0100000SJ";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/SOSH0100000SJ" + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -2324,7 +2323,7 @@ void CuccSmsCHNCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempSOSH0100000SJ";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempSOSH0100000SJ";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/SOSH0100000SJ" + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -2384,7 +2383,7 @@ void CuccSmsCHNCalled(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempSOSH0100000SJ";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempSOSH0100000SJ";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/SOSH0100000SJ" + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -2450,7 +2449,7 @@ void CuccSmsInterCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempSOSH0100000SJ";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempSOSH0100000SJ";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/SOSH0100000SJ" + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -2511,7 +2510,7 @@ void CuccSmsInterRoam(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempSOSH0100000SJ";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempSOSH0100000SJ";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/SOSH0100000SJ" + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -2573,7 +2572,7 @@ void CuccDataCHNCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempSOSH0100000SJ";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempSOSH0100000SJ";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/SOSH0100000SJ" + GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 
@@ -2637,7 +2636,7 @@ void CuccDataInterCalling(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/tempSOSH0100000SJ";
+	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempSOSH0100000SJ";
 	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/SOSH0100000SJ" +  GetSysYMDDate() + ".dat";
 	std::string inFile = CStringToString(csInFile, CP_ACP);
 

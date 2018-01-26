@@ -35,6 +35,9 @@ std::map<int, std::map<CString, PropertyInfo> > gProperties = {
 			{ _TEXT("用户归属地"),
 				{ _TEXT("311"),nullptr , FALSE , }
 			},
+			{ _TEXT("归属运营商"),
+				{ _TEXT("CMCC"),nullptr , FALSE , }
+			},
 			{ _TEXT("客户ID"),
 				{ _TEXT("220150105192242"),nullptr , FALSE , }
 			},
@@ -207,6 +210,25 @@ std::map<int, std::map<CString, PropertyInfo> > gProperties = {
 			},
 			{ _TEXT("CREDIT_VALUE"),
 				{ _TEXT("3000"),nullptr , FALSE , }
+			}
+		}
+	},
+	{ _sec_price /*短信发送*/,
+		{
+			{ _TEXT("文件入口"),
+				{ _TEXT("/home/chengl/src/BillRate/data/in"),nullptr , FALSE , }
+			},
+			{ _TEXT("对端号码"),
+				{ _TEXT("18645005420"),nullptr , FALSE , }
+			},
+			{ _TEXT("时长"),
+				{ _TEXT("1000"),nullptr , FALSE , }
+			},
+			{ _TEXT("下行流量"),
+				{ _TEXT("102400"),nullptr , FALSE , }
+			},
+			{ _TEXT("上行流量"),
+				{ _TEXT("102400"),nullptr , FALSE , }
 			}
 		}
 	}

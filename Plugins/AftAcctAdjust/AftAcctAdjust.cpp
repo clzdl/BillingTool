@@ -130,8 +130,7 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 
-	HTREEITEM hRoot = viewTree->InsertItem(_T("帐后调账功能"), 0, 0);
-	viewTree->SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
+	HTREEITEM hRoot = viewTree->InsertItem(_T("帐后调账"), 0, 0);
 
 	HTREEITEM tmpItem = viewTree->InsertItem(_T("按比例调增"), 1, 2, hRoot);
 	viewTree->SetItemData(tmpItem, DWORD_PTR(IncrementAjdustByRatio));

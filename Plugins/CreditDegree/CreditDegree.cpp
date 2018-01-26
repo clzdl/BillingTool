@@ -117,8 +117,7 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
 
-	HTREEITEM hRoot = viewTree->InsertItem(_T("信用度处理功能"), 0, 0);
-	viewTree->SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
+	HTREEITEM hRoot = viewTree->InsertItem(_T("信用度处理"), 0, 0);
 
 	HTREEITEM tmpItem = viewTree->InsertItem(_T("初始信用度生成"), 1, 2, hRoot);
 	viewTree->SetItemData(tmpItem, DWORD_PTR(CreateInitCreditDegree));
