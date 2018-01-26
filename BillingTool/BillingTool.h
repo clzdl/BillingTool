@@ -76,4 +76,5 @@ enum ModulePropType
 	_predeal = 6,     //预处理
 	_sms_send = 7,		//短信发送
 	_sec_price = 8,		//二次批价
+	_sett_sec_price = 9,		//结算二次批价
 };

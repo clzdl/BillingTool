@@ -94,6 +94,9 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_wndObjectCombo.InsertString(idx, _T("二次批价"));
 	m_wndObjectCombo.SetItemData(idx++, 8);
+	m_wndObjectCombo.InsertString(idx, _T("二次批价(结算)"));
+	m_wndObjectCombo.SetItemData(idx++, 9);
+
 
 	m_wndObjectCombo.SetCurSel(0);
 
@@ -144,6 +147,9 @@ void CPropertiesWnd::OnCbnSelChanged()
 		return InitSmsSendPropList();
 	case 8://二次批价
 		return InitSecPricePropList();
+	case 9://结算二次批价
+		return InitSettSecPricePropList();
+
 	}
 
 }
@@ -282,6 +288,19 @@ void CPropertiesWnd::InitSecPricePropList()
 
 	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("二次批价"), 8));
 }
+
+void CPropertiesWnd::InitSettSecPricePropList()
+{
+	SetPropListFont();
+
+	m_wndPropList.EnableHeaderCtrl(FALSE);
+	m_wndPropList.EnableDescriptionArea();
+	m_wndPropList.SetVSDotNetLook();
+	m_wndPropList.MarkModifiedProperties();
+
+	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("二次批价(结算)"), 9));
+}
+
 void CPropertiesWnd::OnSetFocus(CWnd* pOldWnd)
 {
 	CDockablePane::OnSetFocus(pOldWnd);

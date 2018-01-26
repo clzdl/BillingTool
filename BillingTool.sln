@@ -23,6 +23,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SmsSend", "Plugins\SmsSend\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SecPrice", "Plugins\SecPrice\SecPrice.vcxproj", "{AF4D457D-F3A5-4E6C-A564-97657234B9E2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SettSecPrice", "Plugins\SettSecPrice\SettSecPrice.vcxproj", "{5FAB545F-C0DC-4796-9741-0EA37DDCFF69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -111,6 +113,14 @@ Global
 		{AF4D457D-F3A5-4E6C-A564-97657234B9E2}.Release|x64.Build.0 = Release|x64
 		{AF4D457D-F3A5-4E6C-A564-97657234B9E2}.Release|x86.ActiveCfg = Release|Win32
 		{AF4D457D-F3A5-4E6C-A564-97657234B9E2}.Release|x86.Build.0 = Release|Win32
+		{5FAB545F-C0DC-4796-9741-0EA37DDCFF69}.Debug|x64.ActiveCfg = Debug|x64
+		{5FAB545F-C0DC-4796-9741-0EA37DDCFF69}.Debug|x64.Build.0 = Debug|x64
+		{5FAB545F-C0DC-4796-9741-0EA37DDCFF69}.Debug|x86.ActiveCfg = Debug|Win32
+		{5FAB545F-C0DC-4796-9741-0EA37DDCFF69}.Debug|x86.Build.0 = Debug|Win32
+		{5FAB545F-C0DC-4796-9741-0EA37DDCFF69}.Release|x64.ActiveCfg = Release|x64
+		{5FAB545F-C0DC-4796-9741-0EA37DDCFF69}.Release|x64.Build.0 = Release|x64
+		{5FAB545F-C0DC-4796-9741-0EA37DDCFF69}.Release|x86.ActiveCfg = Release|Win32
+		{5FAB545F-C0DC-4796-9741-0EA37DDCFF69}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -213,7 +213,26 @@ std::map<int, std::map<CString, PropertyInfo> > gProperties = {
 			}
 		}
 	},
-	{ _sec_price /*短信发送*/,
+	{ _sec_price /*二次批价*/,
+		{
+			{ _TEXT("文件入口"),
+				{ _TEXT("/home/chengl/src/BillRate/data/in"),nullptr , FALSE , }
+			},
+			{ _TEXT("对端号码"),
+				{ _TEXT("18645005420"),nullptr , FALSE , }
+			},
+			{ _TEXT("时长"),
+				{ _TEXT("1000"),nullptr , FALSE , }
+			},
+			{ _TEXT("下行流量"),
+				{ _TEXT("102400"),nullptr , FALSE , }
+			},
+			{ _TEXT("上行流量"),
+				{ _TEXT("102400"),nullptr , FALSE , }
+			}
+		}
+	},
+	{ _sett_sec_price /*结算二次批价*/,
 		{
 			{ _TEXT("文件入口"),
 				{ _TEXT("/home/chengl/src/BillRate/data/in"),nullptr , FALSE , }
