@@ -178,6 +178,18 @@ std::vector<std::string> BuildSmsContents(CString serialNumber, CString userId)
 
 }
 
+std::vector<std::string> GetFiles(ModuleContext *ctx)
+{
+	std::vector<std::string> result;
+	result.push_back(CStringToString(ctx->m_funcGetProperty(_sms_send, _TEXT("文件入口")), CP_ACP) + "/../tmp_smsSendFile");
+
+	CString csInFile = ctx->m_funcGetProperty(_sms_send, _TEXT("文件入口"))
+		+ _TEXT("/smsSendFile") + GetSysYMDTime() + _TEXT(".dat");
+
+	result.push_back(CStringToString(csInFile, CP_ACP));
+	return result;
+}
+
 void TriggerSmsSendFile(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("生成短信文件"));
@@ -187,13 +199,11 @@ void TriggerSmsSendFile(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpInFile = CStringToString(ctx->m_funcGetProperty(_sms_send, _TEXT("文件入口")), CP_ACP) + "/../tmp_smsSendFile";
-	CString csInFile = ctx->m_funcGetProperty(_sms_send, _TEXT("文件入口"))
-							+ _TEXT("/smsSendFile") + GetSysYMDTime() + _TEXT(".dat");
-
-	std::string inFile = CStringToString(csInFile, CP_ACP);
-
 	UINT port = 22;
+
+	std::vector<std::string> files =  GetFiles(ctx);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	bool result = true;
 	do {
@@ -299,10 +309,6 @@ void TriggerOneWayStopMsg(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发单停短信"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	/*
-	ModuleContext *ctx, CString userId, CString tradeTypeCode, CString policyId, 
-									CString leaveRealFee,CString realFee,CString creditValue
-	*/
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
 		_TEXT("3120"),
 		ctx->m_funcGetProperty(_sms_send, _TEXT("HASTEN_POLICY_ID")),
@@ -320,10 +326,7 @@ void TriggerDoubleStopMsg(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发双停短信"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	/*
-	ModuleContext *ctx, CString userId, CString tradeTypeCode, CString policyId,
-	CString leaveRealFee,CString realFee,CString creditValue
-	*/
+	
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
 		_TEXT("3110"),
 		ctx->m_funcGetProperty(_sms_send, _TEXT("HASTEN_POLICY_ID")),
@@ -342,10 +345,6 @@ void TriggerNotEnoughBalanceMsg(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发余额不足短信"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	/*
-	ModuleContext *ctx, CString userId, CString tradeTypeCode, CString policyId,
-	CString leaveRealFee,CString realFee,CString creditValue
-	*/
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
 		_TEXT("7001"),
 		ctx->m_funcGetProperty(_sms_send, _TEXT("HASTEN_POLICY_ID")),
@@ -386,10 +385,7 @@ void TriggerDataTopMsg(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发流量封顶短信"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	/*
-	ModuleContext *ctx, CString userId, CString tradeTypeCode, CString policyId,
-	CString leaveRealFee,CString realFee,CString creditValue
-	*/
+
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
 		_TEXT("3111"),
 		ctx->m_funcGetProperty(_sms_send, _TEXT("HASTEN_POLICY_ID")),
@@ -408,10 +404,7 @@ void TriggerPostPaypMsg(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发后付费用户催费短信"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	/*
-	ModuleContext *ctx, CString userId, CString tradeTypeCode, CString policyId,
-	CString leaveRealFee,CString realFee,CString creditValue
-	*/
+
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
 		_TEXT("3200"),
 		ctx->m_funcGetProperty(_sms_send, _TEXT("HASTEN_POLICY_ID")),

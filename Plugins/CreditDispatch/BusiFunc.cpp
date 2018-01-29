@@ -248,6 +248,22 @@ static std::vector<std::string> BuildCreditFileContents(std::string acctId, std:
 	return vec;
 
 }
+
+std::vector<std::string> GetFiles(ModuleContext *ctx ,CString testNumber)
+{ 
+	std::vector<std::string> result;
+
+	CString inPath = ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口"));
+	
+	result.push_back(CStringToString(inPath, CP_ACP) + "/../tempCreditFile.dat");
+
+	CString csCreditInFile = inPath	+ _TEXT("/FX_BILL_") + GetSysYMDTime() + _TEXT("_") + GetSerialNo() + _TEXT("_CCCC.") + testNumber.Left(7) + _TEXT(".bill00.bilcredit");
+	
+	result.push_back(CStringToString(csCreditInFile, CP_ACP));
+	return result;
+
+}
+
 void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发信控停机【FILE】"));
@@ -257,13 +273,11 @@ void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpCreditInFile = CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口")), CP_ACP) + "/../tempCreditFile.dat";
-	CString csCreditInFile = ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口"))
-								+ _TEXT("/FX_BILL_") + GetSysYMDTime()+_TEXT("_") + GetSerialNo() + _TEXT("_.CCCC") + testNumber.Left(7) + _TEXT(".bill00.bilcredit");
-
-	std::string creditInFile = CStringToString(csCreditInFile, CP_ACP);
 
 	UINT port = 22;
+	std::vector<std::string>  files = GetFiles(ctx , testNumber);
+	std::string tmpCreditInFile = files.at(0);
+	std::string creditInFile = files.at(1);
 
 	bool result = true;
 	do {
@@ -365,13 +379,13 @@ void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string tmpCreditInFile = CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口")), CP_ACP) + "/../tempCreditFile.dat";
-	CString csCreditInFile = ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口"))
-		+ _TEXT("/FX_BILL_") + GetSysYMDTime() + _TEXT("_") + GetSerialNo() + _TEXT("_.CCCC") + testNumber.Left(7) + _TEXT(".bill00.bilcredit");
-
-	std::string creditInFile = CStringToString(csCreditInFile, CP_ACP);
-
 	UINT port = 22;
+
+	std::vector<std::string>  files = GetFiles(ctx, testNumber);
+	std::string tmpCreditInFile = files.at(0);
+	std::string creditInFile = files.at(1);
+
+	
 
 	bool result = true;
 	do {

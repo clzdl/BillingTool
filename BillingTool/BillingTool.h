@@ -77,4 +77,5 @@ enum ModulePropType
 	_sms_send = 7,		//短信发送
 	_sec_price = 8,		//二次批价
 	_sett_sec_price = 9,		//结算二次批价
+	_agg_bill = 10,		//累账
 };

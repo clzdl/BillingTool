@@ -107,6 +107,14 @@ static CString GetSysYMTime()
 	return result;
 }
 
+static CString GetSerial()
+{
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	CString result;
+	result.Format(_TEXT("%02d%02d%02d"), st.wHour, st.wMinute, st.wSecond);
+	return result;
+}
 
 static std::string CStringToString(const CString& src, UINT codepage)
 {
@@ -336,7 +344,17 @@ std::vector<std::string> BuildCdrContent(CString cdrTag,CString callType,CString
 }
 
 
+std::vector<std::string> GetFiles(ModuleContext *ctx,CString testNumber,CString providerCode)
+{
+	std::vector<std::string> result;
+	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
+	result.push_back(CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat");
+	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT("_") + GetSerial() + _TEXT(".") + providerCode
+		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
+	result.push_back(CStringToString(csInFile, CP_ACP));
 
+	return result;
+}
 
 
 
@@ -347,12 +365,11 @@ void TriggerVcLocalCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath+ _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-												+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-本地市话"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -371,11 +388,7 @@ void TriggerVcLocalCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-	CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType, 
-	BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 								testNumber, providerCode,
 								ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -417,12 +430,11 @@ void TriggerVcLongCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-国内长途"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -441,11 +453,7 @@ void TriggerVcLongCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -487,12 +495,11 @@ void TriggerVcRoamInProviceCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-省内漫游"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -511,11 +518,7 @@ void TriggerVcRoamInProviceCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -557,12 +560,11 @@ void TriggerVcRoamProviceCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-省际漫游"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -581,11 +583,7 @@ void TriggerVcRoamProviceCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -627,12 +625,11 @@ void TriggerVcLongInterCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-国际长途"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -651,11 +648,7 @@ void TriggerVcLongInterCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -697,12 +690,11 @@ void TriggerVcRoamInterCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-国际漫游"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -721,11 +713,7 @@ void TriggerVcRoamInterCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -767,12 +755,11 @@ void TriggerVcIpCallCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-IP通话"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -791,11 +778,7 @@ void TriggerVcIpCallCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+		
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -837,12 +820,11 @@ void TriggerVcDivertCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-呼转通话"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -861,11 +843,7 @@ void TriggerVcDivertCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+		
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("DIVERTING"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -908,12 +886,11 @@ void TriggerVcCalledCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-国内被叫"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -932,11 +909,7 @@ void TriggerVcCalledCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+	
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLED"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -979,12 +952,11 @@ void TriggerSmsChnCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-国内短信"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -1003,11 +975,7 @@ void TriggerSmsChnCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+		
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_SMS"), _TEXT("CALLING"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -1049,12 +1017,11 @@ void TriggerSmsInterCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-国际短信"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -1073,11 +1040,7 @@ void TriggerSmsInterCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+		
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_SMS"), _TEXT("CALLING"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -1120,12 +1083,11 @@ void TriggerSmsRoamCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-国际漫游短信"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -1144,11 +1106,7 @@ void TriggerSmsRoamCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+	
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_SMS"), _TEXT("CALLING"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -1191,12 +1149,11 @@ void TriggerSmsCalledCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-国内被叫短信"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -1215,11 +1172,7 @@ void TriggerSmsCalledCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+		
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_SMS"), _TEXT("CALLED"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -1262,12 +1215,11 @@ void TriggerDataInProvinceCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-省内流量"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -1286,11 +1238,7 @@ void TriggerDataInProvinceCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+		
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_NET"), _TEXT("CALLING"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -1332,12 +1280,11 @@ void TriggerDataProvinceCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-省际流量"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -1356,11 +1303,7 @@ void TriggerDataProvinceCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+	
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_NET"), _TEXT("CALLING"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
@@ -1403,12 +1346,11 @@ void TriggerDataInterCdr(ModuleContext *ctx, void *ptr)
 	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
 	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	std::string tmpInFile = CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat";
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT(".") + providerCode
-		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	std::string inFile = CStringToString(csInFile, CP_ACP);
 	UINT port = 22;
+
+	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
+	std::string tmpInFile = files.at(0);
+	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("二批-国际漫游流量"));
 	resultViewData.m_result = _TEXT("触发成功.");
@@ -1427,11 +1369,7 @@ void TriggerDataInterCdr(ModuleContext *ctx, void *ptr)
 			resultViewData.m_result = _TEXT("触发失败.");
 			break;
 		}
-		/*
-		CString cdrTag,CString callType,CString serialNumber,CString providerCode,
-		CString peerNumber,CString duration,CString downVolume,CString upVolume,CString roamType,CString longType,
-		BOOL ipCall, CString roamNation,CString firstPriceFee,CString imsi,CString imei,phoneRegion
-		*/
+		
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_NET"), _TEXT("CALLING"),
 			testNumber, providerCode,
 			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),

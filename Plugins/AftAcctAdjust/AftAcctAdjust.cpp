@@ -8,6 +8,7 @@
 #include "../../BillingTool/ModuleContext.h"
 #include "../../BillingTool/BillingTool.h"
 
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
