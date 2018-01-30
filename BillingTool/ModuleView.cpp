@@ -270,7 +270,8 @@ void CModuleView::ConnectDb(ModuleContext *ctx, void *ptr)
 {
 	ListViewData data(_TEXT("XXXXXXXXXXX") , _TEXT("基础功能"));
 	data.m_result = _TEXT("连接数据库成功");
-	if (SUCCESS != ctx->ConnectDb("billtest1/BILLTEST1@FXZN"))
+	
+	if (SUCCESS != ctx->ConnectDb(CStringToString(::GetProperty(_common, _TEXT("数据库连接串")), CP_ACP)))
 	{
 		data.m_result = _TEXT("连接数据库失败");
 	}
