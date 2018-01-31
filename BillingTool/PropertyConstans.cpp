@@ -275,6 +275,40 @@ std::map<int, std::map<CString, PropertyInfo> > gProperties = {
 				{ _TEXT("50000255"),nullptr , FALSE , }
 			}
 		}
+	},
+	{ _first_price /*标批*/,
+		{
+			{ _TEXT("文件入口"),
+				{ _TEXT("/home/chengl/src/BillRate/data/in"),nullptr , FALSE , }
+			},
+			{ _TEXT("对端号码"),
+				{ _TEXT("18645005420"),nullptr , FALSE , }
+			},
+			{ _TEXT("时长"),
+				{ _TEXT("1000"),nullptr , FALSE , }
+			},
+			{ _TEXT("下行流量"),
+				{ _TEXT("102400"),nullptr , FALSE , }
+			},
+			{ _TEXT("上行流量"),
+				{ _TEXT("102400"),nullptr , FALSE , }
+			},
+			{ _TEXT("对端号码归属地"),
+				{ _TEXT("010"),nullptr , FALSE , }
+			},
+			{ _TEXT("计费号码漫游地"),
+				{ _TEXT("010"),nullptr , FALSE , }
+			},
+			{ _TEXT("对端号码漫游地"),
+				{ _TEXT("010"),nullptr , FALSE , }
+			},
+			{ _TEXT("网元设备编号"),
+				{ _TEXT("861864500"),nullptr , FALSE , }
+			},
+			{ _TEXT("漫游国家"),
+				{ _TEXT("861864500"),nullptr , FALSE , }
+			}
+		}
 	}
 };
 

@@ -58,6 +58,7 @@ protected:
 	void InitSecPricePropList();
 	void InitSettSecPricePropList();
 	void InitAggBillPropList();
+	void InitFirstPricePropList();
 	void SetPropListFont();
 	CMFCPropertyGridProperty* BuildPropertyGridGroup(CString groupName,UINT module);
 	int m_nComboHeight;

@@ -16,6 +16,14 @@ static char THIS_FILE[]=__FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 
+static CString GetRigistryKey(DWORD module, CString name)
+{
+	CString key;
+	key.Format(_TEXT("module-%d-%s"), module, name);
+
+	return key;
+}
+
 CPropertiesWnd::CPropertiesWnd()
 {
 	m_nComboHeight = 0;
@@ -69,37 +77,40 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 	int idx = 0;
 	m_wndObjectCombo.InsertString(idx,_T("公共属性"));
-	m_wndObjectCombo.SetItemData(idx++, 0);
+	m_wndObjectCombo.SetItemData(idx++, _common);
 
 	m_wndObjectCombo.InsertString(idx,_T("信控分发"));
-	m_wndObjectCombo.SetItemData(idx++, 1);
+	m_wndObjectCombo.SetItemData(idx++, _credit_dispatch);
 
 	m_wndObjectCombo.InsertString(idx,_T("帐前调账"));
-	m_wndObjectCombo.SetItemData(idx++, 2);
+	m_wndObjectCombo.SetItemData(idx++, _bef_adjust);
 
 	m_wndObjectCombo.InsertString(idx,_T("帐后调账"));
-	m_wndObjectCombo.SetItemData(idx++, 3);
+	m_wndObjectCombo.SetItemData(idx++, _aft_adjust);
 
 	m_wndObjectCombo.InsertString(idx,_T("预存返还"));
-	m_wndObjectCombo.SetItemData(idx++, 4);
+	m_wndObjectCombo.SetItemData(idx++, _prefee_restore);
 
 	m_wndObjectCombo.InsertString(idx,_T("信用度评估及生失效"));
-	m_wndObjectCombo.SetItemData(idx++, 5);
+	m_wndObjectCombo.SetItemData(idx++, _credit_degree);
 
 	m_wndObjectCombo.InsertString(idx,_T("预处理"));
-	m_wndObjectCombo.SetItemData(idx++, 6);
+	m_wndObjectCombo.SetItemData(idx++, _predeal);
 
 	m_wndObjectCombo.InsertString(idx,_T("短信发送"));
-	m_wndObjectCombo.SetItemData(idx++, 7);
+	m_wndObjectCombo.SetItemData(idx++, _sms_send);
 
 	m_wndObjectCombo.InsertString(idx, _T("二次批价"));
-	m_wndObjectCombo.SetItemData(idx++, 8);
+	m_wndObjectCombo.SetItemData(idx++, _sec_price);
 
 	m_wndObjectCombo.InsertString(idx, _T("二次批价(结算)"));
-	m_wndObjectCombo.SetItemData(idx++, 9);
+	m_wndObjectCombo.SetItemData(idx++, _sett_sec_price);
 
 	m_wndObjectCombo.InsertString(idx, _T("累账"));
-	m_wndObjectCombo.SetItemData(idx++, 10);
+	m_wndObjectCombo.SetItemData(idx++, _agg_bill);
+
+	m_wndObjectCombo.InsertString(idx, _T("标批"));
+	m_wndObjectCombo.SetItemData(idx++, _first_price);
 
 	m_wndObjectCombo.SetCurSel(0);
 
@@ -163,9 +174,12 @@ CMFCPropertyGridProperty* CPropertiesWnd::BuildPropertyGridGroup(CString groupNa
 {
 	CMFCPropertyGridProperty *pCreditDispatchGroup = new CMFCPropertyGridProperty(groupName);
 	CMFCPropertyGridProperty *pProp = nullptr;
+	CString value;
 	for (auto comm : gProperties.at(module))
 	{
-		pProp = new CMFCPropertyGridProperty(comm.first, comm.second.propertyValue, comm.first);
+		value = theApp.GetString(GetRigistryKey(module, comm.first), comm.second.propertyValue);
+		
+		pProp = new CMFCPropertyGridProperty(comm.first, value, comm.first);
 
 		if (comm.second.isCombox)
 		{
@@ -318,6 +332,18 @@ void CPropertiesWnd::InitAggBillPropList()
 	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("累账"), 10));
 }
 
+void CPropertiesWnd::InitFirstPricePropList()
+{
+	SetPropListFont();
+
+	m_wndPropList.EnableHeaderCtrl(FALSE);
+	m_wndPropList.EnableDescriptionArea();
+	m_wndPropList.SetVSDotNetLook();
+	m_wndPropList.MarkModifiedProperties();
+
+	m_wndPropList.AddProperty(BuildPropertyGridGroup(_TEXT("标批"), 11));
+}
+
 void CPropertiesWnd::OnSetFocus(CWnd* pOldWnd)
 {
 	CDockablePane::OnSetFocus(pOldWnd);
@@ -357,14 +383,16 @@ LRESULT CPropertiesWnd::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
 {
 	CMFCPropertyGridProperty* pProp = (CMFCPropertyGridProperty*)lParam;
 	std::map<CString, PropertyInfo> &properties = gProperties.at(m_wndObjectCombo.GetItemData(m_wndObjectCombo.GetCurSel()));
-	properties[pProp->GetName()].propertyValue = pProp->GetValue();
+	CString newValue = pProp->GetValue();
+	
+	properties[pProp->GetName()].propertyValue = newValue;
 	PropertyInfo &tmpProp = properties[pProp->GetName()];
 	if (tmpProp.callBack != nullptr)
 	{
-		tmpProp.callBack(this,properties,pProp->GetValue());
+		tmpProp.callBack(this,properties, newValue);
 	}
 	
-
+	theApp.WriteString(GetRigistryKey(m_wndObjectCombo.GetItemData(m_wndObjectCombo.GetCurSel()), pProp->GetName()), newValue);
 
 	return 0;
 }
