@@ -143,28 +143,30 @@ void CPropertiesWnd::OnCbnSelChanged()
 	m_wndPropList.RemoveAll();
 	switch (val)
 	{
-	case 0://公共属性
+	case _common://公共属性
 		return InitCommonPropList();
-	case 1://信控分发属性
+	case _credit_dispatch://信控分发属性
 		return InitCreditDispatchPropList();
-	case 2://帐前调账
+	case _bef_adjust://帐前调账
 		return InitAdjustPropList();
-	case 3://账后调账
+	case _aft_adjust://账后调账
 		return InitAftAdjustPropList();
-	case 4://预存返还
+	case _prefee_restore://预存返还
 		return InitPrefeeRestorePropList();
-	case 5://信用度评估
+	case _credit_degree://信用度评估
 		return InitCreditDegreePropList();
-	case 6://预处理
+	case _predeal://预处理
 		return InitPredealPropList();
-	case 7://短信发送
+	case _sms_send://短信发送
 		return InitSmsSendPropList();
-	case 8://二次批价
+	case _sec_price://二次批价
 		return InitSecPricePropList();
-	case 9://结算二次批价
+	case _sett_sec_price://结算二次批价
 		return InitSettSecPricePropList();
-	case 10://累账
+	case _agg_bill://累账
 		return InitAggBillPropList();
+	case _first_price://标批
+		return InitFirstPricePropList();
 
 	}
 
