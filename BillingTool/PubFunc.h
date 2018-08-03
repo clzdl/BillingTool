@@ -2,12 +2,7 @@
 #include <string>
 #include <map>
 
-
-std::string CStringToString(const CString& src, UINT codepage = CP_UTF8);
-
-CString StringToCString(const std::string& src, UINT codepage = CP_UTF8);
-
 extern std::map<int, std::map<CString, PropertyInfo> > gProperties;
-CString GetProperty(int module, CString properyName);
-CString GetFormtSysTime();
 
+/*获取参数属性*/
+CString GetProperty(int module, CString properyName);

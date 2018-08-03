@@ -5,7 +5,7 @@
 #include "MainFrm.h"
 #include "PubFunc.h"
 #include "SshCmddExecutor.h"
-
+#include "../Plugins/UtilDll/UtilDll.h"
 
 ModuleContext::ModuleContext(CBillingToolApp *app)
 	:m_dbConn(&gDbConn),
@@ -28,7 +28,7 @@ ModuleContext::~ModuleContext()
 	{
 		char errMsg[4096] = { 0 };
 		sprintf_s(errMsg, "code:%d,msg:%s,var_info:%s,stm_text:%s", e.code, e.msg, e.var_info, e.stm_text);
-		CString text = StringToCString(errMsg, CP_ACP);
+		CString text = CommonUtil::StringToCString(errMsg, CP_ACP);
 		theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
 		text.ReleaseBuffer();
 
@@ -50,7 +50,7 @@ int ModuleContext::ConnectDb(std::string dbString)
 	{
 		char errMsg[4096] = { 0 };
 		sprintf_s(errMsg , "code:%d,msg:%s,var_info:%s,stm_text:%s", e.code, e.msg, e.var_info, e.stm_text);
-		CString text = StringToCString(errMsg, CP_ACP);
+		CString text = CommonUtil::StringToCString(errMsg, CP_ACP);
 		theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
 		text.ReleaseBuffer();
 

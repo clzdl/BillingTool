@@ -2,6 +2,7 @@
 #include "SshCmddExecutor.h"
 #include "BillingTool.h"
 #include "PubFunc.h"
+#include "../Plugins/UtilDll/UtilDll.h"
 
 SshCmdExecutor::SshCmdExecutor()
 {
@@ -71,7 +72,7 @@ bool SshCmdExecutor::ConnectAndInit(std::string hostName, int  port, std::string
 			LIBSSH2_KNOWNHOST_KEYENC_RAW,
 			&host);
 
-		CString text = (check <= LIBSSH2_KNOWNHOST_CHECK_MISMATCH) ? StringToCString(host->key, CP_ACP): _TEXT("<none>");
+		CString text = (check <= LIBSSH2_KNOWNHOST_CHECK_MISMATCH) ? CommonUtil::StringToCString(host->key, CP_ACP): _TEXT("<none>");
 		TRACE(_TEXT( "Host check: %d, key: %s\n"), check, text.GetBuffer());
 		text.ReleaseBuffer();
 
@@ -138,7 +139,7 @@ bool SshCmdExecutor::ExecuteCmd(std::string commandline)
 		if (rc > 0)
 		{
 			bytecount += rc;
-			CString text = StringToCString(buffer);
+			CString text = CommonUtil::StringToCString(buffer, CP_UTF8);
 			TRACE(_TEXT("we read: %s \n") , text.GetBuffer() );
 			text.ReleaseBuffer();
 		

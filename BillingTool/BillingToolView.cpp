@@ -12,6 +12,7 @@
 #include "BillingToolDoc.h"
 #include "BillingToolView.h"
 #include "PubFunc.h"
+#include "../Plugins/UtilDll/UtilDll.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -160,7 +161,7 @@ void CBillingToolView::AddResult2ListCtrl(CString phone, CString  scene, CString
 	GetListCtrl().SetItemText(i, 0, phone.IsEmpty()?_TEXT("XXXXXXXXXXX"):phone);
 	GetListCtrl().SetItemText(i, 1, scene);
 	GetListCtrl().SetItemText(i, 2, result);
-	GetListCtrl().SetItemText(i, 3, GetFormtSysTime());
+	GetListCtrl().SetItemText(i, 3, CommonUtil::GetFormtSysTime());
 }
 
 

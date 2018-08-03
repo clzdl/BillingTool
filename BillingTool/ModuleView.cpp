@@ -9,6 +9,7 @@
 #include "PubFunc.h"
 #include <locale.h>
 #include <fstream>
+#include "../Plugins/UtilDll/UtilDll.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -104,16 +105,18 @@ void CModuleView::InitializeCommonModule()
 
 std::vector<DllModules> CModuleView::LoadDllModuleInfo()
 { 
-	std::string confModule = CStringToString(theApp.GetExePath() + _TEXT("./conf/modules.conf"),CP_ACP);
+	std::string confModule = CommonUtil::CStringToString(theApp.GetExePath() + _TEXT("./conf/modules.conf"),CP_ACP);
 	std::ifstream file(confModule.c_str());
 	std::vector<DllModules> result;
 	char buff[1024] = { 0 };
 	while(!file.eof())
 	{
 		file.getline(buff, sizeof(buff));
-		CString line = StringToCString(buff);
+		CString line = CommonUtil::StringToCString(buff, CP_ACP);
 		if (line.GetAt(0) == '#')
+		{
 			continue;
+		}
 		DllModules module;
 		int pos = 0;
 		module.code = line.Tokenize(_TEXT(","), pos);
@@ -271,7 +274,7 @@ void CModuleView::ConnectDb(ModuleContext *ctx, void *ptr)
 	ListViewData data(_TEXT("XXXXXXXXXXX") , _TEXT("基础功能"));
 	data.m_result = _TEXT("连接数据库成功");
 	
-	if (SUCCESS != ctx->ConnectDb(CStringToString(::GetProperty(_common, _TEXT("数据库连接串")), CP_ACP)))
+	if (SUCCESS != ctx->ConnectDb(CommonUtil::CStringToString(::GetProperty(_common, _TEXT("数据库连接串")), CP_ACP)))
 	{
 		data.m_result = _TEXT("连接数据库失败");
 	}

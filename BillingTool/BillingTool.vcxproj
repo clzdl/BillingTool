@@ -79,7 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\workspace\opensource\libssh2-1.8.0\include;C:\workspace\opensource\poco-1.7.8-all\Net\include;C:\workspace\opensource\poco-1.7.8-all\Foundation\include;C:\oraclient11\sdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\oraclient11\sdk\lib\msvc;C:\workspace\opensource\libssh2-1.8.0\win32\Debug_dll;C:\workspace\opensource\poco-1.7.8-all\lib64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\workspace\myselfsource\BillingTool\x64\Debug;C:\oraclient11\sdk\lib\msvc;C:\workspace\opensource\libssh2-1.8.0\win32\Debug_dll;C:\workspace\opensource\poco-1.7.8-all\lib64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -119,7 +119,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>oci.lib;version.lib;PocoFoundation.lib;libssh2.lib;PocoNetd.lib</AdditionalDependencies>
+      <AdditionalDependencies>oci.lib;version.lib;PocoFoundation.lib;libssh2.lib;PocoNetd.lib;UtilDll.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>

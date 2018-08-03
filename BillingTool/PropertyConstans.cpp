@@ -4,7 +4,7 @@
 #include "PubFunc.h"
 #include "BillingTool.h"
 #include "PropertiesWnd.h"
-
+#include "../Plugins/UtilDll/UtilDll.h"
 void cbTestPhoneChg(CPropertiesWnd *propWnd, std::map<CString, PropertyInfo> &modProp, CString newValue);
 
 
@@ -340,19 +340,19 @@ void cbTestPhoneChg(CPropertiesWnd *propWnd, std::map<CString, PropertyInfo> &mo
 		otlStm.open(1, sql.c_str(), gDbConn);
 		otlStm.set_commit(0);
 
-		otlStm << CStringToString(newValue, CP_ACP).c_str();
+		otlStm << CommonUtil::CStringToString(newValue, CP_ACP).c_str();
 
 		otlStm >> strUserId >> strAcctId >> strCustId;
 
-		modProp.at(_TEXT("账户ID")).propertyValue = StringToCString(strAcctId, CP_ACP);
-		modProp.at(_TEXT("用户ID")).propertyValue = StringToCString(strUserId, CP_ACP);
-		modProp.at(_TEXT("客户ID")).propertyValue = StringToCString(strCustId, CP_ACP);
+		modProp.at(_TEXT("账户ID")).propertyValue = CommonUtil::StringToCString(strAcctId, CP_ACP);
+		modProp.at(_TEXT("用户ID")).propertyValue = CommonUtil::StringToCString(strUserId, CP_ACP);
+		modProp.at(_TEXT("客户ID")).propertyValue = CommonUtil::StringToCString(strCustId, CP_ACP);
 	}
 	catch (otl_exception &e)
 	{
 		char strExp[4096] = { 0 };
 		sprintf_s(strExp, "code:%d,msg:%s,var_info:%s,stm_text:%s\n", e.code, e.msg, e.var_info, e.stm_text);
-		CString exp = StringToCString(strExp, CP_ACP);
+		CString exp = CommonUtil::StringToCString(strExp, CP_ACP);
 		theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)exp.GetBuffer());
 		exp.ReleaseBuffer();
 	}
