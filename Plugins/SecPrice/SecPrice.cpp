@@ -8,7 +8,7 @@
 #include "../../BillingTool/ModuleContext.h"
 #include "../../BillingTool/BillingTool.h"
 #include <vector>
-
+#include "../UtilDll/UtilDll.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -67,84 +67,6 @@ BOOL CSecPriceApp::InitInstance()
 	return TRUE;
 }
 
-
-static CString GetSysUtcTime()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d%02d%02d%02d%3d"), st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
-	return result;
-}
-
-static CString GetSysTime()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d%02d%02d%02d"), st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
-	return result;
-}
-
-static CString GetSysYMDTime()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d"), st.wYear, st.wMonth, st.wDay);
-	return result;
-}
-
-
-
-
-static CString GetSysYMTime()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d"), st.wYear, st.wMonth);
-	return result;
-}
-
-static CString GetSerial()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%02d%02d%02d"), st.wHour, st.wMinute, st.wSecond);
-	return result;
-}
-
-static std::string CStringToString(const CString& src, UINT codepage)
-{
-	std::string dst;
-	if (src.IsEmpty())
-	{
-		dst.clear();
-		return "";
-	}
-
-	int length = ::WideCharToMultiByte(codepage, 0, src, src.GetLength(), NULL, 0, NULL, NULL);
-	dst.resize(length);
-	::WideCharToMultiByte(codepage, 0, src, src.GetLength(), &dst[0], (int)dst.size(), NULL, NULL);
-
-	return dst;
-}
-
-static CString StringToCString(const std::string& src, UINT codepage)
-{
-	CString dst;
-	if (src.empty())
-	{
-		return  dst;
-	}
-	int length = ::MultiByteToWideChar(codepage, 0, src.data(), (int)src.size(), NULL, 0);
-	WCHAR* pBuffer = dst.GetBufferSetLength(length);
-	::MultiByteToWideChar(codepage, 0, src.data(), (int)src.size(), pBuffer, length);
-
-	return dst;
-}
 
 void TriggerVcLocalCdr(ModuleContext *ctx, void *ptr);
 void TriggerVcLongCdr(ModuleContext *ctx, void *ptr);
@@ -244,70 +166,70 @@ std::vector<std::string> BuildCdrContent(CString cdrTag,CString callType,CString
 	std::string content;
 	////
 	content = "THEAD,";
-	content += CStringToString(GetSysYMTime(), CP_ACP);
+	content += CommonUtil::CStringToString(CommonUtil::GetSysYMTime(), CP_ACP);
 	content += ",v1,STDBILL_CDR";
 	result.push_back(content);
 
 	///
-	content = CStringToString(GetSysUtcTime(),CP_ACP);
+	content = CommonUtil::CStringToString(CommonUtil::GetSysUtcTime(),CP_ACP);
 	content += ",";
 
-	content += CStringToString(cdrTag , CP_ACP);
+	content += CommonUtil::CStringToString(cdrTag , CP_ACP);
 	content += ",";
 
 	content += "FX_XXXXXXXXXXXXXX.cdr";
 	content += ",";
 
-	content += CStringToString(GetSysYMTime(), CP_ACP);
+	content += CommonUtil::CStringToString(CommonUtil::GetSysYMTime(), CP_ACP);
 	content += ",";
 
-	content += CStringToString(providerCode, CP_ACP);
+	content += CommonUtil::CStringToString(providerCode, CP_ACP);
 	content += ",";
 
-	content += CStringToString(serialNumber, CP_ACP);
+	content += CommonUtil::CStringToString(serialNumber, CP_ACP);
 	content += ",";
 
-	content += CStringToString(peerNumber, CP_ACP);
+	content += CommonUtil::CStringToString(peerNumber, CP_ACP);
 	content += ",";
 
-	content += CStringToString(callType, CP_ACP);
+	content += CommonUtil::CStringToString(callType, CP_ACP);
 	content += ",";
 
 	content += ",,,,";
 
-	content += CStringToString(GetSysTime(), CP_ACP);
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP);
 	content += ",";
 
 	content += ",";
 
-	content += CStringToString(downVolume, CP_ACP);
+	content += CommonUtil::CStringToString(downVolume, CP_ACP);
 	content += ",";
 
-	content += CStringToString(upVolume, CP_ACP);
+	content += CommonUtil::CStringToString(upVolume, CP_ACP);
 	content += ",";
 
 	__int64 totalVolume = _wtoi64(downVolume) + _wtoi64(upVolume);
 	TCHAR strTotalVolume[60];
 	_i64tow_s(totalVolume, strTotalVolume , 60 , 10);
 	
-	content += CStringToString(CString(strTotalVolume), CP_ACP);
+	content += CommonUtil::CStringToString(CString(strTotalVolume), CP_ACP);
 	content += ",";
 		 
-	content += CStringToString(duration, CP_ACP);
+	content += CommonUtil::CStringToString(duration, CP_ACP);
 	content += ",";
 
-	content += CStringToString(GetSysTime(), CP_ACP);
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP);
 	content += ",";
 
 	content += ",,,,,";
 
-	content += CStringToString(roamType, CP_ACP);
+	content += CommonUtil::CStringToString(roamType, CP_ACP);
 	content += ",";
 
-	content += CStringToString(roamNation, CP_ACP);
+	content += CommonUtil::CStringToString(roamNation, CP_ACP);
 	content += ",";
 
-	content += CStringToString(longType, CP_ACP);
+	content += CommonUtil::CStringToString(longType, CP_ACP);
 	content += ",";
 
 	if (TRUE == ipCall) 
@@ -316,19 +238,19 @@ std::vector<std::string> BuildCdrContent(CString cdrTag,CString callType,CString
 	}
 	content += ",,,,,";
 
-	content += CStringToString(firstPriceFee, CP_ACP);
+	content += CommonUtil::CStringToString(firstPriceFee, CP_ACP);
 	content += ",,,,,0,6000001,0,";
 
-	content += CStringToString(GetSysTime(), CP_ACP);
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP);
 	content += ",";
 
 	content += ",,,,";
 
-	content += CStringToString(imsi, CP_ACP);
+	content += CommonUtil::CStringToString(imsi, CP_ACP);
 	content += ",";
 
 
-	content += CStringToString(imei, CP_ACP);
+	content += CommonUtil::CStringToString(imei, CP_ACP);
 	content += ",";
 
 	content += "FX_XXXXXXXXXXXXXXXXX.cdr";
@@ -348,10 +270,10 @@ std::vector<std::string> GetFiles(ModuleContext *ctx,CString testNumber,CString 
 {
 	std::vector<std::string> result;
 	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
-	result.push_back(CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat");
-	CString csInFile = inPath + _TEXT("/FX_ONE_") + GetSysYMDTime() + _TEXT("_") + GetSerial() + _TEXT(".") + providerCode
+	result.push_back(CommonUtil::CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat");
+	CString csInFile = inPath + _TEXT("/FX_ONE_") + CommonUtil::GetSysYMDTime() + _TEXT("_") + CommonUtil::GetSerial() + _TEXT(".") + providerCode
 		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
-	result.push_back(CStringToString(csInFile, CP_ACP));
+	result.push_back(CommonUtil::CStringToString(csInFile, CP_ACP));
 
 	return result;
 }
@@ -361,9 +283,9 @@ std::vector<std::string> GetFiles(ModuleContext *ctx,CString testNumber,CString 
 void TriggerVcLocalCdr(ModuleContext *ctx, void *ptr)
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -426,9 +348,9 @@ void TriggerVcLocalCdr(ModuleContext *ctx, void *ptr)
 void TriggerVcLongCdr(ModuleContext *ctx, void *ptr)
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -491,9 +413,9 @@ void TriggerVcLongCdr(ModuleContext *ctx, void *ptr)
 void TriggerVcRoamInProviceCdr(ModuleContext *ctx, void *ptr)
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -556,9 +478,9 @@ void TriggerVcRoamInProviceCdr(ModuleContext *ctx, void *ptr)
 void TriggerVcRoamProviceCdr(ModuleContext *ctx, void *ptr)
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -621,9 +543,9 @@ void TriggerVcRoamProviceCdr(ModuleContext *ctx, void *ptr)
 void TriggerVcLongInterCdr(ModuleContext *ctx, void *ptr) 
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -686,9 +608,9 @@ void TriggerVcLongInterCdr(ModuleContext *ctx, void *ptr)
 void TriggerVcRoamInterCdr(ModuleContext *ctx, void *ptr)
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -751,9 +673,9 @@ void TriggerVcRoamInterCdr(ModuleContext *ctx, void *ptr)
 void TriggerVcIpCallCdr(ModuleContext *ctx, void *ptr)
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -816,9 +738,9 @@ void TriggerVcIpCallCdr(ModuleContext *ctx, void *ptr)
 void TriggerVcDivertCdr(ModuleContext *ctx, void *ptr)
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -882,9 +804,9 @@ void TriggerVcDivertCdr(ModuleContext *ctx, void *ptr)
 void TriggerVcCalledCdr(ModuleContext *ctx, void *ptr)
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -948,9 +870,9 @@ void TriggerVcCalledCdr(ModuleContext *ctx, void *ptr)
 void TriggerSmsChnCdr(ModuleContext *ctx, void *ptr)
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -1013,9 +935,9 @@ void TriggerSmsChnCdr(ModuleContext *ctx, void *ptr)
 void TriggerSmsInterCdr(ModuleContext *ctx, void *ptr)
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -1079,9 +1001,9 @@ void TriggerSmsInterCdr(ModuleContext *ctx, void *ptr)
 void TriggerSmsRoamCdr(ModuleContext *ctx, void *ptr)
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -1145,9 +1067,9 @@ void TriggerSmsRoamCdr(ModuleContext *ctx, void *ptr)
 void TriggerSmsCalledCdr(ModuleContext *ctx, void *ptr)
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -1211,9 +1133,9 @@ void TriggerSmsCalledCdr(ModuleContext *ctx, void *ptr)
 void TriggerDataInProvinceCdr(ModuleContext *ctx, void *ptr)
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -1276,9 +1198,9 @@ void TriggerDataInProvinceCdr(ModuleContext *ctx, void *ptr)
 void TriggerDataProvinceCdr(ModuleContext *ctx, void *ptr)
 {
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 
@@ -1342,9 +1264,9 @@ void TriggerDataInterCdr(ModuleContext *ctx, void *ptr)
 {
 
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
 	UINT port = 22;
 

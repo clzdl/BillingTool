@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -21,21 +21,21 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9793FD66-F508-43AF-9F5C-25C2BE484EA1}</ProjectGuid>
     <RootNamespace>CreditDispatch</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
     <Keyword>MFCDLLProj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
@@ -43,14 +43,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\workspace\opensource\poco-1.7.8-all\JSON\include;C:\workspace\opensource\poco-1.7.8-all\Net\include;C:\workspace\opensource\poco-1.7.8-all\Foundation\include;C:\software\oraclient11\sdk\include;C:\workspace\opensource\libssh2-1.8.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\workspace\opensource\libssh2-1.8.0\win32\Debug_dll;C:\software\oraclient11\sdk\lib\msvc;C:\workspace\opensource\poco-1.7.8-all\lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\workspace\opensource\poco-1.7.8-all\JSON\include;C:\workspace\opensource\poco-1.7.8-all\Net\include;C:\workspace\opensource\poco-1.7.8-all\Foundation\include;C:\oraclient11\sdk\include;C:\workspace\opensource\libssh2-1.8.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\workspace\myselfsource\BillingTool\x64\Debug;C:\workspace\opensource\libssh2-1.8.0\win32\Debug_dll;C:\oraclient11\sdk\lib\msvc;C:\workspace\opensource\poco-1.7.8-all\lib64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -123,7 +123,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <ModuleDefinitionFile>.\CreditDispatch.def</ModuleDefinitionFile>
-      <AdditionalDependencies>oci.lib;PocoFoundation.lib;libssh2.lib;PocoJSONd.lib;PocoNetd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>oci.lib;PocoFoundation.lib;libssh2.lib;PocoJSONd.lib;PocoNetd.lib;UtilDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>

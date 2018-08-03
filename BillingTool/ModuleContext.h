@@ -10,10 +10,7 @@ class CBillingToolApp;
 class CBillingToolView;
 class SshCmdExecutor;
 
-///宽字符转换成多字节字符
-typedef std::string (*CSTRING2STRING)(const CString&, UINT);
-///多字节字符转换成宽字符
-typedef CString (*STRING2CSTRING)(const std::string&, UINT);
+
 //获取模块属性
 typedef CString(*GET_PROPERTY)(int, CString);
 
@@ -42,8 +39,7 @@ public:
 	otl_connect *m_dbConn;
 	CBillingToolApp *m_theApp;
 
-	CSTRING2STRING m_funcCString2String;
-	STRING2CSTRING m_funcString2CString;
+	
 	GET_PROPERTY m_funcGetProperty;
 
 	SshCmdExecutor *m_objSshCmdExecutor;

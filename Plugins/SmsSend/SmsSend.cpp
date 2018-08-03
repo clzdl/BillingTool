@@ -8,6 +8,7 @@
 #include "../../BillingTool/ModuleContext.h"
 #include "../../BillingTool/BillingTool.h"
 #include <vector>
+#include "../UtilDll/UtilDll.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -66,55 +67,6 @@ BOOL CSmsSendApp::InitInstance()
 	return TRUE;
 }
 
-static CString GetSysYMDTime()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d"), st.wYear, st.wMonth, st.wDay);
-	return result;
-}
-
-
-static CString GetSysTime()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d%02d%02d%02d"), st.wYear, st.wMonth, st.wDay,st.wHour,st.wMinute,st.wSecond);
-	return result;
-}
-
-static std::string CStringToString(const CString& src, UINT codepage)
-{
-	std::string dst;
-	if (src.IsEmpty())
-	{
-		dst.clear();
-		return "";
-	}
-
-	int length = ::WideCharToMultiByte(codepage, 0, src, src.GetLength(), NULL, 0, NULL, NULL);
-	dst.resize(length);
-	::WideCharToMultiByte(codepage, 0, src, src.GetLength(), &dst[0], (int)dst.size(), NULL, NULL);
-
-	return dst;
-}
-
-static CString StringToCString(const std::string& src, UINT codepage)
-{
-	CString dst;
-	if (src.empty())
-	{
-		return  dst;
-	}
-	int length = ::MultiByteToWideChar(codepage, 0, src.data(), (int)src.size(), NULL, 0);
-	WCHAR* pBuffer = dst.GetBufferSetLength(length);
-	::MultiByteToWideChar(codepage, 0, src.data(), (int)src.size(), pBuffer, length);
-
-	return dst;
-}
-
 /*
 #define BILL_URGING_PAY    7001 //催费提醒(余额阀值)
 #define TRAFFIC_REMIND     7002 //流量提醒->单阀值(套餐内)/比例值(套餐内)/单阀值(套餐外)/单阀值(使用总量)
@@ -168,11 +120,11 @@ std::vector<std::string> BuildSmsContents(CString serialNumber, CString userId)
 	17001810501|120150105227073|1|";"=>"\n"|尊敬的分享通信客户，您好！;您2016年9月账单129.00元（总消费129.00元，优惠及减免0.00元），其中：;套餐及固定费：129.00元;-基本套餐费：129.00元;缴费请访问10039.cc
 	*/
 	std::vector<std::string> result;
-	std::string content = CStringToString(serialNumber, CP_ACP);
+	std::string content = CommonUtil::CStringToString(serialNumber, CP_ACP);
 	content += "|";
-	content += CStringToString(serialNumber, CP_ACP);
+	content += CommonUtil::CStringToString(serialNumber, CP_ACP);
 	content += "|";
-	content += CStringToString(_TEXT("1|\"; \"=>\"\\n\"|尊敬的分享通信客户，您好！;您2016年9月账单129.00元（总消费129.00元，优惠及减免0.00元），其中：;套餐及固定费：129.00元;-基本套餐费：129.00元;缴费请访问10039.cc"), CP_UTF8);
+	content += CommonUtil::CStringToString(_TEXT("1|\"; \"=>\"\\n\"|尊敬的分享通信客户，您好！;您2016年9月账单129.00元（总消费129.00元，优惠及减免0.00元），其中：;套餐及固定费：129.00元;-基本套餐费：129.00元;缴费请访问10039.cc"), CP_UTF8);
 	result.push_back(content);
 	return result;
 
@@ -181,12 +133,12 @@ std::vector<std::string> BuildSmsContents(CString serialNumber, CString userId)
 std::vector<std::string> GetFiles(ModuleContext *ctx)
 {
 	std::vector<std::string> result;
-	result.push_back(CStringToString(ctx->m_funcGetProperty(_sms_send, _TEXT("文件入口")), CP_ACP) + "/../tmp_smsSendFile");
+	result.push_back(CommonUtil::CStringToString(ctx->m_funcGetProperty(_sms_send, _TEXT("文件入口")), CP_ACP) + "/../tmp_smsSendFile");
 
 	CString csInFile = ctx->m_funcGetProperty(_sms_send, _TEXT("文件入口"))
-		+ _TEXT("/smsSendFile") + GetSysYMDTime() + _TEXT(".dat");
+		+ _TEXT("/smsSendFile") + CommonUtil::GetSysYMDTime() + _TEXT(".dat");
 
-	result.push_back(CStringToString(csInFile, CP_ACP));
+	result.push_back(CommonUtil::CStringToString(csInFile, CP_ACP));
 	return result;
 }
 
@@ -195,9 +147,9 @@ void TriggerSmsSendFile(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("生成短信文件"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -280,13 +232,13 @@ bool BuildHastenNotice(ModuleContext *ctx, CString userId, CString tradeTypeCode
 		otlStm.open(1, sql.c_str(), *(ctx->m_dbConn));
 		otlStm.set_commit(0);
 
-		otlStm << CStringToString(tradeTypeCode, CP_ACP).c_str()
-			<< CStringToString(userId, CP_ACP).c_str()
-			<< CStringToString(GetSysTime(), CP_ACP).c_str()
-			<< CStringToString(leaveRealFee, CP_ACP).c_str()
-			<< CStringToString(realFee, CP_ACP).c_str()
-			<< CStringToString(creditValue, CP_ACP).c_str()
-			<< CStringToString(policyId, CP_ACP).c_str();
+		otlStm << CommonUtil::CStringToString(tradeTypeCode, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(userId, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP).c_str()
+			<< CommonUtil::CStringToString(leaveRealFee, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(realFee, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(creditValue, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(policyId, CP_ACP).c_str();
 
 		ctx->m_dbConn->commit();
 	}
@@ -294,7 +246,7 @@ bool BuildHastenNotice(ModuleContext *ctx, CString userId, CString tradeTypeCode
 	{
 		char strExp[4096] = { 0 };
 		sprintf_s(strExp, "code:%d,msg:%s,var_info:%s,stm_text:%s\n", e.code, e.msg, e.var_info, e.stm_text);
-		CString exp = ctx->m_funcString2CString(strExp, CP_ACP);
+		CString exp = CommonUtil::StringToCString(strExp, CP_ACP);
 		ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)exp.GetBuffer());
 		exp.ReleaseBuffer();
 		return false;

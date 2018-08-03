@@ -14,76 +14,8 @@
 #include "Poco/Net/HTTPResponse.h"
 #include "Poco/Net/NetException.h"
 #include "Poco/StreamCopier.h"
+#include "../UtilDll/UtilDll.h"
 
-
-#define FAILURE		-1
-#define SUCCESS		0
-static CString GetSysUtcTime()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d%02d%02d%02d%3d"), st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond,st.wMilliseconds);
-	return result;
-}
-
-static CString GetSysTIme()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d%02d%02d%02d"), st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
-	return result;
-}
-
-static CString GetSysYMDTime()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d"), st.wYear, st.wMonth, st.wDay);
-	return result;
-}
-
-static CString GetSerialNo() 
-{
-	CString csSerial;
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	csSerial.Format(_TEXT("%02d%02d%02d"), st.wHour,st.wMinute,st.wSecond);
-
-	return csSerial;
-}
-
-static std::string CStringToString(const CString& src, UINT codepage)
-{
-	std::string dst;
-	if (src.IsEmpty())
-	{
-		dst.clear();
-		return "";
-	}
-
-	int length = ::WideCharToMultiByte(codepage, 0, src, src.GetLength(), NULL, 0, NULL, NULL);
-	dst.resize(length);
-	::WideCharToMultiByte(codepage, 0, src, src.GetLength(), &dst[0], (int)dst.size(), NULL, NULL);
-
-	return dst;
-}
-
-static CString StringToCString(const std::string& src, UINT codepage)
-{
-	CString dst;
-	if (src.empty())
-	{
-		return  dst;
-	}
-	int length = ::MultiByteToWideChar(codepage, 0, src.data(), (int)src.size(), NULL, 0);
-	WCHAR* pBuffer = dst.GetBufferSetLength(length);
-	::MultiByteToWideChar(codepage, 0, src.data(), (int)src.size(), pBuffer, length);
-
-	return dst;
-}
 
 
 void BusiFunc::TriggerStartUp(ModuleContext *ctx,void *ptr)
@@ -111,9 +43,9 @@ void BusiFunc::TriggerStartUp(ModuleContext *ctx,void *ptr)
 		otlStm.open(1, sql.c_str(), *(ctx->m_dbConn));
 		otlStm.set_commit(0);
 		
-		otlStm << ctx->m_funcCString2String(ctx->m_funcGetProperty(0, _TEXT("账户ID")), CP_ACP).c_str()
-			<< ctx->m_funcCString2String(ctx->m_funcGetProperty(0, _TEXT("用户ID")), CP_ACP).c_str()
-		    << ctx->m_funcCString2String(GetSysTIme(), CP_ACP).c_str();
+		otlStm << CommonUtil::CStringToString(ctx->m_funcGetProperty(0, _TEXT("账户ID")), CP_ACP).c_str()
+			<< CommonUtil::CStringToString(ctx->m_funcGetProperty(0, _TEXT("用户ID")), CP_ACP).c_str()
+		    << CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP).c_str();
 
 		ctx->m_dbConn->commit();
 	}
@@ -121,7 +53,7 @@ void BusiFunc::TriggerStartUp(ModuleContext *ctx,void *ptr)
 	{
 		char strExp[4096] = { 0 };
 		sprintf_s(strExp,"code:%d,msg:%s,var_info:%s,stm_text:%s\n", e.code, e.msg, e.var_info, e.stm_text);
-		CString exp = ctx->m_funcString2CString(strExp , CP_ACP);
+		CString exp = CommonUtil::StringToCString(strExp , CP_ACP);
 		ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)exp.GetBuffer());
 		exp.ReleaseBuffer();
 		
@@ -136,11 +68,11 @@ void BusiFunc::TriggerStartUp(ModuleContext *ctx,void *ptr)
 static std::string CreateCreditJsonData(CString acctId , CString userId,CString fee)
 {
 	std::string result = "{";
-	result += "\"ACCT_ID\":" + CStringToString(acctId, CP_UTF8) + ",";
-	result += "\"UESR_ID\":" + CStringToString(userId, CP_UTF8) + ",";
-	result += "\"ADD_ID\":" + CStringToString(GetSysTIme(), CP_UTF8) + ",";
+	result += "\"ACCT_ID\":" + CommonUtil::CStringToString(acctId, CP_UTF8) + ",";
+	result += "\"UESR_ID\":" + CommonUtil::CStringToString(userId, CP_UTF8) + ",";
+	result += "\"ADD_ID\":" + CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_UTF8) + ",";
 	result += "\"TRADE_TYPE\":8001,";
-	result += "\"THIS_FEE\":" + CStringToString(fee, CP_UTF8) + ",";
+	result += "\"THIS_FEE\":" + CommonUtil::CStringToString(fee, CP_UTF8) + ",";
 	result += "\"IN_TYPE\":\"1\"";
 	result += "}";
 	return result;
@@ -176,7 +108,7 @@ static int SendCreditPkg(ModuleContext *ctx,std::string srvIp , UINT port , std:
 		if (retCode != SUCCESS)
 		{
 			Poco::Dynamic::Var errMsg = object->get("ERRORMSG");
-			CString text = StringToCString(errMsg.toString(), CP_UTF8);
+			CString text = CommonUtil::StringToCString(errMsg.toString(), CP_UTF8);
 			ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
 			text.ReleaseBuffer();
 			return FAILURE;
@@ -185,7 +117,7 @@ static int SendCreditPkg(ModuleContext *ctx,std::string srvIp , UINT port , std:
 
 	catch (Poco::Exception &e)
 	{
-		CString text = StringToCString(e.message(), CP_ACP);
+		CString text = CommonUtil::StringToCString(e.message(), CP_ACP);
 		ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
 		return FAILURE;
 	}
@@ -203,11 +135,11 @@ void BusiFunc::TriggerStopByNet(ModuleContext *ctx, void *ptr)
 												ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
 												ctx->m_funcGetProperty(_credit_dispatch, _TEXT("话单费用")));
 	
-	TRACE(ctx->m_funcString2CString(jsonString, CP_ACP));
+	TRACE(CommonUtil::StringToCString(jsonString, CP_ACP));
 	
-	int result = SendCreditPkg(ctx, ctx->m_funcCString2String(ctx->m_funcGetProperty(_common, _TEXT("IP地址")),CP_ACP),
+	int result = SendCreditPkg(ctx, CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")),CP_ACP),
 					   _wtoi(ctx->m_funcGetProperty(_common, _TEXT("端口号"))),
-					   ctx->m_funcCString2String(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("触发停机服务地址")), CP_ACP), jsonString);
+						CommonUtil::CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("触发停机服务地址")), CP_ACP), jsonString);
 
 	if (SUCCESS != result)
 	{
@@ -231,18 +163,18 @@ static std::vector<std::string> BuildCreditFileContents(std::string acctId, std:
 
 	result += "0,,";
 	
-	result += CStringToString(GetSysTIme() , CP_ACP);
+	result += CommonUtil::CStringToString(CommonUtil::GetSysTime() , CP_ACP);
 	result += ",";
 
-	result += CStringToString(GetSysUtcTime(), CP_ACP);
+	result += CommonUtil::CStringToString(CommonUtil::GetSysUtcTime(), CP_ACP);
 	result += ",";
 
 	result += "8003,10,100,1000,1,1100,";
 
-	result += CStringToString(GetSysYMDTime().Left(6), CP_ACP);
+	result += CommonUtil::CStringToString(CommonUtil::GetSysYMDTime().Left(6), CP_ACP);
 	result += ",";
 
-	result += CStringToString(GetSysTIme(), CP_ACP);
+	result += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP);
 
 	vec.push_back(result);
 	return vec;
@@ -255,11 +187,11 @@ std::vector<std::string> GetFiles(ModuleContext *ctx ,CString testNumber)
 
 	CString inPath = ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口"));
 	
-	result.push_back(CStringToString(inPath, CP_ACP) + "/../tempCreditFile.dat");
+	result.push_back(CommonUtil::CStringToString(inPath, CP_ACP) + "/../tempCreditFile.dat");
 
-	CString csCreditInFile = inPath	+ _TEXT("/FX_BILL_") + GetSysYMDTime() + _TEXT("_") + GetSerialNo() + _TEXT("_CCCC.") + testNumber.Left(7) + _TEXT(".bill00.bilcredit");
+	CString csCreditInFile = inPath	+ _TEXT("/FX_BILL_") + CommonUtil::GetSysYMDTime() + _TEXT("_") + CommonUtil::GetSerial() + _TEXT("_CCCC.") + testNumber.Left(7) + _TEXT(".bill00.bilcredit");
 	
-	result.push_back(CStringToString(csCreditInFile, CP_ACP));
+	result.push_back(CommonUtil::CStringToString(csCreditInFile, CP_ACP));
 	return result;
 
 }
@@ -269,9 +201,9 @@ void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发信控停机【FILE】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 
 	UINT port = 22;
@@ -295,8 +227,8 @@ void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 		}
 
 		std::vector<std::string> creditContent = BuildCreditFileContents(
-						CStringToString(ctx->m_funcGetProperty(_common, _TEXT("账户ID")), CP_ACP),
-						CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户ID")), CP_ACP));
+			CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("账户ID")), CP_ACP),
+			CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户ID")), CP_ACP));
 
 		
 
@@ -338,10 +270,10 @@ static std::vector<std::string> BuildRemindFileContents(std::string acctId, std:
 
 	result += "0,,";
 
-	result += CStringToString(GetSysTIme(), CP_ACP);
+	result += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP);
 	result += ",";
 
-	result += CStringToString(GetSysUtcTime(), CP_ACP);
+	result += CommonUtil::CStringToString(CommonUtil::GetSysUtcTime(), CP_ACP);
 	result += ",";
 
 	result += "8003,";
@@ -360,10 +292,10 @@ static std::vector<std::string> BuildRemindFileContents(std::string acctId, std:
 	result += baseVolume;
 	result += ",";
 
-	result += CStringToString(GetSysYMDTime().Left(6), CP_ACP);
+	result += CommonUtil::CStringToString(CommonUtil::GetSysYMDTime().Left(6), CP_ACP);
 	result += ",";
 
-	result += CStringToString(GetSysTIme(), CP_ACP);
+	result += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP);
 
 	vec.push_back(result);
 	return vec;
@@ -375,9 +307,9 @@ void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发信控停机【FILE】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -403,11 +335,11 @@ void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
 		}
 
 		std::vector<std::string> creditContent = BuildRemindFileContents(
-			CStringToString(ctx->m_funcGetProperty(_common, _TEXT("账户ID")), CP_ACP),
-			CStringToString(ctx->m_funcGetProperty(-_common, _TEXT("用户ID")), CP_ACP),
-			CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("话单使用量")), CP_ACP),
-			CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("截止本条话单前的总是用量")), CP_ACP),
-			CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("用户总的基础量")), CP_ACP) );
+			CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("账户ID")), CP_ACP),
+			CommonUtil::CStringToString(ctx->m_funcGetProperty(-_common, _TEXT("用户ID")), CP_ACP),
+			CommonUtil::CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("话单使用量")), CP_ACP),
+			CommonUtil::CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("截止本条话单前的总是用量")), CP_ACP),
+			CommonUtil::CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("用户总的基础量")), CP_ACP) );
 
 
 

@@ -7,7 +7,7 @@
 #include "../../BillingTool/ViewTree.h"
 #include "../../BillingTool/ModuleContext.h"
 #include "../../BillingTool/BillingTool.h"
-
+#include "../UtilDll/UtilDll.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -67,45 +67,6 @@ BOOL CCreditDegreeApp::InitInstance()
 }
 
 
-static CString GetSysTIme()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d%02d%02d%02d"), st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
-	return result;
-}
-
-static std::string CStringToString(const CString& src, UINT codepage)
-{
-	std::string dst;
-	if (src.IsEmpty())
-	{
-		dst.clear();
-		return "";
-	}
-
-	int length = ::WideCharToMultiByte(codepage, 0, src, src.GetLength(), NULL, 0, NULL, NULL);
-	dst.resize(length);
-	::WideCharToMultiByte(codepage, 0, src, src.GetLength(), &dst[0], (int)dst.size(), NULL, NULL);
-
-	return dst;
-}
-
-static CString StringToCString(const std::string& src, UINT codepage)
-{
-	CString dst;
-	if (src.empty())
-	{
-		return  dst;
-	}
-	int length = ::MultiByteToWideChar(codepage, 0, src.data(), (int)src.size(), NULL, 0);
-	WCHAR* pBuffer = dst.GetBufferSetLength(length);
-	::MultiByteToWideChar(codepage, 0, src.data(), (int)src.size(), pBuffer, length);
-
-	return dst;
-}
-
 
 void CreateInitCreditDegree(ModuleContext *ctx, void *ptr);
 void ActiveTempCreditDegree(ModuleContext *ctx, void *ptr);
@@ -161,11 +122,11 @@ static bool BuildInitCredit(ModuleContext *ctx,CString serialNumber, CString use
 		otlStm.open(1, sql.c_str(), *(ctx->m_dbConn));
 		otlStm.set_commit(0);
 
-		otlStm << CStringToString(GetSysTIme(), CP_ACP).c_str()
-			<< CStringToString(serialNumber, CP_ACP).c_str()
-			<< CStringToString(userId, CP_ACP).c_str()
-			<< CStringToString(custId, CP_ACP).c_str()
-			<< CStringToString(vipClass, CP_ACP).c_str();
+		otlStm << CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP).c_str()
+			<< CommonUtil::CStringToString(serialNumber, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(userId, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(custId, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(vipClass, CP_ACP).c_str();
 
 		ctx->m_dbConn->commit();
 	}
@@ -173,7 +134,7 @@ static bool BuildInitCredit(ModuleContext *ctx,CString serialNumber, CString use
 	{
 		char strExp[4096] = { 0 };
 		sprintf_s(strExp, "code:%d,msg:%s,var_info:%s,stm_text:%s\n", e.code, e.msg, e.var_info, e.stm_text);
-		CString exp = ctx->m_funcString2CString(strExp, CP_ACP);
+		CString exp = CommonUtil::StringToCString(strExp, CP_ACP);
 		ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)exp.GetBuffer());
 		exp.ReleaseBuffer();
 		return false;
@@ -210,10 +171,10 @@ static bool BuildUserCredit(ModuleContext *ctx, CString userId, CString creditVa
 		otlStm.open(1, sql.c_str(), *(ctx->m_dbConn));
 		otlStm.set_commit(0);
 
-		otlStm << CStringToString(userId, CP_ACP).c_str()
-			<< CStringToString(creditValue, CP_ACP).c_str()
-			<< CStringToString(creditClass, CP_ACP).c_str()
-			<< CStringToString(creditType, CP_ACP).c_str();
+		otlStm << CommonUtil::CStringToString(userId, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(creditValue, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(creditClass, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(creditType, CP_ACP).c_str();
 
 		ctx->m_dbConn->commit();
 	}
@@ -221,7 +182,7 @@ static bool BuildUserCredit(ModuleContext *ctx, CString userId, CString creditVa
 	{
 		char strExp[4096] = { 0 };
 		sprintf_s(strExp, "code:%d,msg:%s,var_info:%s,stm_text:%s\n", e.code, e.msg, e.var_info, e.stm_text);
-		CString exp = ctx->m_funcString2CString(strExp, CP_ACP);
+		CString exp = CommonUtil::StringToCString(strExp, CP_ACP);
 		ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)exp.GetBuffer());
 		exp.ReleaseBuffer();
 		return false;

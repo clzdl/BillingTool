@@ -7,7 +7,7 @@
 #include "../../BillingTool/ViewTree.h"
 #include "../../BillingTool/ModuleContext.h"
 #include "../../BillingTool/BillingTool.h"
-
+#include "../UtilDll/UtilDll.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -66,52 +66,6 @@ BOOL CBefAccAjustApp::InitInstance()
 	return TRUE;
 }
 
-static CString GetSysTIme()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d%02d%02d%02d"), st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
-	return result;
-}
-
-static CString GetSysYMTime()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d"), st.wYear, st.wMonth);
-	return result;
-}
-static std::string CStringToString(const CString& src, UINT codepage)
-{
-	std::string dst;
-	if (src.IsEmpty())
-	{
-		dst.clear();
-		return "";
-	}
-
-	int length = ::WideCharToMultiByte(codepage, 0, src, src.GetLength(), NULL, 0, NULL, NULL);
-	dst.resize(length);
-	::WideCharToMultiByte(codepage, 0, src, src.GetLength(), &dst[0], (int)dst.size(), NULL, NULL);
-
-	return dst;
-}
-
-static CString StringToCString(const std::string& src, UINT codepage)
-{
-	CString dst;
-	if (src.empty())
-	{
-		return  dst;
-	}
-	int length = ::MultiByteToWideChar(codepage, 0, src.data(), (int)src.size(), NULL, 0);
-	WCHAR* pBuffer = dst.GetBufferSetLength(length);
-	::MultiByteToWideChar(codepage, 0, src.data(), (int)src.size(), pBuffer, length);
-
-	return dst;
-}
 
 
 void IncrementAjdustByMoney(ModuleContext *ctx, void *ptr);
@@ -191,16 +145,16 @@ bool BuildBefAccChk(ModuleContext *ctx, CString userId, CString acctId,CString s
 		otlStm.open(1, sql.c_str(), *(ctx->m_dbConn));
 		otlStm.set_commit(0);
 
-		otlStm << CStringToString(GetSysTIme(), CP_ACP).c_str()
-			<< CStringToString(serialNumber, CP_ACP).c_str()
-			<< CStringToString(userId, CP_ACP).c_str()
-			<< CStringToString(acctId, CP_ACP).c_str()
-			<< CStringToString(GetSysYMTime(), CP_ACP).c_str()
-			<< CStringToString(adjustType, CP_ACP).c_str()
-			<< CStringToString(adjustMode, CP_ACP).c_str()
-			<< CStringToString(itemCode, CP_ACP).c_str()
-			<< CStringToString(activeTag, CP_ACP).c_str()
-			<< CStringToString(moneyOrRatio, CP_ACP).c_str();
+		otlStm << CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP).c_str()
+			<< CommonUtil::CStringToString(serialNumber, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(userId, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(acctId, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(CommonUtil::GetSysYMTime(), CP_ACP).c_str()
+			<< CommonUtil::CStringToString(adjustType, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(adjustMode, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(itemCode, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(activeTag, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(moneyOrRatio, CP_ACP).c_str();
 
 		ctx->m_dbConn->commit();
 	}
@@ -208,7 +162,7 @@ bool BuildBefAccChk(ModuleContext *ctx, CString userId, CString acctId,CString s
 	{
 		char strExp[4096] = { 0 };
 		sprintf_s(strExp, "code:%d,msg:%s,var_info:%s,stm_text:%s\n", e.code, e.msg, e.var_info, e.stm_text);
-		CString exp = ctx->m_funcString2CString(strExp, CP_ACP);
+		CString exp = CommonUtil::StringToCString(strExp, CP_ACP);
 		ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)exp.GetBuffer());
 		exp.ReleaseBuffer();
 		return false;

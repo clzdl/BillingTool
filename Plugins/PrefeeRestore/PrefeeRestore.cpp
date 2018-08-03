@@ -7,6 +7,7 @@
 #include "../../BillingTool/ViewTree.h"
 #include "../../BillingTool/ModuleContext.h"
 #include "../../BillingTool/BillingTool.h"
+#include "../UtilDll/UtilDll.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -65,70 +66,6 @@ BOOL CPrefeeRestoreApp::InitInstance()
 	return TRUE;
 }
 
-static CString GetSysUtcTime()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d%02d%02d%02d%3d"), st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
-	return result;
-}
-
-static CString GetSysTIme()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d%02d%02d%02d"), st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
-	return result;
-}
-
-static int GetCurDay()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	
-	return st.wDay;
-}
-
-static CString GetSysYMDTime()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d"), st.wYear, st.wMonth, st.wDay);
-	return result;
-}
-
-static std::string CStringToString(const CString& src, UINT codepage)
-{
-	std::string dst;
-	if (src.IsEmpty())
-	{
-		dst.clear();
-		return "";
-	}
-
-	int length = ::WideCharToMultiByte(codepage, 0, src, src.GetLength(), NULL, 0, NULL, NULL);
-	dst.resize(length);
-	::WideCharToMultiByte(codepage, 0, src, src.GetLength(), &dst[0], (int)dst.size(), NULL, NULL);
-
-	return dst;
-}
-
-static CString StringToCString(const std::string& src, UINT codepage)
-{
-	CString dst;
-	if (src.empty())
-	{
-		return  dst;
-	}
-	int length = ::MultiByteToWideChar(codepage, 0, src.data(), (int)src.size(), NULL, 0);
-	WCHAR* pBuffer = dst.GetBufferSetLength(length);
-	::MultiByteToWideChar(codepage, 0, src.data(), (int)src.size(), pBuffer, length);
-
-	return dst;
-}
 
 void TriggerPrefee(ModuleContext *ctx, void *ptr);
 
@@ -215,15 +152,15 @@ bool BuildPrefee(ModuleContext *ctx, CString userId, CString activityId,CString 
 		otlStm.open(1, sql.c_str(), *(ctx->m_dbConn));
 		otlStm.set_commit(0);
 
-		otlStm << CStringToString(userId, CP_ACP).c_str()
-			<< CStringToString(activityId, CP_ACP).c_str()
-			<< GetCurDay()
-			<< CStringToString(ruleType, CP_ACP).c_str()
-			<< CStringToString(feeRuleId, CP_ACP).c_str()
-			<< CStringToString(cycleFee, CP_ACP).c_str()
-			<< CStringToString(cycleUnit, CP_ACP).c_str()
-			<< CStringToString(acctBalanceId, CP_ACP).c_str()
-			<< CStringToString(validProdState, CP_ACP).c_str();
+		otlStm << CommonUtil::CStringToString(userId, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(activityId, CP_ACP).c_str()
+			<< CommonUtil::GetCurDay()
+			<< CommonUtil::CStringToString(ruleType, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(feeRuleId, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(cycleFee, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(cycleUnit, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(acctBalanceId, CP_ACP).c_str()
+			<< CommonUtil::CStringToString(validProdState, CP_ACP).c_str();
 
 		ctx->m_dbConn->commit();
 	}
@@ -231,7 +168,7 @@ bool BuildPrefee(ModuleContext *ctx, CString userId, CString activityId,CString 
 	{
 		char strExp[4096] = { 0 };
 		sprintf_s(strExp, "code:%d,msg:%s,var_info:%s,stm_text:%s\n", e.code, e.msg, e.var_info, e.stm_text);
-		CString exp = ctx->m_funcString2CString(strExp, CP_ACP);
+		CString exp = CommonUtil::StringToCString(strExp, CP_ACP);
 		ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)exp.GetBuffer());
 		exp.ReleaseBuffer();
 		return false;

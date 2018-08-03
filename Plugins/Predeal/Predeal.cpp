@@ -9,6 +9,7 @@
 #include "../../BillingTool/BillingTool.h"
 #include <vector>
 #include <string>
+#include "../UtilDll/UtilDll.h"
 
 
 #ifdef _DEBUG
@@ -70,66 +71,6 @@ BOOL CPredealApp::InitInstance()
 }
 
 
-static CString GetSysTIme()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d%02d%02d%02d"), st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
-	return result;
-}
-
-
-static CString GetSysYMDate()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d"), st.wYear, st.wMonth);
-	return result;
-
-}
-
-static CString GetSysYMDDate()
-{
-	SYSTEMTIME st;
-	GetLocalTime(&st);
-	CString result;
-	result.Format(_TEXT("%04d%02d%02d"), st.wYear, st.wMonth,st.wDay);
-	return result;
-}
-
-
-
-static std::string CStringToString(const CString& src, UINT codepage)
-{
-	std::string dst;
-	if (src.IsEmpty())
-	{
-		dst.clear();
-		return "";
-	}
-
-	int length = ::WideCharToMultiByte(codepage, 0, src, src.GetLength(), NULL, 0, NULL, NULL);
-	dst.resize(length);
-	::WideCharToMultiByte(codepage, 0, src, src.GetLength(), &dst[0], (int)dst.size(), NULL, NULL);
-
-	return dst;
-}
-
-static CString StringToCString(const std::string& src, UINT codepage)
-{
-	CString dst;
-	if (src.empty())
-	{
-		return  dst;
-	}
-	int length = ::MultiByteToWideChar(codepage, 0, src.data(), (int)src.size(), NULL, 0);
-	WCHAR* pBuffer = dst.GetBufferSetLength(length);
-	::MultiByteToWideChar(codepage, 0, src.data(), (int)src.size(), pBuffer, length);
-
-	return dst;
-}
 
 /////
 void CtccVcCHNCalling(ModuleContext *ctx, void *ptr);
@@ -287,9 +228,9 @@ std::vector<std::string> BuildCtccTCGPCdr(CString cdrType,CString sessionId , CS
 
 	std::vector<std::string> result;
 	std::string content = "TBAT;CHN01;FX034;00200;";
-	content += GetSysTIme() + ";";
-	content += GetSysTIme() + ";";
-	content += GetSysTIme() + ";";
+	content += CommonUtil::GetSysTime() + ";";
+	content += CommonUtil::GetSysTime() + ";";
+	content += CommonUtil::GetSysTime() + ";";
 	content += "3;11;TACC;RMB;CNY;0;01;0000000;100000;5;0;3;TNET;1;3;0;";
 	result.push_back(content);
 	///
@@ -298,20 +239,20 @@ std::vector<std::string> BuildCtccTCGPCdr(CString cdrType,CString sessionId , CS
 	content = "TCGP;";
 	content += "0;";
 	content += "0;";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "32;";
-	content += CStringToString(GetSysYMDate(), CP_ACP) + ";";
-	content += CStringToString(cdrType, CP_ACP) + ";";
-	content += CStringToString(sessionId, CP_ACP) + ";";
-	content += CStringToString(sessionId, CP_ACP) + ";";
-	content += CStringToString(sessionId, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysYMTime(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(cdrType, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(sessionId, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(sessionId, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(sessionId, CP_ACP) + ";";
 	content += "0;0;1;1;0;0;0;0;0;0;0;";
 	content += imsi + ";";
 	content += serialNumber + ";";
 	content += "27.149.88.225;0;ctnet@mycdma.cn;";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "600;1;1;2;";
-	content += CStringToString(nationCode, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(nationCode, CP_ACP) + ";";
 	content += "311;";
 	content += ";;0;0;X;59;0;0;";
 	content += "01:0:02:0;";
@@ -324,8 +265,8 @@ std::vector<std::string> BuildCtccTCGPCdr(CString cdrType,CString sessionId , CS
 
 	///
 	content = "TAUD;";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "0;0;0;1";
 	result.push_back(content);
 	return result;
@@ -339,9 +280,9 @@ std::vector<std::string> BuildCtccTCMOCdr(CString busiType, CString imsi,
 
 	std::vector<std::string> result;
 	std::string content = "TBAT;CHN01;FX034;00200;";
-	content += GetSysTIme() + ";";
-	content += GetSysTIme() + ";";
-	content += GetSysTIme() + ";";
+	content += CommonUtil::GetSysTime() + ";";
+	content += CommonUtil::GetSysTime() + ";";
+	content += CommonUtil::GetSysTime() + ";";
 	content += "3;11;TACC;RMB;CNY;0;01;0000000;100000;5;0;3;TNET;1;3;0;";
 	result.push_back(content);
 	///
@@ -354,24 +295,24 @@ std::vector<std::string> BuildCtccTCMOCdr(CString busiType, CString imsi,
 	content = "TCMO;";
 	content += "0;";
 	content += "0;";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "32;";
-	content += CStringToString(GetSysYMDate(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysYMTime(), CP_ACP) + ";";
 	content += "0;";
-	content += CStringToString(sessionId, CP_ACP) + ";";
-	content += CStringToString(sessionId, CP_ACP) + ";";
-	content += CStringToString(peerNumber, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(sessionId, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(sessionId, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(peerNumber, CP_ACP) + ";";
 	content += "0;0;1;1;0;0;0;0;0;0;0;";
 	content += imsi + ";";
 	content += serialNumber + ";";
 	content += peerNumber + ";";
 	content += "18731173110;311;311;;";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "600;8613448728;";
-	content += CStringToString(nationCode, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(nationCode, CP_ACP) + ";";
 	content += "311;";
-	content += CStringToString(phoneLocation, CP_ACP) + ";";
-	content += CStringToString(imei, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(phoneLocation, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(imei, CP_ACP) + ";";
 	content += ";11;";
 	if (_TEXT("VC") == busiType)
 	{
@@ -388,8 +329,8 @@ std::vector<std::string> BuildCtccTCMOCdr(CString busiType, CString imsi,
 
 	///
 	content = "TAUD;";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "0;0;0;1";
 	result.push_back(content);
 	return result;
@@ -404,9 +345,9 @@ std::vector<std::string> BuildCtccTCMTCdr(CString busiType, CString imsi,
 
 	std::vector<std::string> result;
 	std::string content = "TBAT;CHN01;FX034;00200;";
-	content += GetSysTIme() + ";";
-	content += GetSysTIme() + ";";
-	content += GetSysTIme() + ";";
+	content += CommonUtil::GetSysTime() + ";";
+	content += CommonUtil::GetSysTime() + ";";
+	content += CommonUtil::GetSysTime() + ";";
 	content += "3;11;TACC;RMB;CNY;0;01;0000000;100000;5;0;3;TNET;1;3;0;";
 	result.push_back(content);
 	///
@@ -419,22 +360,22 @@ std::vector<std::string> BuildCtccTCMTCdr(CString busiType, CString imsi,
 	content = "TCMT;";
 	content += "0;";
 	content += "0;";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "32;";
-	content += CStringToString(GetSysYMDate(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysYMTime(), CP_ACP) + ";";
 	content += "123123123123;";
-	content += CStringToString(sessionId, CP_ACP) + ";";
-	content += CStringToString(sessionId, CP_ACP) + ";";
-	content += CStringToString(peerNumber, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(sessionId, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(sessionId, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(peerNumber, CP_ACP) + ";";
 	content += "0;0;1;1;0;0;0;0;0;0;0;";
 	content += imsi + ";";
 	content += serialNumber + ";";
 	content += peerNumber + ";";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "600;8613448728;";
-	content += CStringToString(nationCode, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(nationCode, CP_ACP) + ";";
 	content += "311;";
-	content += CStringToString(imei, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(imei, CP_ACP) + ";";
 	content += ";11;";
 	if (_TEXT("VC") == busiType)
 	{
@@ -451,8 +392,8 @@ std::vector<std::string> BuildCtccTCMTCdr(CString busiType, CString imsi,
 
 	///
 	content = "TAUD;";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "0;0;0;1";
 	result.push_back(content);
 	return result;
@@ -461,10 +402,10 @@ std::vector<std::string> BuildCtccTCMTCdr(CString busiType, CString imsi,
 std::vector<std::string> GetCtccFiles(ModuleContext *ctx)
 {
 	std::vector<std::string> result;
-	result.push_back(CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125");
+	result.push_back(CommonUtil::CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125");
 
-	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125" + _TEXT(".") + GetSysYMDDate() + ".dat";
-	result.push_back(CStringToString(csInFile, CP_ACP));
+	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125" + _TEXT(".") + CommonUtil::GetSysYMTime() + ".dat";
+	result.push_back(CommonUtil::CStringToString(csInFile, CP_ACP));
 
 	return result;
 }
@@ -474,9 +415,9 @@ void CtccVcCHNCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("语音-国内主叫【电信】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -539,9 +480,9 @@ void CtccVcCHNCalled(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("语音-国内被叫【电信】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -603,9 +544,9 @@ void CtccVcInterCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("语音-国际长途【电信】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -667,9 +608,9 @@ void CtccVcInterRoam(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("语音-国际漫游【电信】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -732,9 +673,9 @@ void CtccSmsCHNCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("短信-国内主叫【电信】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -796,9 +737,9 @@ void CtccSmsCHNCalled(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("短信-国内主叫【电信】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -861,9 +802,9 @@ void CtccSmsInterCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("短信-国际长途【电信】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -925,9 +866,9 @@ void CtccSmsInterRoam(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("短信-国际漫游【电信】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -990,9 +931,9 @@ void CtccDataCHNCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("流量-国内【电信】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -1051,9 +992,9 @@ void CtccDataInterCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("流量-国际【电信】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -1119,9 +1060,9 @@ std::vector<std::string> BuildCmccTCGPCdr( CString imsi,CString imei,
 
 	std::vector<std::string> result;
 	std::string content = "TBAT;CHN01;FX034;00200;";
-	content += GetSysTIme() + ";";
-	content += GetSysTIme() + ";";
-	content += GetSysTIme() + ";";
+	content += CommonUtil::GetSysTime() + ";";
+	content += CommonUtil::GetSysTime() + ";";
+	content += CommonUtil::GetSysTime() + ";";
 	content += "3;11;TACC;RMB;CNY;0;01;0000000;100000;5;0;3;TNET;1;3;0;";
 	result.push_back(content);
 	///
@@ -1145,9 +1086,9 @@ std::vector<std::string> BuildCmccTCGPCdr( CString imsi,CString imei,
 	content += imsi + ";";
 	content += serialNumber + ";";
 	content += ";CMNET;;";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "600;0;0;DDB1ADFC;;;";
-	content += CStringToString(imei, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(imei, CP_ACP) + ";";
 	content += "102400;102400;X;10;0;1;00:0;;";
 	
 
@@ -1157,8 +1098,8 @@ std::vector<std::string> BuildCmccTCGPCdr( CString imsi,CString imei,
 
 	///
 	content = "TAUD;";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "0;0;0;1";
 	result.push_back(content);
 	return result;
@@ -1171,9 +1112,9 @@ std::vector<std::string> BuildCmccTCMOCdr(CString busiType, CString imsi,
 
 	std::vector<std::string> result;
 	std::string content = "TBAT;CHN01;FX034;00200;";
-	content += GetSysTIme() + ";";
-	content += GetSysTIme() + ";";
-	content += GetSysTIme() + ";";
+	content += CommonUtil::GetSysTime() + ";";
+	content += CommonUtil::GetSysTime() + ";";
+	content += CommonUtil::GetSysTime() + ";";
 	content += "3;11;TACC;RMB;CNY;0;01;0000000;100000;5;0;3;TNET;1;3;0;";
 	result.push_back(content);
 	///
@@ -1198,7 +1139,7 @@ std::vector<std::string> BuildCmccTCMOCdr(CString busiType, CString imsi,
 	content += serialNumber + ";";
 	content += peerNumber + ";";
 	content += ";;;;";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "600;8613448728;";
 	content += ";;866351036723560;866351036723560;11;";
 	if (_TEXT("VC") == busiType)
@@ -1216,8 +1157,8 @@ std::vector<std::string> BuildCmccTCMOCdr(CString busiType, CString imsi,
 
 	///
 	content = "TAUD;";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "0;0;0;1";
 	result.push_back(content);
 	return result;
@@ -1231,9 +1172,9 @@ std::vector<std::string> BuildCmccTCMTCdr(CString busiType, CString imsi,
 
 	std::vector<std::string> result;
 	std::string content = "TBAT;CHN01;FX034;00200;";
-	content += GetSysTIme() + ";";
-	content += GetSysTIme() + ";";
-	content += GetSysTIme() + ";";
+	content += CommonUtil::GetSysTime() + ";";
+	content += CommonUtil::GetSysTime() + ";";
+	content += CommonUtil::GetSysTime() + ";";
 	content += "3;11;TACC;RMB;CNY;0;01;0000000;100000;5;0;3;TNET;1;3;0;";
 	result.push_back(content);
 	///
@@ -1257,7 +1198,7 @@ std::vector<std::string> BuildCmccTCMTCdr(CString busiType, CString imsi,
 	content += imsi + ";";
 	content += serialNumber + ";";
 	content += peerNumber + ";";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "600;8613448728;";
 	content += ";;866351036723560;866351036723560;11;";
 	if (_TEXT("VC") == busiType)
@@ -1274,8 +1215,8 @@ std::vector<std::string> BuildCmccTCMTCdr(CString busiType, CString imsi,
 
 	///
 	content = "TAUD;";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ";";
 	content += "0;0;0;1";
 	result.push_back(content);
 	return result;
@@ -1284,9 +1225,9 @@ std::vector<std::string> BuildCmccTCMTCdr(CString busiType, CString imsi,
 std::vector<std::string> GetCmccFiles(ModuleContext *ctx)
 {
 	std::vector<std::string> result;
-	result.push_back(CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125");
-	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125.CMCC" + _TEXT(".") + GetSysYMDDate() + ".dat";
-	result.push_back(CStringToString(csInFile, CP_ACP));
+	result.push_back(CommonUtil::CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempDCHN01FX03400125");
+	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/CDCHN01FX03400125.CMCC" + _TEXT(".") + CommonUtil::GetSysYMTime() + ".dat";
+	result.push_back(CommonUtil::CStringToString(csInFile, CP_ACP));
 	return result;
 }
 
@@ -1295,9 +1236,9 @@ void CmccVcCHNCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("语音-国内主叫【移动】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -1356,9 +1297,9 @@ void CmccVcCHNCalled(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("语音-国内被叫【移动】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -1417,9 +1358,9 @@ void CmccVcInterCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("语音-国际长途【移动】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -1478,9 +1419,9 @@ void CmccVcInterRoam(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("语音-国际漫游【移动】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -1540,9 +1481,9 @@ void CmccSmsCHNCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("短信-国内主叫【移动】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -1601,9 +1542,9 @@ void CmccSmsCHNCalled(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("短信-国内主叫【移动】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -1663,9 +1604,9 @@ void CmccSmsInterCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("短信-国际长途【移动】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -1724,9 +1665,9 @@ void CmccSmsInterRoam(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("短信-国际漫游【移动】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -1786,9 +1727,9 @@ void CmccDataCHNCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("流量-国内【移动】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -1846,9 +1787,9 @@ void CmccDataInterCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("流量-国际【移动】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -1911,12 +1852,12 @@ std::vector<std::string> BuildCuccTCGPCdr(CString imsi, CString imei,
 
 	std::vector<std::string> result;
 	std::string content = "2003,11,1,";
-	content += CStringToString(serialNumber, CP_ACP) + ",";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ",";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ",";
+	content += CommonUtil::CStringToString(serialNumber, CP_ACP) + ",";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ",";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ",";
 	content += "102400,102400,";
-	content += CStringToString(imsi, CP_ACP) + ";";
-	content += CStringToString(imei, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(imsi, CP_ACP) + ";";
+	content += CommonUtil::CStringToString(imei, CP_ACP) + ";";
 	content += "311,10,0,,3GNET,46001,";
 	if (_TEXT("CHN") == nationCode)
 	{
@@ -1952,19 +1893,19 @@ std::vector<std::string> BuildCuccVcdr(CString callType, CString imsi,CString im
 
 	if (_TEXT("CALLING") == callType)
 	{
-		content += CStringToString(serialNumber, CP_ACP) + ",10,";
-		content += CStringToString(peerNumber, CP_ACP) + ",";
+		content += CommonUtil::CStringToString(serialNumber, CP_ACP) + ",10,";
+		content += CommonUtil::CStringToString(peerNumber, CP_ACP) + ",";
 	}
 	else
 	{
-		content += CStringToString(peerNumber, CP_ACP) + ",10,";
-		content += CStringToString(serialNumber, CP_ACP) + ",";
+		content += CommonUtil::CStringToString(peerNumber, CP_ACP) + ",10,";
+		content += CommonUtil::CStringToString(serialNumber, CP_ACP) + ",";
 	}
 	content += "8617001200291,";
-	content += CStringToString(GetSysTIme(), CP_ACP) + ",";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ",";
 	content += "120,";
-	content += CStringToString(imsi, CP_ACP) + ",";
-	content += CStringToString(imei, CP_ACP) + ",";
+	content += CommonUtil::CStringToString(imsi, CP_ACP) + ",";
+	content += CommonUtil::CStringToString(imei, CP_ACP) + ",";
 	content += "10,cuc,";
 	if (_TEXT("CHN") == roamType)
 	{
@@ -2023,17 +1964,17 @@ std::vector<std::string> BuildCuccSmsCdr(CString callType, CString imsi,CString 
 
 	if (_TEXT("CALLING") == callType)
 	{
-		content += CStringToString(serialNumber, CP_ACP) + ",";
-		content += CStringToString(peerNumber, CP_ACP) + ",";
+		content += CommonUtil::CStringToString(serialNumber, CP_ACP) + ",";
+		content += CommonUtil::CStringToString(peerNumber, CP_ACP) + ",";
 	}
 	else
 	{
-		content += CStringToString(peerNumber, CP_ACP) + ",";
-		content += CStringToString(serialNumber, CP_ACP) + ",";
+		content += CommonUtil::CStringToString(peerNumber, CP_ACP) + ",";
+		content += CommonUtil::CStringToString(serialNumber, CP_ACP) + ",";
 	}
-	content += CStringToString(GetSysTIme(), CP_ACP) + ",";
-	content += CStringToString(imsi, CP_ACP) + ",";
-	content += CStringToString(imei, CP_ACP) + ",";
+	content += CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP) + ",";
+	content += CommonUtil::CStringToString(imsi, CP_ACP) + ",";
+	content += CommonUtil::CStringToString(imei, CP_ACP) + ",";
 	content += "10,";
 	
 	if (_TEXT("CHN") == longType)
@@ -2053,9 +1994,9 @@ std::vector<std::string> BuildCuccSmsCdr(CString callType, CString imsi,CString 
 std::vector<std::string> GetCuccFiles(ModuleContext *ctx)
 {
 	std::vector<std::string> result;
-	result.push_back(CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempSOSH0100000SJ");
-	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/SOSH0100000SJ" + GetSysYMDDate() + ".dat";
-	result.push_back(CStringToString(csInFile, CP_ACP));
+	result.push_back(CommonUtil::CStringToString(ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")), CP_ACP) + "/../tempSOSH0100000SJ");
+	CString csInFile = ctx->m_funcGetProperty(_predeal, _TEXT("文件入口")) + "/SOSH0100000SJ" + CommonUtil::GetSysYMDTime() + ".dat";
+	result.push_back(CommonUtil::CStringToString(csInFile, CP_ACP));
 	return result;
 }
 
@@ -2064,9 +2005,9 @@ void CuccVcCHNCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("语音-国内主叫【联通】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -2126,9 +2067,9 @@ void CuccVcCHNCalled(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("语音-国内被叫【联通】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -2187,9 +2128,9 @@ void CuccVcInterCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("语音-国际长途【联通】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -2248,9 +2189,9 @@ void CuccVcInterRoam(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("语音-国际漫游【联通】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -2310,9 +2251,9 @@ void CuccSmsCHNCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("短信-国内主叫【联通】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -2370,9 +2311,9 @@ void CuccSmsCHNCalled(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("短信-国内主叫【联通】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -2433,9 +2374,9 @@ void CuccSmsInterCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("短信-国际长途【联通】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -2494,9 +2435,9 @@ void CuccSmsInterRoam(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("短信-国际漫游【联通】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -2556,9 +2497,9 @@ void CuccDataCHNCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("流量-国内【联通】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
@@ -2617,9 +2558,9 @@ void CuccDataInterCalling(ModuleContext *ctx, void *ptr)
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("流量-国际【联通】"));
 	resultViewData.m_result = _TEXT("触发成功.");
 
-	std::string hostName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
 	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
 	UINT port = 22;
 
