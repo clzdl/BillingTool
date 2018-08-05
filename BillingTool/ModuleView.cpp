@@ -301,7 +301,6 @@ void CModuleView::OnWndTreeViewClick(NMHDR *pNMHDR, LRESULT *pResult)
 void CModuleView::ConnectDb(ModuleContext *ctx, void *ptr)
 {
 	ListViewData data(_TEXT("XXXXXXXXXXX") , _TEXT("基础功能"));
-	
 	if (SUCCESS != ctx->ConnectDb(CommonUtil::CStringToString(::GetProperty(_common, _TEXT("数据库连接串")), CP_ACP)))
 	{
 		data.PushMsg(_TEXT("连接数据库失败"));

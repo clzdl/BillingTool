@@ -46,7 +46,7 @@ int ModuleContext::ConnectDb(std::string dbString)
 	catch (otl_exception &e)
 	{
 		char errMsg[4096] = { 0 };
-		sprintf_s(errMsg , "code:%d,msg:%s,var_info:%s,stm_text:%s", e.code, e.msg, e.var_info, e.stm_text);
+		sprintf_s(errMsg , "connect string:%s,code:%d,msg:%s,var_info:%s,stm_text:%s", dbString.c_str(), e.code, e.msg, e.var_info, e.stm_text);
 		CString text = CommonUtil::StringToCString(errMsg, CP_ACP);
 		theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
 		text.ReleaseBuffer();
