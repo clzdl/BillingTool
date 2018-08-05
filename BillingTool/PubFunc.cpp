@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "PubFunc.h"
 #include <string>
-
+#include "PluginInterface.h"
 
 CString GetProperty(int module, CString properyName)
 {

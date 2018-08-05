@@ -68,6 +68,14 @@ BOOL CCreditOrderSenderApp::InitInstance()
 }
 
 
+static std::map<CString, PropertyInfo> modulePropertys = {
+	
+};
+
+void PropertyInitilize(std::map<int, std::map<CString, PropertyInfo> > &gProperty)
+{
+	gProperty.insert(std::make_pair(_credit_sender, modulePropertys));
+}
 
 void TriggerStartUp(ModuleContext *ctx, void *ptr);
 void TriggerOnWayStop(ModuleContext *ctx, void *ptr);

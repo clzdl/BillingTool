@@ -67,6 +67,31 @@ BOOL CSmsSendApp::InitInstance()
 	return TRUE;
 }
 
+
+static std::map<CString, PropertyInfo> modulePropertys = {
+	{ _TEXT("文件入口"),
+		{ _TEXT("/home/chengl/src/soPeriodSmsProcess/data/in"),nullptr , FALSE , }
+	},
+	{ _TEXT("HASTEN_POLICY_ID"),
+		{ _TEXT("40000036"),nullptr , FALSE , }
+	},
+	{ _TEXT("LEAVE_REAL_FEE"),
+		{ _TEXT("1000"),nullptr , FALSE , }
+	},
+	{ _TEXT("REAL_FEE"),
+		{ _TEXT("2000"),nullptr , FALSE , }
+	},
+	{ _TEXT("CREDIT_VALUE"),
+		{ _TEXT("3000"),nullptr , FALSE , }
+	}
+};
+
+
+void PropertyInitilize(std::map<int, std::map<CString, PropertyInfo> > &gProperty)
+{
+	gProperty.insert(std::make_pair(_sms_send, modulePropertys));
+}
+
 /*
 #define BILL_URGING_PAY    7001 //催费提醒(余额阀值)
 #define TRAFFIC_REMIND     7002 //流量提醒->单阀值(套餐内)/比例值(套餐内)/单阀值(套餐外)/单阀值(使用总量)

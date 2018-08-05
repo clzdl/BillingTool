@@ -67,6 +67,24 @@ BOOL CCreditDegreeApp::InitInstance()
 }
 
 
+static std::map<CString, PropertyInfo> modulePropertys = {
+	{ _TEXT("VIP-CLASS"),
+		{ _TEXT("10"),nullptr , FALSE , }
+	},
+	{ _TEXT("信用度值"),
+		{ _TEXT("1000"),nullptr , FALSE , }
+	},
+	{ _TEXT("信用度等级"),
+		{ _TEXT("A"),nullptr , FALSE , }
+	}
+};
+
+void PropertyInitilize(std::map<int, std::map<CString, PropertyInfo> > &gProperty)
+{
+	gProperty.insert(std::make_pair(_credit_degree, modulePropertys));
+}
+
+
 
 void CreateInitCreditDegree(ModuleContext *ctx, void *ptr);
 void ActiveTempCreditDegree(ModuleContext *ctx, void *ptr);

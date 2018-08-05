@@ -145,8 +145,16 @@ void CModuleView::InitializeModules()
 			TRACE(text);
 			continue;
 		}
+		/*≤Àµ•*/
 		INIT_FUNC fun = (INIT_FUNC)GetProcAddress(lib, "Initilize");
 		fun(GetParent(), &m_wndModuleView);
+
+		/* Ù–‘ */
+		INIT_PROPERTY_FUNC funProperty = (INIT_PROPERTY_FUNC)GetProcAddress(lib, "PropertyInitilize");
+		if (nullptr != funProperty)
+		{
+			funProperty(gProperties);
+		}
 	}
 	
 

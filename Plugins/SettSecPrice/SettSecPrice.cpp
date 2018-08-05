@@ -69,6 +69,31 @@ BOOL CSettSecPriceApp::InitInstance()
 	return TRUE;
 }
 
+
+static std::map<CString, PropertyInfo> modulePropertys = {
+	{ _TEXT("文件入口"),
+		{ _TEXT("/home/chengl/src/BillRate/data/in"),nullptr , FALSE , }
+	},
+	{ _TEXT("对端号码"),
+		{ _TEXT("18645005420"),nullptr , FALSE , }
+	},
+	{ _TEXT("时长"),
+		{ _TEXT("1000"),nullptr , FALSE , }
+	},
+	{ _TEXT("下行流量"),
+		{ _TEXT("102400"),nullptr , FALSE , }
+	},
+	{ _TEXT("上行流量"),
+		{ _TEXT("102400"),nullptr , FALSE , }
+	}
+};
+
+
+void PropertyInitilize(std::map<int, std::map<CString, PropertyInfo> > &gProperty)
+{
+	gProperty.insert(std::make_pair(_sett_sec_price, modulePropertys));
+}
+
 void TriggerVcLocalCdr(ModuleContext *ctx, void *ptr);
 void TriggerVcLongCdr(ModuleContext *ctx, void *ptr);
 void TriggerVcRoamInProviceCdr(ModuleContext *ctx, void *ptr);

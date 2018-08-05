@@ -71,6 +71,31 @@ BOOL CPredealApp::InitInstance()
 }
 
 
+static std::map<CString, PropertyInfo> modulePropertys = {
+	{ _TEXT("对端号码"),
+		{ _TEXT("18731173110"),nullptr , FALSE , }
+	},
+	{ _TEXT("SESSIONID"),
+		{ _TEXT("Eadfkjla234"),nullptr , FALSE , }
+	},
+	{ _TEXT("文件入口"),
+		{ _TEXT("/home/chengl/src/soPredealBin/data/in"),nullptr , FALSE , }
+	},
+
+	{ _TEXT("流量话单类型"),
+		{ _TEXT("首单"),nullptr , TRUE ,{
+				{ _TEXT("首单"),_TEXT("0") },
+				{ _TEXT("中间单"),_TEXT("1") },
+				{ _TEXT("尾单"),_TEXT("-1") },
+			}
+		}
+	}
+};
+
+void PropertyInitilize(std::map<int, std::map<CString, PropertyInfo> > &gProperty)
+{
+	gProperty.insert(std::make_pair(_predeal, modulePropertys));
+}
 
 /////
 void CtccVcCHNCalling(ModuleContext *ctx, void *ptr);

@@ -8,7 +8,7 @@
 #include "../../BillingTool/ModuleContext.h"
 #include "../../BillingTool/BillingTool.h"
 #include "../UtilDll/UtilDll.h"
-
+#include <map>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -66,6 +66,36 @@ BOOL CAftAcctAdjustApp::InitInstance()
 	CWinApp::InitInstance();
 
 	return TRUE;
+}
+
+static std::map<CString, PropertyInfo> modulePropertys = {
+		{ _TEXT("账单ID"),
+			{ _TEXT("1111111000"),nullptr , FALSE , }
+		},
+		{ _TEXT("调账金额/比例"),
+			{ _TEXT("1000"),nullptr , FALSE , }
+		},
+		{ _TEXT("账目编码"),
+			{ _TEXT("110000"),nullptr , FALSE , }
+		},
+		{ _TEXT("账单费用"),
+			{ _TEXT("10000"),nullptr , FALSE , }
+		},
+		{ _TEXT("账单余额"),
+			{ _TEXT("100"),nullptr , FALSE , }
+		},
+		{ _TEXT("调减余额处理方式"),
+			{ _TEXT("作废"),nullptr , TRUE ,{
+				{ _TEXT("作废"),_TEXT("1") },
+				{ _TEXT("转赠款"),_TEXT("2") }
+				}
+			}
+		}
+	};
+
+void PropertyInitilize(std::map<int, std::map<CString, PropertyInfo> > &gProperty)
+{
+	gProperty.insert(std::make_pair(_aft_adjust, modulePropertys));
 }
 
 

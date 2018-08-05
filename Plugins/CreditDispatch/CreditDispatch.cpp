@@ -68,6 +68,32 @@ BOOL CCreditDispatchApp::InitInstance()
 }
 
 
+static std::map<CString, PropertyInfo> modulePropertys = {
+	{ _TEXT("触发停机服务地址"),
+		{ _TEXT("/creditTrigger"),nullptr, FALSE, }
+	},
+	{ _TEXT("话单费用"),
+		{ _TEXT("1000"),nullptr ,FALSE , }
+	},
+	{ _TEXT("话单使用量"),
+		{ _TEXT("10"),nullptr ,FALSE , }
+	},
+	{ _TEXT("截止本条话单前的总是用量"),
+		{ _TEXT("100"),nullptr ,FALSE , }
+	},
+	{ _TEXT("用户总的基础量"),
+		{ _TEXT("200"),nullptr , FALSE , }
+	},
+	{ _TEXT("信控分发文件入口"),
+		{ _TEXT("/home/chengl/src/soCreditDispatch/data/in"),nullptr , FALSE , }
+	}
+};
+
+void PropertyInitilize(std::map<int, std::map<CString, PropertyInfo> > &gProperty)
+{
+	gProperty.insert(std::make_pair(_credit_dispatch, modulePropertys));
+}
+
 
 static _ItemCallBackDef moduleCallBackDef[] = {
 	{ _credit_dispatch, BusiFunc::TriggerStartUp },

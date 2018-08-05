@@ -67,6 +67,52 @@ BOOL CPrefeeRestoreApp::InitInstance()
 }
 
 
+
+static std::map<CString, PropertyInfo> modulePropertys = {
+	{ _TEXT("活动ID"),
+		{ _TEXT("1111111000"),nullptr , FALSE , }
+	},
+	{ _TEXT("规则类型"),
+		{ _TEXT("均分"),nullptr , TRUE ,{
+				{ _TEXT("均分"),_TEXT("0") },
+				{ _TEXT("自定义"),_TEXT("1") }
+			}
+		}
+	},
+	{ _TEXT("自定义规则ID"),
+		{ _TEXT("1101111000"),nullptr , FALSE , }
+	},
+	{ _TEXT("返还费用"),
+		{ _TEXT("10000"),nullptr , FALSE , }
+	},
+	{ _TEXT("返还周期"),
+		{ _TEXT("按天"),nullptr , TRUE ,{
+				{ _TEXT("按天"),_TEXT("0") },
+				{ _TEXT("按自然甜"),_TEXT("1") },
+				{ _TEXT("按月"),_TEXT("2") },
+				{ _TEXT("按自然月"),_TEXT("3") }
+			}
+		}
+	},
+	{ _TEXT("校验规则"),
+		{ _TEXT("不校验强制返费"),nullptr , TRUE ,{
+				{ _TEXT("不校验强制返费"),_TEXT("0") },
+				{ _TEXT("校验不通过废弃"),_TEXT("1") },
+				{ _TEXT("校验不通过顺延"),_TEXT("2") }
+			}
+		}
+	},
+	{ _TEXT("预存返还账本"),
+		{ _TEXT("2111111010130"),nullptr , FALSE , }
+	}
+};
+
+void PropertyInitilize(std::map<int, std::map<CString, PropertyInfo> > &gProperty)
+{
+	gProperty.insert(std::make_pair(_prefee_restore, modulePropertys));
+}
+
+
 void TriggerPrefee(ModuleContext *ctx, void *ptr);
 
 

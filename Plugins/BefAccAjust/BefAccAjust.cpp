@@ -67,6 +67,27 @@ BOOL CBefAccAjustApp::InitInstance()
 }
 
 
+static std::map<CString, PropertyInfo> modulePropertys = {
+	{ _TEXT("调账金额/比例"),
+		{ _TEXT("1000"),nullptr , FALSE , }
+	},
+	{ _TEXT("账目编码"),
+		{ _TEXT("110000"),nullptr , FALSE , }
+	},
+	{ _TEXT("生效标识"),
+		{ _TEXT("立即生效"),nullptr , TRUE ,{
+				{ _TEXT("立即生效"),_TEXT("0") } ,
+				{ _TEXT("月末生效"),_TEXT("1") }
+			}
+		}
+	}
+};
+
+void PropertyInitilize(std::map<int, std::map<CString, PropertyInfo> > &gProperty)
+{
+	gProperty.insert(std::make_pair(_bef_adjust, modulePropertys));
+}
+
 
 void IncrementAjdustByMoney(ModuleContext *ctx, void *ptr);
 void IncrementAjdustByRatio(ModuleContext *ctx, void *ptr);

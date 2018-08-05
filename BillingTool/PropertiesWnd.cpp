@@ -6,7 +6,7 @@
 #include "BillingTool.h"
 #include <map>
 #include "PubFunc.h"
-
+#include "PluginInterface.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
