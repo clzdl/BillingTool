@@ -301,13 +301,15 @@ void CModuleView::OnWndTreeViewClick(NMHDR *pNMHDR, LRESULT *pResult)
 void CModuleView::ConnectDb(ModuleContext *ctx, void *ptr)
 {
 	ListViewData data(_TEXT("XXXXXXXXXXX") , _TEXT("基础功能"));
-	data.m_result = _TEXT("连接数据库成功");
 	
 	if (SUCCESS != ctx->ConnectDb(CommonUtil::CStringToString(::GetProperty(_common, _TEXT("数据库连接串")), CP_ACP)))
 	{
-		data.m_result = _TEXT("连接数据库失败");
+		data.PushMsg(_TEXT("连接数据库失败"));
 	}
-	
+	else
+	{
+		data.PushMsg(_TEXT("连接数据库成功"));
+	}
 	theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&data);
 
 }

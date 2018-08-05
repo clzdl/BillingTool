@@ -21,6 +21,9 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="SshCmdExecutor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="UtilDll.def">
@@ -41,6 +44,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="UtilDll.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SshCmdExecutor.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

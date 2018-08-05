@@ -23,6 +23,7 @@
     <RootNamespace>SmsSend</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
     <Keyword>MFCDLLProj</Keyword>
+    <ProjectName>CreditSms</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -78,8 +79,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\oraclient11\sdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\workspace\myselfsource\BillingTool\x64\Debug;C:\oraclient11\sdk\lib\msvc;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\workspace\opensource\libssh2-1.8.0\include;C:\workspace\opensource\poco-1.7.8-all\Net\include;C:\workspace\opensource\poco-1.7.8-all\Foundation\include;C:\oraclient11\sdk\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\workspace\opensource\poco-1.7.8-all\lib64;C:\workspace\opensource\libssh2-1.8.0\win32\Debug_dll;C:\workspace\myselfsource\BillingTool\x64\Debug;C:\oraclient11\sdk\lib\msvc;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -188,7 +189,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SmsSend.cpp" />
+    <ClCompile Include="CreditSms.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -198,7 +199,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="SmsSend.h" />
+    <ClInclude Include="CreditSms.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

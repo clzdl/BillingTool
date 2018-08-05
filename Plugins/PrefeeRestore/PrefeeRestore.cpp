@@ -232,7 +232,6 @@ bool BuildPrefee(ModuleContext *ctx, CString userId, CString activityId,CString 
 void TriggerPrefee(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("预存返回功能"));
-	resultViewData.m_result = _TEXT("触发成功.");
 	if (!BuildPrefee(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
 						ctx->m_funcGetProperty(_prefee_restore, _TEXT("活动ID")),
 						ctx->m_funcGetProperty(_prefee_restore, _TEXT("规则类型")),
@@ -242,7 +241,11 @@ void TriggerPrefee(ModuleContext *ctx, void *ptr)
 						ctx->m_funcGetProperty(_prefee_restore, _TEXT("校验规则")),
 						ctx->m_funcGetProperty(_prefee_restore, _TEXT("预存返还账本")) ))
 	{
-		resultViewData.m_result = _TEXT("触发失败.");
+		resultViewData.PushMsg(_TEXT("触发失败."));
+	}
+	else
+	{
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	}
 
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);

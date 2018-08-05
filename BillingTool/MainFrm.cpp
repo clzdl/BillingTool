@@ -367,9 +367,13 @@ LRESULT CMainFrame::OnWriteMsg2StatusBar(WPARAM wParam, LPARAM lParam)
 LRESULT CMainFrame::OnWriteMsg2ListView(WPARAM wParam, LPARAM lParam)
 {
 	ListViewData *pViewData = (ListViewData*)lParam;
-	dynamic_cast<CBillingToolView*>(GetActiveView())->AddResult2ListCtrl(pViewData->m_phone, 
-																			pViewData->m_sence, 
-																			pViewData->m_result);
+	for (auto it : pViewData->m_result) 
+	{
+		dynamic_cast<CBillingToolView*>(GetActiveView())->AddResult2ListCtrl(pViewData->m_phone,
+																				pViewData->m_sence,
+																				it);
+
+	}
 	return 0;
 }
 

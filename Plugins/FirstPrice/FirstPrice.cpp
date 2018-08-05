@@ -9,7 +9,7 @@
 #include "../../BillingTool/BillingTool.h"
 #include <vector>
 #include "../UtilDll/UtilDll.h"
-
+#include "../UtilDll/SshCmdExecutor.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -442,20 +442,21 @@ void TriggerVcLocalCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-本地市话"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg( _TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -477,24 +478,26 @@ void TriggerVcLocalCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 void TriggerVcLongCdr(ModuleContext *ctx, void *ptr)
@@ -511,20 +514,21 @@ void TriggerVcLongCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-国内长途"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -547,24 +551,26 @@ void TriggerVcLongCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 void TriggerVcRoamInProviceCdr(ModuleContext *ctx, void *ptr)
@@ -581,20 +587,21 @@ void TriggerVcRoamInProviceCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-省内漫游"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -615,24 +622,26 @@ void TriggerVcRoamInProviceCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 void TriggerVcRoamProviceCdr(ModuleContext *ctx, void *ptr)
@@ -649,20 +658,21 @@ void TriggerVcRoamProviceCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-省际漫游"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -684,24 +694,26 @@ void TriggerVcRoamProviceCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
 
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 void TriggerVcLongInterCdr(ModuleContext *ctx, void *ptr)
@@ -718,20 +730,21 @@ void TriggerVcLongInterCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-国际长途"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -753,24 +766,26 @@ void TriggerVcLongInterCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 void TriggerVcRoamInterCdr(ModuleContext *ctx, void *ptr)
@@ -787,20 +802,21 @@ void TriggerVcRoamInterCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-国际漫游"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -822,24 +838,26 @@ void TriggerVcRoamInterCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 void TriggerVcIpCallCdr(ModuleContext *ctx, void *ptr)
@@ -856,20 +874,21 @@ void TriggerVcIpCallCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-IP通话"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -891,24 +910,26 @@ void TriggerVcIpCallCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 void TriggerVcDivertCdr(ModuleContext *ctx, void *ptr)
@@ -925,20 +946,21 @@ void TriggerVcDivertCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-呼转通话"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -960,24 +982,25 @@ void TriggerVcDivertCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
-			break;
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 
@@ -995,20 +1018,21 @@ void TriggerVcCalledCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-国内被叫"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -1030,24 +1054,26 @@ void TriggerVcCalledCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 
@@ -1065,20 +1091,21 @@ void TriggerSmsChnCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-国内短信"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -1100,24 +1127,26 @@ void TriggerSmsChnCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 void TriggerSmsInterCdr(ModuleContext *ctx, void *ptr)
@@ -1134,20 +1163,21 @@ void TriggerSmsInterCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-国际短信"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -1169,24 +1199,26 @@ void TriggerSmsInterCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 
@@ -1204,20 +1236,21 @@ void TriggerSmsRoamCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-国际漫游短信"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -1239,24 +1272,26 @@ void TriggerSmsRoamCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 
@@ -1274,20 +1309,21 @@ void TriggerSmsCalledCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-国内被叫短信"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -1309,24 +1345,26 @@ void TriggerSmsCalledCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 
@@ -1344,20 +1382,21 @@ void TriggerDataInProvinceCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-省内流量"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -1379,24 +1418,26 @@ void TriggerDataInProvinceCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 void TriggerDataProvinceCdr(ModuleContext *ctx, void *ptr)
@@ -1413,20 +1454,21 @@ void TriggerDataProvinceCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-省际流量"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -1448,24 +1490,26 @@ void TriggerDataProvinceCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 void TriggerDataInterCdr(ModuleContext *ctx, void *ptr)
@@ -1483,20 +1527,21 @@ void TriggerDataInterCdr(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("标批-国际漫游流量"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -1518,23 +1563,25 @@ void TriggerDataInterCdr(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }

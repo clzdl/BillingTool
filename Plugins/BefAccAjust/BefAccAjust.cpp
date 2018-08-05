@@ -205,7 +205,6 @@ bool BuildBefAccChk(ModuleContext *ctx, CString userId, CString acctId,CString s
 void IncrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("账前调账-按金额调增"));
-	resultViewData.m_result = _TEXT("调账成功");
 	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
 							ctx->m_funcGetProperty(_common, _TEXT("账户ID")),
 							ctx->m_funcGetProperty(_common, _TEXT("测试号码")),
@@ -214,7 +213,11 @@ void IncrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 							ctx->m_funcGetProperty(_bef_adjust, _TEXT("调账金额/比例")),
 							ctx->m_funcGetProperty(_bef_adjust, _TEXT("生效标识"))))
 	{
-		resultViewData.m_result = _TEXT("调账失败.");
+		resultViewData.PushMsg( _TEXT("调账失败."));
+	}
+	else
+	{
+		resultViewData.PushMsg(_TEXT("调账成功."));
 	}
 
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
@@ -223,7 +226,7 @@ void IncrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 void IncrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("账前调账-按比例调增"));
-	resultViewData.m_result = _TEXT("调账成功");
+	
 	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
 		ctx->m_funcGetProperty(_common, _TEXT("账户ID")),
 		ctx->m_funcGetProperty(_common, _TEXT("测试号码")),
@@ -232,7 +235,11 @@ void IncrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 		ctx->m_funcGetProperty(_bef_adjust, _TEXT("调账金额/比例")),
 		ctx->m_funcGetProperty(_bef_adjust, _TEXT("生效标识"))))
 	{
-		resultViewData.m_result = _TEXT("调账失败.");
+		resultViewData.PushMsg(_TEXT("调账失败."));
+	}
+	else
+	{
+		resultViewData.PushMsg(_TEXT("调账成功."));
 	}
 
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
@@ -241,7 +248,7 @@ void IncrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 void DecrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("账前调账-按金额调减"));
-	resultViewData.m_result = _TEXT("调账成功");
+	
 	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
 		ctx->m_funcGetProperty(_common, _TEXT("账户ID")),
 		ctx->m_funcGetProperty(_common, _TEXT("测试号码")),
@@ -250,7 +257,11 @@ void DecrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 		ctx->m_funcGetProperty(_bef_adjust, _TEXT("调账金额/比例")),
 		ctx->m_funcGetProperty(_bef_adjust, _TEXT("生效标识"))))
 	{
-		resultViewData.m_result = _TEXT("调账失败.");
+		resultViewData.PushMsg(_TEXT("调账失败."));
+	}
+	else
+	{
+		resultViewData.PushMsg(_TEXT("调账成功."));
 	}
 
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
@@ -259,7 +270,7 @@ void DecrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 void DecrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("账前调账-按比例调减"));
-	resultViewData.m_result = _TEXT("调账成功");
+	
 	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
 		ctx->m_funcGetProperty(_common, _TEXT("账户ID")),
 		ctx->m_funcGetProperty(_common, _TEXT("测试号码")),
@@ -268,7 +279,11 @@ void DecrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 		ctx->m_funcGetProperty(_bef_adjust, _TEXT("调账金额/比例")),
 		ctx->m_funcGetProperty(_bef_adjust, _TEXT("生效标识"))))
 	{
-		resultViewData.m_result = _TEXT("调账失败.");
+		resultViewData.PushMsg(_TEXT("调账失败."));
+	}
+	else
+	{
+		resultViewData.PushMsg(_TEXT("调账成功."));
 	}
 
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);

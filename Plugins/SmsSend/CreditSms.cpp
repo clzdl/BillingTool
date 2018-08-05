@@ -2,13 +2,14 @@
 //
 
 #include "stdafx.h"
-#include "SmsSend.h"
+#include "CreditSms.h"
 #include "../../BillingTool/PluginInterface.h"
 #include "../../BillingTool/ViewTree.h"
 #include "../../BillingTool/ModuleContext.h"
 #include "../../BillingTool/BillingTool.h"
 #include <vector>
 #include "../UtilDll/UtilDll.h"
+#include "../UtilDll/SshCmdExecutor.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -179,7 +180,6 @@ std::vector<std::string> GetFiles(ModuleContext *ctx)
 void TriggerSmsSendFile(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("生成短信文件"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
 	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
@@ -193,16 +193,18 @@ void TriggerSmsSendFile(ModuleContext *ctx, void *ptr)
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -210,24 +212,26 @@ void TriggerSmsSendFile(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 
@@ -293,7 +297,6 @@ bool BuildHastenNotice(ModuleContext *ctx, CString userId, CString tradeTypeCode
 void TriggerOneWayStopMsg(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发单停短信"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
 		_TEXT("3120"),
@@ -302,7 +305,11 @@ void TriggerOneWayStopMsg(ModuleContext *ctx, void *ptr)
 		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
 		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
 	{
-		resultViewData.m_result = _TEXT("触发失败.");
+		resultViewData.PushMsg(_TEXT("触发失败."));
+	}
+	else
+	{
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	}
 
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
@@ -310,7 +317,6 @@ void TriggerOneWayStopMsg(ModuleContext *ctx, void *ptr)
 void TriggerDoubleStopMsg(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发双停短信"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
@@ -320,7 +326,11 @@ void TriggerDoubleStopMsg(ModuleContext *ctx, void *ptr)
 		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
 		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
 	{
-		resultViewData.m_result = _TEXT("触发失败.");
+		resultViewData.PushMsg(_TEXT("触发失败."));
+	}
+	else
+	{
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	}
 
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
@@ -329,7 +339,6 @@ void TriggerDoubleStopMsg(ModuleContext *ctx, void *ptr)
 void TriggerNotEnoughBalanceMsg(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发余额不足短信"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
 		_TEXT("7001"),
@@ -338,7 +347,11 @@ void TriggerNotEnoughBalanceMsg(ModuleContext *ctx, void *ptr)
 		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
 		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
 	{
-		resultViewData.m_result = _TEXT("触发失败.");
+		resultViewData.PushMsg(_TEXT("触发失败."));
+	}
+	else
+	{
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	}
 
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
@@ -347,7 +360,6 @@ void TriggerNotEnoughBalanceMsg(ModuleContext *ctx, void *ptr)
 void TriggerDataRemindMsg(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发流量使用短信"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	/*
 	ModuleContext *ctx, CString userId, CString tradeTypeCode, CString policyId,
@@ -360,16 +372,18 @@ void TriggerDataRemindMsg(ModuleContext *ctx, void *ptr)
 		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
 		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
 	{
-		resultViewData.m_result = _TEXT("触发失败.");
+		resultViewData.PushMsg(_TEXT("触发失败."));
 	}
-
+	else
+	{
+		resultViewData.PushMsg(_TEXT("触发成功."));
+	}
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 	
 }
 void TriggerDataTopMsg(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发流量封顶短信"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
@@ -379,16 +393,18 @@ void TriggerDataTopMsg(ModuleContext *ctx, void *ptr)
 		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
 		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
 	{
-		resultViewData.m_result = _TEXT("触发失败.");
+		resultViewData.PushMsg(_TEXT("触发失败."));
 	}
-
+	else
+	{
+		resultViewData.PushMsg(_TEXT("触发成功."));
+	}
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 
 }
 void TriggerPostPaypMsg(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发后付费用户催费短信"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
@@ -398,7 +414,11 @@ void TriggerPostPaypMsg(ModuleContext *ctx, void *ptr)
 		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
 		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
 	{
-		resultViewData.m_result = _TEXT("触发失败.");
+		resultViewData.PushMsg(_TEXT("触发失败."));
+	}
+	else
+	{
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	}
 
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);

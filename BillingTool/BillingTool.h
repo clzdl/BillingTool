@@ -14,7 +14,7 @@
 // CBillingToolApp:
 // 有关此类的实现，请参阅 BillingTool.cpp
 //
-
+#include <vector>
 /*
  自定义消息
 */
@@ -34,9 +34,13 @@ public:
 	~ListViewData()
 	{
 	}
+	void PushMsg(CString msg)
+	{
+		m_result.push_back(msg);
+	}
 	CString m_phone;
 	CString m_sence;
-	CString m_result;
+	std::vector<CString> m_result;
 };
 
 class CBillingToolApp : public CWinAppEx

@@ -1,9 +1,7 @@
 #include "stdafx.h"
-#include "SshCmddExecutor.h"
-#include "BillingTool.h"
-#include "PubFunc.h"
-#include "../Plugins/UtilDll/UtilDll.h"
 
+#include "SshCmdExecutor.h"
+#include "UtilDll.h"
 SshCmdExecutor::SshCmdExecutor()
 {
 }
@@ -22,10 +20,7 @@ bool SshCmdExecutor::ConnectAndInit(std::string hostName, int  port, std::string
 	int rc = libssh2_init(0);
 
 	if (rc != 0) {
-		CString text;
-		text.Format(_TEXT("libssh2 initialization failed (%d)"), rc);
-		theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
-		text.ReleaseBuffer();
+		m_errMsg.Format(_TEXT("libssh2 initialization failed (%d)"), rc);
 		return false;
 	}
 
@@ -91,15 +86,11 @@ bool SshCmdExecutor::ConnectAndInit(std::string hostName, int  port, std::string
 	/* We could authenticate via password */
 	while ((rc = libssh2_userauth_password(m_session, userName.c_str(), userPwd.c_str())) == LIBSSH2_ERROR_EAGAIN);
 	if (rc) {
-		CString text;
-		text.Format(_TEXT("Authentication by password failed."));
-		theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
-		text.ReleaseBuffer();
+		m_errMsg.Format(_TEXT("Authentication by password failed."));
 		return false;
 	}
 
-	
-
+	return true;
 }
 
 bool SshCmdExecutor::ExecuteCmd(std::string commandline)
@@ -111,10 +102,7 @@ bool SshCmdExecutor::ExecuteCmd(std::string commandline)
 
 	if (m_channel == NULL)
 	{
-		CString text;
-		text.Format(_TEXT("open channel failed."));
-		theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
-		text.ReleaseBuffer();
+		m_errMsg.Format(_TEXT("open channel failed."));
 		return false;
 	}
 
@@ -122,11 +110,7 @@ bool SshCmdExecutor::ExecuteCmd(std::string commandline)
 	while ((rc = libssh2_channel_exec(m_channel, commandline.c_str())) == LIBSSH2_ERROR_EAGAIN);
 	if (rc != 0)
 	{
-		CString text;
-		text.Format(_TEXT("execute command failed."));
-		theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
-		text.ReleaseBuffer();
-		
+		m_errMsg.Format(_TEXT("execute command failed."));
 		return false;
 	}
 
@@ -148,10 +132,7 @@ bool SshCmdExecutor::ExecuteCmd(std::string commandline)
 			if (0 >rc && rc != LIBSSH2_ERROR_EAGAIN)
 			{
 				/* no need to output this for the EAGAIN case */
-				CString text;
-				text.Format(_TEXT("libssh2_channel_read returned %d"), rc);
-				theApp.GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)text.GetBuffer());
-				text.ReleaseBuffer();
+				m_errMsg.Format(_TEXT("libssh2_channel_read returned %d"), rc);
 				return false;
 			}
 		}
@@ -176,18 +157,21 @@ bool SshCmdExecutor::ExecuteCmd(std::string commandline)
 	libssh2_channel_free(m_channel);
 
 	m_channel = NULL;
+	return true;
 }
 
 void SshCmdExecutor::DisconnectAndFree()
 {
 	int rc = 0;
-	
-
-
 	libssh2_session_disconnect(m_session, "Normal Shutdown, Thank you for playing");
 	libssh2_session_free(m_session);
 	m_session = NULL;
 	m_streamSocket.close();
 	libssh2_exit();
 
+}
+
+CString SshCmdExecutor::GetErrMsg()
+{
+	return m_errMsg;
 }

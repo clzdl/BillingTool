@@ -15,13 +15,13 @@
 #include "Poco/Net/NetException.h"
 #include "Poco/StreamCopier.h"
 #include "../UtilDll/UtilDll.h"
+#include "../UtilDll/SshCmdExecutor.h"
 
 
 
 void BusiFunc::TriggerStartUp(ModuleContext *ctx,void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("触发信控开机"));
-	resultViewData.m_result = _TEXT("触发成功.");
 	try{
 		std::string sql = "insert into ACC_JFTOCREDIT(acc_id, "
 			"	user_id, "
@@ -48,6 +48,7 @@ void BusiFunc::TriggerStartUp(ModuleContext *ctx,void *ptr)
 		    << CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP).c_str();
 
 		ctx->m_dbConn->commit();
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	}
 	catch (otl_exception &e)
 	{
@@ -57,7 +58,7 @@ void BusiFunc::TriggerStartUp(ModuleContext *ctx,void *ptr)
 		ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_STATUSBAR, 0, (LPARAM)exp.GetBuffer());
 		exp.ReleaseBuffer();
 		
-		resultViewData.m_result = _TEXT("触发失败.");
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	}
 	 
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
@@ -129,7 +130,6 @@ static int SendCreditPkg(ModuleContext *ctx,std::string srvIp , UINT port , std:
 void BusiFunc::TriggerStopByNet(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发信控停机【NET】"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	std::string jsonString = CreateCreditJsonData(ctx->m_funcGetProperty(_common, _TEXT("账户ID")) ,
 												ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
@@ -143,7 +143,11 @@ void BusiFunc::TriggerStopByNet(ModuleContext *ctx, void *ptr)
 
 	if (SUCCESS != result)
 	{
-		resultViewData.m_result = _TEXT("触发失败.");
+		resultViewData.PushMsg(_TEXT("触发失败."));
+	}
+	else
+	{
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	}
 
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
@@ -199,7 +203,7 @@ std::vector<std::string> GetFiles(ModuleContext *ctx ,CString testNumber)
 void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发信控停机【FILE】"));
-	resultViewData.m_result = _TEXT("触发成功.");
+
 
 	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
 	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
@@ -213,16 +217,18 @@ void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpCreditInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpCreditInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -234,24 +240,26 @@ void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 
 		for(auto it : creditContent)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo \"" + it + "\" >>" + tmpCreditInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo \"" + it + "\" >>" + tmpCreditInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 		
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpCreditInFile + " " + creditInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpCreditInFile + " " + creditInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 
 }
@@ -305,7 +313,6 @@ static std::vector<std::string> BuildRemindFileContents(std::string acctId, std:
 void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发信控停机【FILE】"));
-	resultViewData.m_result = _TEXT("触发成功.");
 
 	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
 	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
@@ -321,16 +328,18 @@ void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpCreditInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpCreditInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
@@ -345,23 +354,25 @@ void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
 
 		for (auto it : creditContent)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo \"" + it + "\" >>" + tmpCreditInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo \"" + it + "\" >>" + tmpCreditInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("触发失败.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("触发失败."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpCreditInFile + " " + creditInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpCreditInFile + " " + creditInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("触发失败.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("触发失败."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("触发成功."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }

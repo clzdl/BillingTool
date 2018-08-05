@@ -4,7 +4,7 @@
 #include "BillingToolView.h"
 #include "MainFrm.h"
 #include "PubFunc.h"
-#include "SshCmddExecutor.h"
+#include "../Plugins/UtilDll/SshCmdExecutor.h"
 #include "../Plugins/UtilDll/UtilDll.h"
 
 ModuleContext::ModuleContext(CBillingToolApp *app)
@@ -13,9 +13,6 @@ ModuleContext::ModuleContext(CBillingToolApp *app)
 	m_funcGetProperty(GetProperty),
 	m_objSshCmdExecutor(new SshCmdExecutor())
 {
-	m_funcSshConnectAndInit = &SshCmdExecutor::ConnectAndInit;
-	m_funcSshExecuteCmd = &SshCmdExecutor::ExecuteCmd;
-	m_funcSshDisconnectAndFree = &SshCmdExecutor::DisconnectAndFree;
 }
 ModuleContext::~ModuleContext()
 {

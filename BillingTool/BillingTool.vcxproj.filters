@@ -69,9 +69,6 @@
     <ClInclude Include="LoadingDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SshCmddExecutor.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="splashwnd\SplashWindow.h">
       <Filter>splashwnd</Filter>
     </ClInclude>
@@ -117,9 +114,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="LoadingDlg.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="SshCmdExecutor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="splashwnd\SplashWindow.cpp">

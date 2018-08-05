@@ -9,6 +9,7 @@
 #include "../../BillingTool/BillingTool.h"
 #include <vector>
 #include "../UtilDll/UtilDll.h"
+#include "../UtilDll/SshCmdExecutor.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -272,20 +273,20 @@ void AggVc(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("ÀÛÕË-ÓïÒô"));
-	resultViewData.m_result = _TEXT("´¥·¢³É¹¦.");
-
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("´¥·¢Ê§°Ü.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("´¥·¢Ê§°Ü."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("´¥·¢Ê§°Ü.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("´¥·¢Ê§°Ü."));
 			break;
 		}
 
@@ -306,24 +307,25 @@ void AggVc(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("´¥·¢Ê§°Ü.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("´¥·¢Ê§°Ü."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("´¥·¢Ê§°Ü.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("´¥·¢Ê§°Ü."));
 			break;
 		}
-
-
+		resultViewData.PushMsg(_TEXT("´¥·¢³É¹¦."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 void AggSms(ModuleContext *ctx, void *ptr)
@@ -341,20 +343,22 @@ void AggSms(ModuleContext *ctx, void *ptr)
 	
 
 	ListViewData resultViewData(testNumber, _TEXT("ÀÛÕË-¶ÌÐÅ"));
-	resultViewData.m_result = _TEXT("´¥·¢³É¹¦.");
+	
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("´¥·¢Ê§°Ü.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("´¥·¢Ê§°Ü."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("´¥·¢Ê§°Ü.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("´¥·¢Ê§°Ü."));
 			break;
 		}
 
@@ -375,24 +379,26 @@ void AggSms(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("´¥·¢Ê§°Ü.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("´¥·¢Ê§°Ü."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("´¥·¢Ê§°Ü.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("´¥·¢Ê§°Ü."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("´¥·¢³É¹¦."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
 void AggData(ModuleContext *ctx, void *ptr)
@@ -410,20 +416,22 @@ void AggData(ModuleContext *ctx, void *ptr)
 	std::string inFile = files.at(1);
 
 	ListViewData resultViewData(testNumber, _TEXT("ÀÛÕË-Á÷Á¿"));
-	resultViewData.m_result = _TEXT("´¥·¢³É¹¦.");
+	
 
 	bool result = true;
 	do {
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshConnectAndInit))(hostName, port, userName, userPwd);
+		result = ctx->m_objSshCmdExecutor->ConnectAndInit(hostName, port, userName, userPwd);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("´¥·¢Ê§°Ü.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("´¥·¢Ê§°Ü."));
 			break;
 		}
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("touch " + tmpInFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("touch " + tmpInFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("´¥·¢Ê§°Ü.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("´¥·¢Ê§°Ü."));
 			break;
 		}
 
@@ -444,23 +452,25 @@ void AggData(ModuleContext *ctx, void *ptr)
 
 		for (auto it : contents)
 		{
-			result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("echo '" + it + "' >>" + tmpInFile);
+			result = ctx->m_objSshCmdExecutor->ExecuteCmd("echo '" + it + "' >>" + tmpInFile);
 			if (!result)
 			{
-				resultViewData.m_result = _TEXT("´¥·¢Ê§°Ü.");
+				resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+				resultViewData.PushMsg(_TEXT("´¥·¢Ê§°Ü."));
 				break;
 			}
 		}
 
-		result = (ctx->m_objSshCmdExecutor->*(ctx->m_funcSshExecuteCmd))("mv  " + tmpInFile + " " + inFile);
+		result = ctx->m_objSshCmdExecutor->ExecuteCmd("mv  " + tmpInFile + " " + inFile);
 		if (!result)
 		{
-			resultViewData.m_result = _TEXT("´¥·¢Ê§°Ü.");
+			resultViewData.PushMsg(ctx->m_objSshCmdExecutor->GetErrMsg());
+			resultViewData.PushMsg(_TEXT("´¥·¢Ê§°Ü."));
 			break;
 		}
 
-
+		resultViewData.PushMsg(_TEXT("´¥·¢³É¹¦."));
 	} while (false);
-	(ctx->m_objSshCmdExecutor->*(ctx->m_funcSshDisconnectAndFree))();
+	ctx->m_objSshCmdExecutor->DisconnectAndFree();
 	ctx->m_theApp->GetMainWnd()->SendMessage(MSG_WRITE_MSG2_LISTVIEW, 0, (LPARAM)&resultViewData);
 }
