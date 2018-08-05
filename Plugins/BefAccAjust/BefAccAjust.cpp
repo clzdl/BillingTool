@@ -67,7 +67,7 @@ BOOL CBefAccAjustApp::InitInstance()
 }
 
 
-static std::map<CString, PropertyInfo> modulePropertys = {
+static std::map<CString, PropertyGrid> modulePropertys = {
 	{ _TEXT("µ÷ÕË½ð¶î/±ÈÀý"),
 		{ _TEXT("1000"),nullptr , FALSE , }
 	},
@@ -83,7 +83,7 @@ static std::map<CString, PropertyInfo> modulePropertys = {
 	}
 };
 
-void PropertyInitilize(std::map<int, std::map<CString, PropertyInfo> > &gProperty)
+void PropertyInitilize(std::map<int, std::map<CString, PropertyGrid> > &gProperty)
 {
 	gProperty.insert(std::make_pair(_bef_adjust, modulePropertys));
 }

@@ -70,7 +70,7 @@ BOOL CSettSecPriceApp::InitInstance()
 }
 
 
-static std::map<CString, PropertyInfo> modulePropertys = {
+static std::map<CString, PropertyGrid> modulePropertys = {
 	{ _TEXT("文件入口"),
 		{ _TEXT("/home/chengl/src/BillRate/data/in"),nullptr , FALSE , }
 	},
@@ -89,7 +89,7 @@ static std::map<CString, PropertyInfo> modulePropertys = {
 };
 
 
-void PropertyInitilize(std::map<int, std::map<CString, PropertyInfo> > &gProperty)
+void PropertyInitilize(std::map<int, std::map<CString, PropertyGrid> > &gProperty)
 {
 	gProperty.insert(std::make_pair(_sett_sec_price, modulePropertys));
 }

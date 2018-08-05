@@ -67,7 +67,7 @@ BOOL CCreditDegreeApp::InitInstance()
 }
 
 
-static std::map<CString, PropertyInfo> modulePropertys = {
+static std::map<CString, PropertyGrid> modulePropertys = {
 	{ _TEXT("VIP-CLASS"),
 		{ _TEXT("10"),nullptr , FALSE , }
 	},
@@ -79,7 +79,7 @@ static std::map<CString, PropertyInfo> modulePropertys = {
 	}
 };
 
-void PropertyInitilize(std::map<int, std::map<CString, PropertyInfo> > &gProperty)
+void PropertyInitilize(std::map<int, std::map<CString, PropertyGrid> > &gProperty)
 {
 	gProperty.insert(std::make_pair(_credit_degree, modulePropertys));
 }

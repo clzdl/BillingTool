@@ -7,10 +7,10 @@
 #include "ViewTree.h"
 #include "PluginInterface.h"
 
-void cbTestPhoneChg(CPropertiesWnd *propWnd, std::map<CString, PropertyInfo> &modProp, CString newValue);
+void cbTestPhoneChg(CPropertiesWnd *propWnd, std::map<CString, PropertyGrid> &modProp, CString newValue);
 
 
-std::map<int, std::map<CString, PropertyInfo> > gProperties = {
+std::map<int, std::map<CString, PropertyGrid> > gProperties = {
 	{ _common /*公共属性*/,
 		{
 			{ _TEXT("IP地址"),
@@ -57,7 +57,7 @@ std::map<int, std::map<CString, PropertyInfo> > gProperties = {
 };
 
 
-void cbTestPhoneChg(CPropertiesWnd *propWnd, std::map<CString, PropertyInfo> &modProp, CString newValue)
+void cbTestPhoneChg(CPropertiesWnd *propWnd, std::map<CString, PropertyGrid> &modProp, CString newValue)
 {
 	if (!gDbConn.connected)
 	{

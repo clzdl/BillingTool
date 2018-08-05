@@ -292,11 +292,11 @@ void CPropertiesWnd::SetPropListFont()
 LRESULT CPropertiesWnd::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
 {
 	CMFCPropertyGridProperty* pProp = (CMFCPropertyGridProperty*)lParam;
-	std::map<CString, PropertyInfo> &properties = gProperties.at(pProp->GetData());
+	std::map<CString, PropertyGrid> &properties = gProperties.at(pProp->GetData());
 	CString newValue = pProp->GetValue();
 	
 	properties[pProp->GetName()].propertyValue = newValue;
-	PropertyInfo &tmpProp = properties[pProp->GetName()];
+	PropertyGrid &tmpProp = properties[pProp->GetName()];
 	if (tmpProp.callBack != nullptr)
 	{
 		tmpProp.callBack(this,properties, newValue);
