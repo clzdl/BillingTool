@@ -68,20 +68,29 @@ public:
 extern CBillingToolApp theApp;
 extern  otl_connect gDbConn;
 
+#define  _mod_type_map(x)		\
+	x( _common, _TEXT("公共"))	\
+	x( _credit_dispatch, _TEXT("信控分发") )	\
+	x( _bef_adjust, _TEXT("帐前调账") )	\
+	x( _aft_adjust, _TEXT("账后调账") )	\
+	x(_prefee_restore, _TEXT("预存返还") )	\
+	x(_credit_degree, _TEXT("信用度评估"))	\
+	x( _predeal, _TEXT("预处理") )	\
+	x( _credit_sms, _TEXT("短信发送") )	\
+	x( _sec_price, _TEXT("二次批价") )	\
+	x( _sett_sec_price, _TEXT("结算二次批价"))	\
+	x( _agg_bill, _TEXT("结算二次批价"))	\
+	x( _first_price, _TEXT("标批"))	\
+	x( _credit_sender, _TEXT("信控指令"))	\
 
-enum ModulePropType
+
+
+#define   _gen_mod_type(e, c)	e,
+enum ModuleType
 {
-	_common = 0,   ///公共组件属性
-	_credit_dispatch = 1,   ///信控分发
-	_bef_adjust = 2,   ///帐前调账
-	_aft_adjust = 3,		///账后调账
-	_prefee_restore = 4,		///预存返还
-	_credit_degree	= 5,  //信用度评估
-	_predeal = 6,     //预处理
-	_sms_send = 7,		//短信发送
-	_sec_price = 8,		//二次批价
-	_sett_sec_price = 9,		//结算二次批价
-	_agg_bill = 10,		//累账
-	_first_price = 11,		//一次批价
-	_credit_sender = 12,		//信控指令发送
+	_mod_type_map(_gen_mod_type)
 };
+
+#undef _gen_mod_type
+
+CString GetModuleNameByModuleType(ModuleType type);

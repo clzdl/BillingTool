@@ -2,6 +2,15 @@
 #include "PubFunc.h"
 #include <string>
 #include "PluginInterface.h"
+#include "BillingTool.h"
+
+#define _gen_module_name(e,c)	c,
+
+static CString gModuleName[] = {
+	_mod_type_map(_gen_module_name)
+};
+#undef _gen_module_name
+
 
 CString GetProperty(int module, CString properyName)
 {
@@ -17,3 +26,9 @@ CString GetProperty(int module, CString properyName)
 	}
 }
 
+
+
+CString GetModuleNameByModuleType(ModuleType type)
+{
+	return gModuleName[type];
+}

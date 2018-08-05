@@ -25,6 +25,7 @@ static CString GetRigistryKey(DWORD module, CString name)
 }
 
 CPropertiesWnd::CPropertiesWnd()
+	:m_specModuleType(_common)
 {
 }
 
@@ -68,7 +69,7 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;      // 未能创建
 	}
 
-	InitCommonPropList();
+	BuildPropertyList(_common);
 
 	AdjustLayout();
 	return 0;
@@ -107,7 +108,8 @@ CMFCPropertyGridProperty* CPropertiesWnd::BuildPropertyGridGroup(CString groupNa
 	return pCreditDispatchGroup;
 }
 
-void CPropertiesWnd::InitCommonPropList()
+
+void CPropertiesWnd::BuildPropertyList(ModuleType moduleType)
 {
 	SetPropListFont();
 
@@ -116,143 +118,7 @@ void CPropertiesWnd::InitCommonPropList()
 	m_wndPropGridCtrl.SetVSDotNetLook();
 	m_wndPropGridCtrl.MarkModifiedProperties();
 
-	m_wndPropGridCtrl.AddProperty(BuildPropertyGridGroup(_T("公共属性"),0));
-	
-}
-
-
-void CPropertiesWnd::InitCreditDispatchPropList()
-{
-	SetPropListFont();
-
-	m_wndPropGridCtrl.EnableHeaderCtrl(FALSE);
-	m_wndPropGridCtrl.EnableDescriptionArea();
-	m_wndPropGridCtrl.SetVSDotNetLook();
-	m_wndPropGridCtrl.MarkModifiedProperties();
-	
-	m_wndPropGridCtrl.AddProperty(BuildPropertyGridGroup(_TEXT("信控分发属性"),1));
-
-}
-
-void CPropertiesWnd::InitAdjustPropList()
-{
-	SetPropListFont();
-
-	m_wndPropGridCtrl.EnableHeaderCtrl(FALSE);
-	m_wndPropGridCtrl.EnableDescriptionArea();
-	m_wndPropGridCtrl.SetVSDotNetLook();
-	m_wndPropGridCtrl.MarkModifiedProperties();
-
-	m_wndPropGridCtrl.AddProperty(BuildPropertyGridGroup(_TEXT("帐前调账属性"), 2));
-}
-
-void CPropertiesWnd::InitAftAdjustPropList()
-{
-	SetPropListFont();
-
-	m_wndPropGridCtrl.EnableHeaderCtrl(FALSE);
-	m_wndPropGridCtrl.EnableDescriptionArea();
-	m_wndPropGridCtrl.SetVSDotNetLook();
-	m_wndPropGridCtrl.MarkModifiedProperties();
-
-	m_wndPropGridCtrl.AddProperty(BuildPropertyGridGroup(_TEXT("账后调账属性"), 3));
-}
-
-void CPropertiesWnd::InitPrefeeRestorePropList()
-{
-	SetPropListFont();
-
-	m_wndPropGridCtrl.EnableHeaderCtrl(FALSE);
-	m_wndPropGridCtrl.EnableDescriptionArea();
-	m_wndPropGridCtrl.SetVSDotNetLook();
-	m_wndPropGridCtrl.MarkModifiedProperties();
-
-	m_wndPropGridCtrl.AddProperty(BuildPropertyGridGroup(_TEXT("预存返还属性"), 4));
-}
-
-void CPropertiesWnd::InitCreditDegreePropList()
-{
-	SetPropListFont();
-
-	m_wndPropGridCtrl.EnableHeaderCtrl(FALSE);
-	m_wndPropGridCtrl.EnableDescriptionArea();
-	m_wndPropGridCtrl.SetVSDotNetLook();
-	m_wndPropGridCtrl.MarkModifiedProperties();
-
-	m_wndPropGridCtrl.AddProperty(BuildPropertyGridGroup(_TEXT("信用度评估及生失效"), 5));
-}
-
-
-void CPropertiesWnd::InitPredealPropList()
-{
-	SetPropListFont();
-
-	m_wndPropGridCtrl.EnableHeaderCtrl(FALSE);
-	m_wndPropGridCtrl.EnableDescriptionArea();
-	m_wndPropGridCtrl.SetVSDotNetLook();
-	m_wndPropGridCtrl.MarkModifiedProperties();
-
-	m_wndPropGridCtrl.AddProperty(BuildPropertyGridGroup(_TEXT("预处理"), 6));
-}
-
-void CPropertiesWnd::InitSmsSendPropList()
-{
-	SetPropListFont();
-
-	m_wndPropGridCtrl.EnableHeaderCtrl(FALSE);
-	m_wndPropGridCtrl.EnableDescriptionArea();
-	m_wndPropGridCtrl.SetVSDotNetLook();
-	m_wndPropGridCtrl.MarkModifiedProperties();
-
-	m_wndPropGridCtrl.AddProperty(BuildPropertyGridGroup(_TEXT("短信发送"), 7));
-}
-
-void CPropertiesWnd::InitSecPricePropList()
-{
-	SetPropListFont();
-
-	m_wndPropGridCtrl.EnableHeaderCtrl(FALSE);
-	m_wndPropGridCtrl.EnableDescriptionArea();
-	m_wndPropGridCtrl.SetVSDotNetLook();
-	m_wndPropGridCtrl.MarkModifiedProperties();
-
-	m_wndPropGridCtrl.AddProperty(BuildPropertyGridGroup(_TEXT("二次批价"), 8));
-}
-
-void CPropertiesWnd::InitSettSecPricePropList()
-{
-	SetPropListFont();
-
-	m_wndPropGridCtrl.EnableHeaderCtrl(FALSE);
-	m_wndPropGridCtrl.EnableDescriptionArea();
-	m_wndPropGridCtrl.SetVSDotNetLook();
-	m_wndPropGridCtrl.MarkModifiedProperties();
-
-	m_wndPropGridCtrl.AddProperty(BuildPropertyGridGroup(_TEXT("二次批价(结算)"), 9));
-}
-
-void CPropertiesWnd::InitAggBillPropList()
-{
-	SetPropListFont();
-
-	m_wndPropGridCtrl.EnableHeaderCtrl(FALSE);
-	m_wndPropGridCtrl.EnableDescriptionArea();
-	m_wndPropGridCtrl.SetVSDotNetLook();
-	m_wndPropGridCtrl.MarkModifiedProperties();
-
-	m_wndPropGridCtrl.AddProperty(BuildPropertyGridGroup(_TEXT("累账"), 10));
-}
-
-void CPropertiesWnd::InitFirstPricePropList()
-{
-	SetPropListFont();
-
-	m_wndPropGridCtrl.EnableHeaderCtrl(FALSE);
-	m_wndPropGridCtrl.EnableDescriptionArea();
-	m_wndPropGridCtrl.SetVSDotNetLook();
-	m_wndPropGridCtrl.MarkModifiedProperties();
-
-	m_wndPropGridCtrl.AddProperty(BuildPropertyGridGroup(_TEXT("标批"), 11));
+	m_wndPropGridCtrl.AddProperty(BuildPropertyGridGroup(GetModuleNameByModuleType(moduleType), moduleType));
 }
 
 void CPropertiesWnd::OnSetFocus(CWnd* pOldWnd)
@@ -307,33 +173,17 @@ LRESULT CPropertiesWnd::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-void CPropertiesWnd::Refresh(int propType)
+void CPropertiesWnd::Refresh(ModuleType propType)
 {
 	m_wndPropGridCtrl.RemoveAll();
-	InitCommonPropList();
-	switch (propType)
-	{ 
-	case _credit_dispatch://信控分发属性
-		return InitCreditDispatchPropList();
-	case _bef_adjust://帐前调账
-		return InitAdjustPropList();
-	case _aft_adjust://账后调账
-		return InitAftAdjustPropList();
-	case _prefee_restore://预存返还
-		return InitPrefeeRestorePropList();
-	case _credit_degree://信用度评估
-		return InitCreditDegreePropList();
-	case _predeal://预处理
-		return InitPredealPropList();
-	case _sms_send://短信发送
-		return InitSmsSendPropList();
-	case _sec_price://二次批价
-		return InitSecPricePropList();
-	case _sett_sec_price://结算二次批价
-		return InitSettSecPricePropList();
-	case _agg_bill://累账
-		return InitAggBillPropList();
-	case _first_price://标批
-		return InitFirstPricePropList();
+	BuildPropertyList(_common);
+	if (_common == propType)
+	{
+		BuildPropertyList(m_specModuleType);
+	}
+	else
+	{
+		BuildPropertyList(propType);
+		m_specModuleType = propType;
 	}
 }

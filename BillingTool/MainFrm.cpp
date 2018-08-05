@@ -375,6 +375,6 @@ LRESULT CMainFrame::OnWriteMsg2ListView(WPARAM wParam, LPARAM lParam)
 
 LRESULT CMainFrame::OnPropertyRefresh(WPARAM wParam, LPARAM lParam)
 {
-	m_wndProperties.Refresh(lParam);
+	m_wndProperties.Refresh(static_cast<ModuleType>(lParam));
 	return 0;
 }

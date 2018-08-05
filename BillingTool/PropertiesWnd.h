@@ -1,7 +1,7 @@
 
 #pragma once
 
-
+#include "BillingTool.h"
 
 class CPropertiesToolBar : public CMFCToolBar
 {
@@ -21,7 +21,7 @@ public:
 	CPropertiesWnd();
 
 	void AdjustLayout();
-	void Refresh(int propType);
+	void Refresh(ModuleType propType);
 // Ьиад
 public:
 	void SetVSDotNetLook(BOOL bSet)
@@ -49,20 +49,11 @@ protected:
 	
 	DECLARE_MESSAGE_MAP()
 
-	void InitCommonPropList();
-	void InitCreditDispatchPropList();
-	void InitAdjustPropList();
-	void InitAftAdjustPropList();
-	void InitPrefeeRestorePropList();
-	void InitCreditDegreePropList();
-	void InitPredealPropList();
-	void InitSmsSendPropList();
-	void InitSecPricePropList();
-	void InitSettSecPricePropList();
-	void InitAggBillPropList();
-	void InitFirstPricePropList();
 	void SetPropListFont();
+	void BuildPropertyList(ModuleType moduleType);
 	
 	CMFCPropertyGridProperty* BuildPropertyGridGroup(CString groupName,UINT module);
+
+	ModuleType m_specModuleType;
 };
 

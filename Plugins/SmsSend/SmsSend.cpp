@@ -89,7 +89,7 @@ static std::map<CString, PropertyGrid> modulePropertys = {
 
 void PropertyInitilize(std::map<int, std::map<CString, PropertyGrid> > &gProperty)
 {
-	gProperty.insert(std::make_pair(_sms_send, modulePropertys));
+	gProperty.insert(std::make_pair(_credit_sms, modulePropertys));
 }
 
 /*
@@ -111,13 +111,13 @@ void TriggerPostPaypMsg(ModuleContext *ctx, void *ptr);
 
 
 static _ItemCallBackDef moduleCallBackDef[] = {
-	{ _sms_send, TriggerSmsSendFile },
-	{ _sms_send, TriggerOneWayStopMsg },
-	{ _sms_send, TriggerDoubleStopMsg },
-	{ _sms_send, TriggerNotEnoughBalanceMsg },
-	{ _sms_send, TriggerDataRemindMsg },
-	{ _sms_send, TriggerDataTopMsg },
-	{ _sms_send, TriggerPostPaypMsg }};
+	{ _credit_sms, TriggerSmsSendFile },
+	{ _credit_sms, TriggerOneWayStopMsg },
+	{ _credit_sms, TriggerDoubleStopMsg },
+	{ _credit_sms, TriggerNotEnoughBalanceMsg },
+	{ _credit_sms, TriggerDataRemindMsg },
+	{ _credit_sms, TriggerDataTopMsg },
+	{ _credit_sms, TriggerPostPaypMsg }};
 
 void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 {
@@ -167,9 +167,9 @@ std::vector<std::string> BuildSmsContents(CString serialNumber, CString userId)
 std::vector<std::string> GetFiles(ModuleContext *ctx)
 {
 	std::vector<std::string> result;
-	result.push_back(CommonUtil::CStringToString(ctx->m_funcGetProperty(_sms_send, _TEXT("文件入口")), CP_ACP) + "/../tmp_smsSendFile");
+	result.push_back(CommonUtil::CStringToString(ctx->m_funcGetProperty(_credit_sms, _TEXT("文件入口")), CP_ACP) + "/../tmp_smsSendFile");
 
-	CString csInFile = ctx->m_funcGetProperty(_sms_send, _TEXT("文件入口"))
+	CString csInFile = ctx->m_funcGetProperty(_credit_sms, _TEXT("文件入口"))
 		+ _TEXT("/smsSendFile") + CommonUtil::GetSysYMDTime() + _TEXT(".dat");
 
 	result.push_back(CommonUtil::CStringToString(csInFile, CP_ACP));
@@ -297,10 +297,10 @@ void TriggerOneWayStopMsg(ModuleContext *ctx, void *ptr)
 
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
 		_TEXT("3120"),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("HASTEN_POLICY_ID")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("LEAVE_REAL_FEE")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("REAL_FEE")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("CREDIT_VALUE"))))
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("HASTEN_POLICY_ID")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("LEAVE_REAL_FEE")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
 	{
 		resultViewData.m_result = _TEXT("触发失败.");
 	}
@@ -315,10 +315,10 @@ void TriggerDoubleStopMsg(ModuleContext *ctx, void *ptr)
 	
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
 		_TEXT("3110"),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("HASTEN_POLICY_ID")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("LEAVE_REAL_FEE")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("REAL_FEE")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("CREDIT_VALUE"))))
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("HASTEN_POLICY_ID")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("LEAVE_REAL_FEE")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
 	{
 		resultViewData.m_result = _TEXT("触发失败.");
 	}
@@ -333,10 +333,10 @@ void TriggerNotEnoughBalanceMsg(ModuleContext *ctx, void *ptr)
 
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
 		_TEXT("7001"),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("HASTEN_POLICY_ID")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("LEAVE_REAL_FEE")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("REAL_FEE")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("CREDIT_VALUE"))))
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("HASTEN_POLICY_ID")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("LEAVE_REAL_FEE")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
 	{
 		resultViewData.m_result = _TEXT("触发失败.");
 	}
@@ -355,10 +355,10 @@ void TriggerDataRemindMsg(ModuleContext *ctx, void *ptr)
 	*/
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
 		_TEXT("7002"),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("HASTEN_POLICY_ID")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("LEAVE_REAL_FEE")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("REAL_FEE")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("CREDIT_VALUE"))))
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("HASTEN_POLICY_ID")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("LEAVE_REAL_FEE")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
 	{
 		resultViewData.m_result = _TEXT("触发失败.");
 	}
@@ -374,10 +374,10 @@ void TriggerDataTopMsg(ModuleContext *ctx, void *ptr)
 
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
 		_TEXT("3111"),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("HASTEN_POLICY_ID")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("LEAVE_REAL_FEE")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("REAL_FEE")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("CREDIT_VALUE"))))
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("HASTEN_POLICY_ID")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("LEAVE_REAL_FEE")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
 	{
 		resultViewData.m_result = _TEXT("触发失败.");
 	}
@@ -393,10 +393,10 @@ void TriggerPostPaypMsg(ModuleContext *ctx, void *ptr)
 
 	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
 		_TEXT("3200"),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("HASTEN_POLICY_ID")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("LEAVE_REAL_FEE")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("REAL_FEE")),
-		ctx->m_funcGetProperty(_sms_send, _TEXT("CREDIT_VALUE"))))
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("HASTEN_POLICY_ID")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("LEAVE_REAL_FEE")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
+		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
 	{
 		resultViewData.m_result = _TEXT("触发失败.");
 	}
