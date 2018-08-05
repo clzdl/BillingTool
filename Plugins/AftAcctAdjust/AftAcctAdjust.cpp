@@ -75,7 +75,11 @@ void DecrementAjdustByMoney(ModuleContext *ctx, void *ptr);
 void DecrementAjdustByRatio(ModuleContext *ctx, void *ptr);
 
 
-
+static _ItemCallBackDef moduleCallBackDef[] = { 
+								{ _aft_adjust, IncrementAjdustByRatio },
+								{ _aft_adjust, IncrementAjdustByMoney },
+								{ _aft_adjust, DecrementAjdustByRatio },
+								{ _aft_adjust, DecrementAjdustByMoney } };
 
 void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 {
@@ -85,16 +89,16 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 	HTREEITEM hRoot = viewTree->InsertItem(_T("帐后调账"), 0, 0);
 
 	HTREEITEM tmpItem = viewTree->InsertItem(_T("按比例调增"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(IncrementAjdustByRatio));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[0])));
 
 	tmpItem = viewTree->InsertItem(_T("按金额调增"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(IncrementAjdustByMoney));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[1])));
 
 	tmpItem = viewTree->InsertItem(_T("按比例调减"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(DecrementAjdustByRatio));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[2])));
 
 	tmpItem = viewTree->InsertItem(_T("按金额调减"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(DecrementAjdustByMoney));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[3])));
 }
 
 

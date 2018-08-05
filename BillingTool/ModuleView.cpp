@@ -21,6 +21,7 @@ static char THIS_FILE[]=__FILE__;
 // CFileView
 
 CModuleView::CModuleView()
+:m_lastPropType(0)
 {
 }
 
@@ -34,7 +35,8 @@ BEGIN_MESSAGE_MAP(CModuleView, CDockablePane)
 	ON_WM_CONTEXTMENU()
 	ON_WM_PAINT()
 	ON_WM_SETFOCUS()
-	ON_NOTIFY(NM_DBLCLK, 4, OnWndFileTreeViewClick)
+	ON_NOTIFY(NM_DBLCLK, 4, OnWndTreeViewDBClick)
+	ON_NOTIFY(NM_CLICK, 4, OnWndTreeViewClick)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -89,6 +91,7 @@ void CModuleView::OnSize(UINT nType, int cx, int cy)
 	AdjustLayout();
 }
 
+static _ItemCallBackDef commonCallBackDef[] = { {_common, CModuleView::ConnectDb } };
 
 void CModuleView::InitializeCommonModule()
 {
@@ -96,9 +99,7 @@ void CModuleView::InitializeCommonModule()
 	m_wndModuleView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
 
 	HTREEITEM tmpItem = m_wndModuleView.InsertItem(_T("连接数据库"), 1, 2, hRoot);
-	m_wndModuleView.SetItemData(tmpItem, DWORD_PTR(CModuleView::ConnectDb));
-
-
+	m_wndModuleView.SetItemData(tmpItem, DWORD_PTR(&(commonCallBackDef[0])));
 
 	m_wndModuleView.Expand(hRoot, TVE_EXPAND);
 }
@@ -253,18 +254,38 @@ bool ALongRightProcessProc(const CUPDUPDATA* pCUPDUPData)
 	return true;	// Return true to indicate everything has completed successfully
 }
 
-void CModuleView::OnWndFileTreeViewClick(NMHDR *pNMHDR, LRESULT *pResult)
+void CModuleView::OnWndTreeViewDBClick(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	HTREEITEM hCurItem = m_wndModuleView.GetSelectedItem();//获得当前选中ID  
-	ITEM_FUNC func = (ITEM_FUNC)(m_wndModuleView.GetItemData(hCurItem));
-	if (nullptr == func)
+	_ItemCallBackDef* cbDef = reinterpret_cast<_ItemCallBackDef*>(m_wndModuleView.GetItemData(hCurItem));
+	if (nullptr == cbDef)
+	{
 		return;
-	LoadingDlg Dlg(AfxGetMainWnd()->GetSafeHwnd(), ALongRightProcessProc, func, _TEXT("请等待..."), false, true);
+	}
+
+	LoadingDlg Dlg(AfxGetMainWnd()->GetSafeHwnd(), ALongRightProcessProc, cbDef->cb, _TEXT("请等待..."), false, true);
 	// Use My custom dialog template
 	Dlg.SetDialogTemplate(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDD_DLG_LOADING), NULL, IDC_PROGRESS_LOADING, NULL);
 	Dlg.DoModal();
 	
 	*pResult = 0;
+}
+
+void CModuleView::OnWndTreeViewClick(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	HTREEITEM hCurItem = m_wndModuleView.GetSelectedItem();//获得当前选中ID  
+	_ItemCallBackDef* cbDef = reinterpret_cast<_ItemCallBackDef*>(m_wndModuleView.GetItemData(hCurItem));
+	if (nullptr == cbDef)
+	{
+		return;
+	}
+
+	///刷新模块参数
+	if(m_lastPropType != cbDef->modulePropType)
+	{
+		AfxGetMainWnd()->SendMessage(MSG_PROPERY_REFRESH, 0, cbDef->modulePropType);
+		m_lastPropType = cbDef->modulePropType;
+	}
 }
 
 

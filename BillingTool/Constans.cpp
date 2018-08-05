@@ -5,6 +5,8 @@
 #include "BillingTool.h"
 #include "PropertiesWnd.h"
 #include "../Plugins/UtilDll/UtilDll.h"
+#include "ViewTree.h"
+
 void cbTestPhoneChg(CPropertiesWnd *propWnd, std::map<CString, PropertyInfo> &modProp, CString newValue);
 
 
@@ -359,5 +361,5 @@ void cbTestPhoneChg(CPropertiesWnd *propWnd, std::map<CString, PropertyInfo> &mo
 
 
 
-	propWnd->OnCbnSelChanged();
+	propWnd->Refresh(_common);
 }

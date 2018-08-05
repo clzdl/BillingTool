@@ -29,6 +29,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_WM_SETTINGCHANGE()
 	ON_MESSAGE(MSG_WRITE_MSG2_STATUSBAR , OnWriteMsg2StatusBar)
 	ON_MESSAGE(MSG_WRITE_MSG2_LISTVIEW, OnWriteMsg2ListView)
+	ON_MESSAGE(MSG_PROPERY_REFRESH, OnPropertyRefresh)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -372,3 +373,8 @@ LRESULT CMainFrame::OnWriteMsg2ListView(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
+LRESULT CMainFrame::OnPropertyRefresh(WPARAM wParam, LPARAM lParam)
+{
+	m_wndProperties.Refresh(lParam);
+	return 0;
+}

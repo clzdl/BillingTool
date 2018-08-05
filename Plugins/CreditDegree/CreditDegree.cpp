@@ -73,6 +73,13 @@ void ActiveTempCreditDegree(ModuleContext *ctx, void *ptr);
 void ActiveDynamicCreditDegree(ModuleContext *ctx, void *ptr);
 void ActiveInitCreditDegree(ModuleContext *ctx, void *ptr);
 
+
+static _ItemCallBackDef moduleCallBackDef[] = {
+			{ _credit_degree, CreateInitCreditDegree },
+			{ _credit_degree, ActiveTempCreditDegree },
+			{ _credit_degree, ActiveDynamicCreditDegree },
+			{ _credit_degree, ActiveInitCreditDegree } };
+
 void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -81,16 +88,16 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 	HTREEITEM hRoot = viewTree->InsertItem(_T("信用度处理"), 0, 0);
 
 	HTREEITEM tmpItem = viewTree->InsertItem(_T("初始信用度生成"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CreateInitCreditDegree));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[0])));
 
 	tmpItem = viewTree->InsertItem(_T("临时信用度生效"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(ActiveTempCreditDegree));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[1])));
 
 	tmpItem = viewTree->InsertItem(_T("动态信用度生效"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(ActiveDynamicCreditDegree));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[2])));
 
 	tmpItem = viewTree->InsertItem(_T("初始信用度生效"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(ActiveInitCreditDegree));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[3])));
 }
 
 

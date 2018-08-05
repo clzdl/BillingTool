@@ -5,6 +5,12 @@
 class ModuleContext;
 typedef void(*ITEM_FUNC)(ModuleContext *ctx , void *ptr);
 
+typedef struct {
+	int modulePropType;
+	ITEM_FUNC  cb;
+}_ItemCallBackDef;
+
+
 class CViewTree : public CTreeCtrl
 {
 // ππ‘Ï

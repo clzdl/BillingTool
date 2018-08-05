@@ -69,6 +69,11 @@ BOOL CPrefeeRestoreApp::InitInstance()
 
 void TriggerPrefee(ModuleContext *ctx, void *ptr);
 
+
+static _ItemCallBackDef moduleCallBackDef[] = {
+	{ _prefee_restore, TriggerPrefee } };
+
+
 void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -77,7 +82,7 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 	HTREEITEM hRoot = viewTree->InsertItem(_T("预存返还"), 0, 0);
 
 	HTREEITEM tmpItem = viewTree->InsertItem(_T("生成返还记录"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerPrefee));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[0])));
 
 
 }

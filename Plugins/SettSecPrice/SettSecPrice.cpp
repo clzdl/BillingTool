@@ -91,6 +91,24 @@ void TriggerDataInProvinceCdr(ModuleContext *ctx, void *ptr);
 void TriggerDataProvinceCdr(ModuleContext *ctx, void *ptr);
 void TriggerDataInterCdr(ModuleContext *ctx, void *ptr);
 
+static _ItemCallBackDef moduleCallBackDef[] = {
+	{ _sett_sec_price, TriggerVcLocalCdr },
+	{ _sett_sec_price, TriggerVcLongCdr },
+	{ _sett_sec_price, TriggerVcRoamInProviceCdr },
+	{ _sett_sec_price, TriggerVcRoamProviceCdr },
+	{ _sett_sec_price, TriggerVcLongInterCdr },
+	{ _sett_sec_price, TriggerVcRoamInterCdr },
+	{ _sett_sec_price, TriggerVcIpCallCdr },
+	{ _sett_sec_price, TriggerVcDivertCdr },
+	{ _sett_sec_price, TriggerVcCalledCdr },
+	{ _sett_sec_price, TriggerSmsChnCdr },
+	{ _sett_sec_price, TriggerSmsInterCdr },
+	{ _sett_sec_price, TriggerSmsRoamCdr },
+	{ _sett_sec_price, TriggerSmsCalledCdr },
+	{ _sett_sec_price, TriggerDataInProvinceCdr },
+	{ _sett_sec_price, TriggerDataProvinceCdr },
+	{ _sett_sec_price, TriggerDataInterCdr } };
+
 void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -101,57 +119,57 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 	HTREEITEM secItem = viewTree->InsertItem(_T("语音"), 0, 0, hRoot);
 
 	HTREEITEM tmpItem = viewTree->InsertItem(_T("市话"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerVcLocalCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[0])));
 
 	tmpItem = viewTree->InsertItem(_T("长途"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerVcLongCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[1])));
 
 	tmpItem = viewTree->InsertItem(_T("省内漫游"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerVcRoamInProviceCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[2])));
 
 	tmpItem = viewTree->InsertItem(_T("省际漫游"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerVcRoamProviceCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[3])));
 
 	tmpItem = viewTree->InsertItem(_T("国际长途"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerVcLongInterCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[4])));
 
 	tmpItem = viewTree->InsertItem(_T("国际漫游"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerVcRoamInterCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[5])));
 
 	tmpItem = viewTree->InsertItem(_T("IP通话"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerVcIpCallCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[6])));
 
 	tmpItem = viewTree->InsertItem(_T("呼转通话"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerVcDivertCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[7])));
 
 	tmpItem = viewTree->InsertItem(_T("国内被叫"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerVcCalledCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[8])));
 
 	secItem = viewTree->InsertItem(_T("短信"), 0, 0, hRoot);
 
 	tmpItem = viewTree->InsertItem(_T("国内短信"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerSmsChnCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[9])));
 
 	tmpItem = viewTree->InsertItem(_T("国际短信"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerSmsInterCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[10])));
 
 	tmpItem = viewTree->InsertItem(_T("国际漫游短信"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerSmsRoamCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[11])));
 
 	tmpItem = viewTree->InsertItem(_T("短信被叫"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerSmsCalledCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[12])));
 
 
 	secItem = viewTree->InsertItem(_T("流量"), 0, 0, hRoot);
 
 	tmpItem = viewTree->InsertItem(_T("省内流量"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerDataInProvinceCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[13])));
 
 	tmpItem = viewTree->InsertItem(_T("省际流量"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerDataProvinceCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[14])));
 
 	tmpItem = viewTree->InsertItem(_T("国际流量"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerDataInterCdr));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[15])));
 
 }
 

@@ -51,8 +51,11 @@ protected:
 	
 	afx_msg void OnPaint();
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
-	afx_msg void OnWndFileTreeViewClick(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnWndTreeViewDBClick(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnWndTreeViewClick(NMHDR *pNMHDR, LRESULT *pResult);
 	
+	///记录上一次点击的菜单对应的属性类型
+	int m_lastPropType;
 	DECLARE_MESSAGE_MAP()
 };
 

@@ -75,7 +75,10 @@ void AggSms(ModuleContext *ctx, void *ptr);
 void AggData(ModuleContext *ctx, void *ptr);
 
 
-
+static _ItemCallBackDef moduleCallBackDef[] = {
+	{ _agg_bill, AggVc },
+	{ _agg_bill, AggSms },
+	{ _agg_bill, AggData }};
 
 void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 {
@@ -85,13 +88,13 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 	HTREEITEM hRoot = viewTree->InsertItem(_T("ÀÛÕË"), 0, 0);
 
 	HTREEITEM tmpItem = viewTree->InsertItem(_T("ÓïÒô"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(AggVc));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[0])));
 
 	tmpItem = viewTree->InsertItem(_T("¶ÌÐÅ"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(AggSms));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[1])));
 
 	tmpItem = viewTree->InsertItem(_T("Êý¾Ý"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(AggData));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[2])));
 
 }
 

@@ -74,6 +74,13 @@ void TriggerOnWayStop(ModuleContext *ctx, void *ptr);
 void TriggerDoubleStop(ModuleContext *ctx, void *ptr);
 
 
+
+static _ItemCallBackDef moduleCallBackDef[] = {
+	{ _credit_sender, TriggerStartUp },
+	{ _credit_sender, TriggerOnWayStop },
+	{ _credit_sender, TriggerDoubleStop } };
+
+
 void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -81,13 +88,13 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 
 	HTREEITEM hRoot = viewTree->InsertItem(_T("信控指令发送"), 0, 0);
 	HTREEITEM tmpItem = viewTree->InsertItem(_T("生成开机指令"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerStartUp));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[0])));
 
 	tmpItem = viewTree->InsertItem(_T("生成单停指令"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerOnWayStop));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[1])));
 
 	tmpItem = viewTree->InsertItem(_T("生成双停指令"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerDoubleStop));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[2])));
 
 }
 

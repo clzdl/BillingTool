@@ -5,7 +5,7 @@
 #include "CreditDispatch.h"
 #include "../../BillingTool/PluginInterface.h"
 #include "../../BillingTool/ViewTree.h"
-
+#include "../../BillingTool/BillingTool.h"
 #include "BusiFunc.h"
 
 #ifdef _DEBUG
@@ -68,6 +68,13 @@ BOOL CCreditDispatchApp::InitInstance()
 }
 
 
+
+static _ItemCallBackDef moduleCallBackDef[] = {
+	{ _credit_dispatch, BusiFunc::TriggerStartUp },
+	{ _credit_dispatch, BusiFunc::TriggerStopByNet },
+	{ _credit_dispatch, BusiFunc::TriggerStopByFile },
+	{ _credit_dispatch, BusiFunc::TriggerRemindByFile } };
+
 void Initilize(CWnd *mainWnd,CViewTree *viewTree)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -76,15 +83,15 @@ void Initilize(CWnd *mainWnd,CViewTree *viewTree)
 	HTREEITEM hRoot = viewTree->InsertItem(_T("信控分发"), 0, 0);
 
 	HTREEITEM tmpItem = viewTree->InsertItem(_T("触发开机"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerStartUp));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[0])));
 	
 	tmpItem = viewTree->InsertItem(_T("触发停机【NET】"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerStopByNet));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[1])));
 
 	tmpItem = viewTree->InsertItem(_T("触发停机【FILE】"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerStopByFile));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[2])));
 	
 	tmpItem = viewTree->InsertItem(_T("触发提醒【FILE】"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(BusiFunc::TriggerRemindByFile));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[3])));
 	
 }

@@ -115,6 +115,42 @@ void CuccDataCHNCalling(ModuleContext *ctx, void *ptr);
 void CuccDataInterCalling(ModuleContext *ctx, void *ptr);
 
 
+
+static _ItemCallBackDef moduleCallBackDef[] = {
+	{ _predeal, CtccVcCHNCalling },
+	{ _predeal, CtccVcCHNCalled },
+	{ _predeal, CtccVcInterCalling },
+	{ _predeal, CtccVcInterRoam },
+	{ _predeal, CtccSmsCHNCalling },
+	{ _predeal, CtccSmsCHNCalled },
+	{ _predeal, CtccSmsInterCalling },
+	{ _predeal, CtccSmsInterRoam },
+	{ _predeal, CtccDataCHNCalling },
+	{ _predeal, CtccDataInterCalling },
+	{ _predeal, CmccVcCHNCalling },
+	{ _predeal, CmccVcCHNCalled },
+	{ _predeal, CmccVcInterCalling },
+	{ _predeal, CmccVcInterRoam },
+	{ _predeal, CmccSmsCHNCalling },
+	{ _predeal, CmccSmsCHNCalled },
+	{ _predeal, CmccSmsInterCalling },
+	{ _predeal, CmccSmsInterRoam },
+	{ _predeal, CmccDataCHNCalling },
+	{ _predeal, CmccDataInterCalling },
+	{ _predeal, CuccVcCHNCalling },
+	{ _predeal, CuccVcCHNCalled },
+	{ _predeal, CuccVcInterCalling },
+	{ _predeal, CuccVcInterRoam },
+	{ _predeal, CuccSmsCHNCalling },
+	{ _predeal, CuccSmsCHNCalled },
+	{ _predeal, CuccSmsInterCalling },
+	{ _predeal, CuccSmsInterRoam },
+	{ _predeal, CuccDataCHNCalling } ,
+	{ _predeal, CuccDataInterCalling } 
+};
+
+
+
 void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -125,100 +161,100 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 	HTREEITEM secItem = viewTree->InsertItem(_T("电信"), 0, 0 , hRoot);
 	///电信
 	HTREEITEM tmpItem = viewTree->InsertItem(_T("语音-国内主叫"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CtccVcCHNCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[0])));
 
 	tmpItem = viewTree->InsertItem(_T("语音-国内被叫"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CtccVcCHNCalled));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[1])));
 
 	tmpItem = viewTree->InsertItem(_T("语音-国级长途"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CtccVcInterCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[2])));
 
 	tmpItem = viewTree->InsertItem(_T("语音-国级漫游"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CtccVcInterRoam));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[3])));
 
 	tmpItem = viewTree->InsertItem(_T("短信-国内主叫"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CtccSmsCHNCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[4])));
 
 	tmpItem = viewTree->InsertItem(_T("短信-国内被叫"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CtccSmsCHNCalled));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[5])));
 
 	tmpItem = viewTree->InsertItem(_T("短信-国际长途"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CtccSmsInterCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[6])));
 
 	tmpItem = viewTree->InsertItem(_T("短信-国际漫游"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CtccSmsInterRoam));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[7])));
 
 	tmpItem = viewTree->InsertItem(_T("流量-国内"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CtccDataCHNCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[8])));
 
 	tmpItem = viewTree->InsertItem(_T("流量-国际"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CtccDataInterCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[9])));
 
 
 	////
 	secItem = viewTree->InsertItem(_T("移动"), 0, 0, hRoot);
 	tmpItem = viewTree->InsertItem(_T("语音-国内主叫"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CmccVcCHNCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[10])));
 
 	tmpItem = viewTree->InsertItem(_T("语音-国内被叫"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CmccVcCHNCalled));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[11])));
 
 	tmpItem = viewTree->InsertItem(_T("语音-国级长途"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CmccVcInterCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[12])));
 
 	tmpItem = viewTree->InsertItem(_T("语音-国级漫游"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CmccVcInterRoam));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[13])));
 
 	tmpItem = viewTree->InsertItem(_T("短信-国内主叫"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CmccSmsCHNCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[14])));
 
 	tmpItem = viewTree->InsertItem(_T("短信-国内被叫"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CmccSmsCHNCalled));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[15])));
 
 	tmpItem = viewTree->InsertItem(_T("短信-国际长途"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CmccSmsInterCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[16])));
 
 	tmpItem = viewTree->InsertItem(_T("短信-国际漫游"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CmccSmsInterRoam));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[17])));
 
 	tmpItem = viewTree->InsertItem(_T("流量-国内"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CmccDataCHNCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[18])));
 
 	tmpItem = viewTree->InsertItem(_T("流量-国际"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CmccDataInterCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[19])));
 
 	///
 	secItem = viewTree->InsertItem(_T("联通"), 0, 0, hRoot);
 
 	tmpItem = viewTree->InsertItem(_T("语音-国内主叫"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CuccVcCHNCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[20])));
 
 	tmpItem = viewTree->InsertItem(_T("语音-国内被叫"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CuccVcCHNCalled));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[21])));
 
 	tmpItem = viewTree->InsertItem(_T("语音-国级长途"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CuccVcInterCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[22])));
 
 	tmpItem = viewTree->InsertItem(_T("语音-国级漫游"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CuccVcInterRoam));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[23])));
 
 	tmpItem = viewTree->InsertItem(_T("短信-国内主叫"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CuccSmsCHNCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[24])));
 
 	tmpItem = viewTree->InsertItem(_T("短信-国内被叫"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CuccSmsCHNCalled));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[25])));
 
 	tmpItem = viewTree->InsertItem(_T("短信-国际长途"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CuccSmsInterCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[26])));
 
 	tmpItem = viewTree->InsertItem(_T("短信-国际漫游"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CuccSmsInterRoam));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[27])));
 
 	tmpItem = viewTree->InsertItem(_T("流量-国内"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CuccDataCHNCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[28])));
 
 	tmpItem = viewTree->InsertItem(_T("流量-国际"), 1, 2, secItem);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(CuccDataInterCalling));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[29])));
 
 }
 

@@ -52,10 +52,10 @@
 #endif
 #include <map>
 
-
 struct PropertyInfo;
 class CPropertiesWnd;
 typedef void(*PROPERTY_CHG_FUNC)(CPropertiesWnd *propWnd,std::map<CString, PropertyInfo> &modProp, CString newValue);
+
 struct PropertyInfo
 {
 	CString propertyValue;
@@ -63,4 +63,3 @@ struct PropertyInfo
 	BOOL isCombox;    ///是否下拉框属性
 	std::map<CString, CString> comboxValRel;    ///下拉框的值映射
 };
-

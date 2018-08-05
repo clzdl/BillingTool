@@ -1,6 +1,8 @@
 
 #pragma once
 
+
+
 class CPropertiesToolBar : public CMFCToolBar
 {
 public:
@@ -19,24 +21,22 @@ public:
 	CPropertiesWnd();
 
 	void AdjustLayout();
-
+	void Refresh(int propType);
 // 特性
 public:
 	void SetVSDotNetLook(BOOL bSet)
 	{
-		m_wndPropList.SetVSDotNetLook(bSet);
-		m_wndPropList.SetGroupNameFullWidth(bSet);
+		m_wndPropGridCtrl.SetVSDotNetLook(bSet);
+		m_wndPropGridCtrl.SetGroupNameFullWidth(bSet);
 	}
 
 protected:
 	CFont m_fntPropList;
-	CComboBox m_wndObjectCombo;
-	CMFCPropertyGridCtrl m_wndPropList;
+	CMFCPropertyGridCtrl m_wndPropGridCtrl;
 
 // 实现
 public:
 	virtual ~CPropertiesWnd();
-	afx_msg void OnCbnSelChanged();
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
@@ -45,6 +45,8 @@ protected:
 	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
 	
 	afx_msg LRESULT OnPropertyChanged(WPARAM wParam, LPARAM lParam);
+
+	
 	DECLARE_MESSAGE_MAP()
 
 	void InitCommonPropList();
@@ -60,8 +62,7 @@ protected:
 	void InitAggBillPropList();
 	void InitFirstPricePropList();
 	void SetPropListFont();
+	
 	CMFCPropertyGridProperty* BuildPropertyGridGroup(CString groupName,UINT module);
-	int m_nComboHeight;
-
 };
 

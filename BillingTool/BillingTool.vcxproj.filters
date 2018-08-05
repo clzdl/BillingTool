@@ -128,7 +128,7 @@
     <ClCompile Include="UniversalProgressDialog\UPDialog.cpp">
       <Filter>UniversalProgressDialog</Filter>
     </ClCompile>
-    <ClCompile Include="PropertyConstans.cpp">
+    <ClCompile Include="Constans.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

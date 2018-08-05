@@ -217,7 +217,7 @@
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="ModuleContext.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
-    <ClCompile Include="PropertyConstans.cpp" />
+    <ClCompile Include="Constans.cpp" />
     <ClCompile Include="PubFunc.cpp" />
     <ClCompile Include="splashwnd\SplashWindow.cpp" />
     <ClCompile Include="SshCmdExecutor.cpp" />

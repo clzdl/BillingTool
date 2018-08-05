@@ -15,8 +15,12 @@
 // 有关此类的实现，请参阅 BillingTool.cpp
 //
 
+/*
+ 自定义消息
+*/
 #define  MSG_WRITE_MSG2_STATUSBAR		WM_USER+1000
 #define  MSG_WRITE_MSG2_LISTVIEW		WM_USER+1001
+#define  MSG_PROPERY_REFRESH			WM_USER+1002
 
 
 class ListViewData
@@ -79,4 +83,5 @@ enum ModulePropType
 	_sett_sec_price = 9,		//结算二次批价
 	_agg_bill = 10,		//累账
 	_first_price = 11,		//一次批价
+	_credit_sender = 12,		//信控指令发送
 };

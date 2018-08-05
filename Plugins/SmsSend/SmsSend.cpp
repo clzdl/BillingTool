@@ -85,6 +85,15 @@ void TriggerDataTopMsg(ModuleContext *ctx, void *ptr);
 void TriggerPostPaypMsg(ModuleContext *ctx, void *ptr);
 
 
+static _ItemCallBackDef moduleCallBackDef[] = {
+	{ _sms_send, TriggerSmsSendFile },
+	{ _sms_send, TriggerOneWayStopMsg },
+	{ _sms_send, TriggerDoubleStopMsg },
+	{ _sms_send, TriggerNotEnoughBalanceMsg },
+	{ _sms_send, TriggerDataRemindMsg },
+	{ _sms_send, TriggerDataTopMsg },
+	{ _sms_send, TriggerPostPaypMsg }};
+
 void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
@@ -93,25 +102,25 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 	HTREEITEM hRoot = viewTree->InsertItem(_T("短信提醒"), 0, 0);
 
 	HTREEITEM tmpItem = viewTree->InsertItem(_T("生成短信文件"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerSmsSendFile));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[0])));
 
 	tmpItem = viewTree->InsertItem(_T("触发单停短信"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerOneWayStopMsg));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[1])));
 
 	tmpItem = viewTree->InsertItem(_T("触发双停短信"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerDoubleStopMsg));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[2])));
 
 	tmpItem = viewTree->InsertItem(_T("触发余额不足短信"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerNotEnoughBalanceMsg));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[3])));
 	
 	tmpItem = viewTree->InsertItem(_T("触发流量使用短信"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerDataRemindMsg));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[4])));
 
 	tmpItem = viewTree->InsertItem(_T("触发流量封顶短信"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerDataTopMsg));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[5])));
 
 	tmpItem = viewTree->InsertItem(_T("触发后付费用户催费短信"), 1, 2, hRoot);
-	viewTree->SetItemData(tmpItem, DWORD_PTR(TriggerPostPaypMsg));
+	viewTree->SetItemData(tmpItem, DWORD_PTR(&(moduleCallBackDef[6])));
 }
 
 std::vector<std::string> BuildSmsContents(CString serialNumber, CString userId)

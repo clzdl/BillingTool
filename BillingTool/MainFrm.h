@@ -18,7 +18,6 @@ public:
 	void WriteString2StatusBar(CString str);
 // ²Ù×÷
 public:
-
 // ÖØÐ´
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
@@ -52,7 +51,7 @@ protected:
 	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
 	afx_msg LRESULT OnWriteMsg2StatusBar(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnWriteMsg2ListView(WPARAM wParam, LPARAM lParam);
-
+	afx_msg LRESULT OnPropertyRefresh(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 
 	BOOL CreateDockingWindows();
