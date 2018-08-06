@@ -69,28 +69,33 @@ void cbTestPhoneChg(CPropertiesWnd *propWnd, std::map<CString, PropertyGrid> &mo
 	}
 	newValue.Trim();
 
-	char strUserId[30] = { 0 }, strAcctId[30] = { 0 }, strCustId[30] = { 0 };
+	char userId[30] = { 0 }, acctId[30] = { 0 }, custId[30] = { 0 };
 	try {
-		std::string sql = "select to_char(t1.user_id), to_char(t2.acct_id),to_char(t1.cust_id) "
-			" from cs_user_info t1, cs_user_payrelation t2 "
-			" where t1.user_id = t2.user_id "
-			"	and t2.default_tag = '1' "
-			"	and t2.state = '0' "
-			"	and sysdate between t2.start_date and t2.end_date "
-			"	and serial_number = :v1<char[32]>";
-
+		std::string sql ="select t.user_id,t.cust_id from cs_user_info t where t.serial_number = :v1<char[21]>";
 
 		otl_stream otlStm;
+		otlStm.set_all_column_types(otl_all_num2str); 
 		otlStm.open(1, sql.c_str(), gDbConn);
 		otlStm.set_commit(0);
-
 		otlStm << CommonUtil::CStringToString(newValue, CP_ACP).c_str();
+		otlStm >> userId >> custId;
+		otlStm.close();
 
-		otlStm >> strUserId >> strAcctId >> strCustId;
+		if (userId[0] != '\0')
+		{
+			sql = "select t.acct_id from cs_user_payrelation t where t.user_id = :v1<char[30]> and t.state = '1' and t.default_tag ='1'";
+			otlStm.open(1, sql.c_str(), gDbConn);
+			otlStm.set_commit(0);
+			otlStm << userId;
+			otlStm >> acctId;
+			otlStm.close();
+		}
 
-		modProp.at(_TEXT("账户ID")).propertyValue = CommonUtil::StringToCString(strAcctId, CP_ACP);
-		modProp.at(_TEXT("用户ID")).propertyValue = CommonUtil::StringToCString(strUserId, CP_ACP);
-		modProp.at(_TEXT("客户ID")).propertyValue = CommonUtil::StringToCString(strCustId, CP_ACP);
+	
+		modProp.at(_TEXT("账户ID")).propertyValue = CommonUtil::StringToCString(acctId, CP_ACP);
+		modProp.at(_TEXT("用户ID")).propertyValue = CommonUtil::StringToCString(userId, CP_ACP);
+		modProp.at(_TEXT("客户ID")).propertyValue = CommonUtil::StringToCString(custId, CP_ACP);
+		propWnd->Refresh(_common);
 	}
 	catch (otl_exception &e)
 	{
@@ -101,7 +106,4 @@ void cbTestPhoneChg(CPropertiesWnd *propWnd, std::map<CString, PropertyGrid> &mo
 		exp.ReleaseBuffer();
 	}
 
-
-
-	propWnd->Refresh(_common);
 }

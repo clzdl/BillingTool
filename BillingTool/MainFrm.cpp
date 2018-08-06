@@ -105,7 +105,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// 基于持久值设置视觉管理器和样式
 	OnApplicationLook(theApp.m_nAppLook);
-
+	
 	CSplashWindow::ShowSplashScreen(NULL, _TEXT("application  started."), 1000);
 	return 0;
 }

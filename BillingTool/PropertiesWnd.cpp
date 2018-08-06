@@ -68,7 +68,6 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("未能创建属性网格\n");
 		return -1;      // 未能创建
 	}
-
 	BuildPropertyList(_common);
 
 	AdjustLayout();
@@ -160,7 +159,8 @@ LRESULT CPropertiesWnd::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
 	CMFCPropertyGridProperty* pProp = (CMFCPropertyGridProperty*)lParam;
 	std::map<CString, PropertyGrid> &properties = gProperties.at(pProp->GetData());
 	CString newValue = pProp->GetValue();
-	
+	theApp.WriteString(GetRigistryKey(pProp->GetData(), pProp->GetName()), newValue);
+
 	properties[pProp->GetName()].propertyValue = newValue;
 	PropertyGrid &tmpProp = properties[pProp->GetName()];
 	if (tmpProp.callBack != nullptr)
@@ -168,7 +168,7 @@ LRESULT CPropertiesWnd::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
 		tmpProp.callBack(this,properties, newValue);
 	}
 	
-	theApp.WriteString(GetRigistryKey(pProp->GetData(), pProp->GetName()), newValue);
+	
 
 	return 0;
 }
@@ -177,9 +177,12 @@ void CPropertiesWnd::Refresh(ModuleType propType)
 {
 	m_wndPropGridCtrl.RemoveAll();
 	BuildPropertyList(_common);
-	if (_common == propType)
+	if (_common == propType )
 	{
-		BuildPropertyList(m_specModuleType);
+		if (m_specModuleType != _common)
+		{
+			BuildPropertyList(m_specModuleType);
+		}
 	}
 	else
 	{
