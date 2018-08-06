@@ -68,21 +68,27 @@ BOOL CSmsSendApp::InitInstance()
 	return TRUE;
 }
 
+const CString FILE_IN = _TEXT("文件入口");
+const CString HASTEN_POLICYID = _TEXT("HASTEN_POLICY_ID");
+const CString LEAVE_REAL_FEE = _TEXT("LEAVE_REAL_FEE");
+const CString REAL_FEE = _TEXT("REAL_FEE");
+const CString CREDIT_VALUE = _TEXT("CREDIT_VALUE");
+
 
 static std::map<CString, PropertyGrid> modulePropertys = {
-	{ _TEXT("文件入口"),
+	{ FILE_IN,
 		{ _TEXT("/home/chengl/src/soPeriodSmsProcess/data/in"),nullptr , FALSE , }
 	},
-	{ _TEXT("HASTEN_POLICY_ID"),
+	{ HASTEN_POLICYID,
 		{ _TEXT("40000036"),nullptr , FALSE , }
 	},
-	{ _TEXT("LEAVE_REAL_FEE"),
+	{ LEAVE_REAL_FEE,
 		{ _TEXT("1000"),nullptr , FALSE , }
 	},
-	{ _TEXT("REAL_FEE"),
+	{ REAL_FEE,
 		{ _TEXT("2000"),nullptr , FALSE , }
 	},
-	{ _TEXT("CREDIT_VALUE"),
+	{ CREDIT_VALUE,
 		{ _TEXT("3000"),nullptr , FALSE , }
 	}
 };
@@ -168,9 +174,9 @@ std::vector<std::string> BuildSmsContents(CString serialNumber, CString userId)
 std::vector<std::string> GetFiles(ModuleContext *ctx)
 {
 	std::vector<std::string> result;
-	result.push_back(CommonUtil::CStringToString(ctx->m_funcGetProperty(_credit_sms, _TEXT("文件入口")), CP_ACP) + "/../tmp_smsSendFile");
+	result.push_back(CommonUtil::CStringToString(ctx->m_funcGetProperty(_credit_sms, FILE_IN), CP_ACP) + "/../tmp_smsSendFile");
 
-	CString csInFile = ctx->m_funcGetProperty(_credit_sms, _TEXT("文件入口"))
+	CString csInFile = ctx->m_funcGetProperty(_credit_sms, FILE_IN)
 		+ _TEXT("/smsSendFile") + CommonUtil::GetSysYMDTime() + _TEXT(".dat");
 
 	result.push_back(CommonUtil::CStringToString(csInFile, CP_ACP));
@@ -179,12 +185,12 @@ std::vector<std::string> GetFiles(ModuleContext *ctx)
 
 void TriggerSmsSendFile(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("生成短信文件"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("生成短信文件"));
 
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
 	UINT port = 22;
 
 	std::vector<std::string> files =  GetFiles(ctx);
@@ -208,7 +214,7 @@ void TriggerSmsSendFile(ModuleContext *ctx, void *ptr)
 			break;
 		}
 
-		std::vector<std::string> contents = BuildSmsContents(testNumber, ctx->m_funcGetProperty(_common, _TEXT("用户ID")));
+		std::vector<std::string> contents = BuildSmsContents(testNumber, ctx->m_funcGetProperty(_common, USER_ID));
 
 		for (auto it : contents)
 		{
@@ -296,14 +302,14 @@ bool BuildHastenNotice(ModuleContext *ctx, CString userId, CString tradeTypeCode
 
 void TriggerOneWayStopMsg(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发单停短信"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("触发单停短信"));
 
-	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
+	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(_common, USER_ID),
 		_TEXT("3120"),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("HASTEN_POLICY_ID")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("LEAVE_REAL_FEE")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
+		ctx->m_funcGetProperty(_credit_sms, HASTEN_POLICYID),
+		ctx->m_funcGetProperty(_credit_sms, LEAVE_REAL_FEE),
+		ctx->m_funcGetProperty(_credit_sms, REAL_FEE),
+		ctx->m_funcGetProperty(_credit_sms, CREDIT_VALUE)))
 	{
 		resultViewData.PushMsg(_TEXT("触发失败."));
 	}
@@ -316,15 +322,15 @@ void TriggerOneWayStopMsg(ModuleContext *ctx, void *ptr)
 }
 void TriggerDoubleStopMsg(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发双停短信"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("触发双停短信"));
 
 	
-	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
+	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, USER_ID),
 		_TEXT("3110"),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("HASTEN_POLICY_ID")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("LEAVE_REAL_FEE")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
+		ctx->m_funcGetProperty(_credit_sms, HASTEN_POLICYID),
+		ctx->m_funcGetProperty(_credit_sms, LEAVE_REAL_FEE),
+		ctx->m_funcGetProperty(_credit_sms, REAL_FEE),
+		ctx->m_funcGetProperty(_credit_sms, CREDIT_VALUE)))
 	{
 		resultViewData.PushMsg(_TEXT("触发失败."));
 	}
@@ -338,14 +344,14 @@ void TriggerDoubleStopMsg(ModuleContext *ctx, void *ptr)
 
 void TriggerNotEnoughBalanceMsg(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发余额不足短信"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("触发余额不足短信"));
 
-	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
+	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, USER_ID),
 		_TEXT("7001"),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("HASTEN_POLICY_ID")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("LEAVE_REAL_FEE")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
+		ctx->m_funcGetProperty(_credit_sms, HASTEN_POLICYID),
+		ctx->m_funcGetProperty(_credit_sms, LEAVE_REAL_FEE),
+		ctx->m_funcGetProperty(_credit_sms, REAL_FEE),
+		ctx->m_funcGetProperty(_credit_sms, CREDIT_VALUE)))
 	{
 		resultViewData.PushMsg(_TEXT("触发失败."));
 	}
@@ -359,18 +365,18 @@ void TriggerNotEnoughBalanceMsg(ModuleContext *ctx, void *ptr)
 
 void TriggerDataRemindMsg(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发流量使用短信"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("触发流量使用短信"));
 
 	/*
 	ModuleContext *ctx, CString userId, CString tradeTypeCode, CString policyId,
 	CString leaveRealFee,CString realFee,CString creditValue
 	*/
-	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
+	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, USER_ID),
 		_TEXT("7002"),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("HASTEN_POLICY_ID")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("LEAVE_REAL_FEE")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
+		ctx->m_funcGetProperty(_credit_sms, HASTEN_POLICYID),
+		ctx->m_funcGetProperty(_credit_sms, LEAVE_REAL_FEE),
+		ctx->m_funcGetProperty(_credit_sms, REAL_FEE),
+		ctx->m_funcGetProperty(_credit_sms, CREDIT_VALUE)))
 	{
 		resultViewData.PushMsg(_TEXT("触发失败."));
 	}
@@ -383,15 +389,15 @@ void TriggerDataRemindMsg(ModuleContext *ctx, void *ptr)
 }
 void TriggerDataTopMsg(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发流量封顶短信"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("触发流量封顶短信"));
 
 
-	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
+	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, USER_ID),
 		_TEXT("3111"),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("HASTEN_POLICY_ID")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("LEAVE_REAL_FEE")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
+		ctx->m_funcGetProperty(_credit_sms, HASTEN_POLICYID),
+		ctx->m_funcGetProperty(_credit_sms, LEAVE_REAL_FEE),
+		ctx->m_funcGetProperty(_credit_sms, REAL_FEE),
+		ctx->m_funcGetProperty(_credit_sms, CREDIT_VALUE)))
 	{
 		resultViewData.PushMsg(_TEXT("触发失败."));
 	}
@@ -404,15 +410,15 @@ void TriggerDataTopMsg(ModuleContext *ctx, void *ptr)
 }
 void TriggerPostPaypMsg(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发后付费用户催费短信"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("触发后付费用户催费短信"));
 
 
-	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
+	if (!BuildHastenNotice(ctx, ctx->m_funcGetProperty(0, USER_ID),
 		_TEXT("3200"),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("HASTEN_POLICY_ID")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("LEAVE_REAL_FEE")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("REAL_FEE")),
-		ctx->m_funcGetProperty(_credit_sms, _TEXT("CREDIT_VALUE"))))
+		ctx->m_funcGetProperty(_credit_sms, HASTEN_POLICYID),
+		ctx->m_funcGetProperty(_credit_sms, LEAVE_REAL_FEE),
+		ctx->m_funcGetProperty(_credit_sms, REAL_FEE),
+		ctx->m_funcGetProperty(_credit_sms, CREDIT_VALUE)))
 	{
 		resultViewData.PushMsg(_TEXT("触发失败."));
 	}

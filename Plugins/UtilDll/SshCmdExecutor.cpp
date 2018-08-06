@@ -39,7 +39,7 @@ bool SshCmdExecutor::ConnectAndInit(std::string hostName, int  port, std::string
 	*/
 	while ((rc = libssh2_session_handshake(m_session, socket)) == LIBSSH2_ERROR_EAGAIN);
 	if (rc) {
-		fprintf(stderr, "Failure establishing SSH session: %d\n", rc);
+		m_errMsg.Format(_TEXT("Failure establishing SSH session: %d"), rc);
 		return false;
 	}
 	nh = libssh2_knownhost_init(m_session);

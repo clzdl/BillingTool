@@ -69,22 +69,22 @@ BOOL CCreditDispatchApp::InitInstance()
 
 
 static std::map<CString, PropertyGrid> modulePropertys = {
-	{ _TEXT("触发停机服务地址"),
+	{ CREDIT_SERVICE,
 		{ _TEXT("/creditTrigger"),nullptr, FALSE, }
 	},
-	{ _TEXT("话单费用"),
+	{ BILL_FEE,
 		{ _TEXT("1000"),nullptr ,FALSE , }
 	},
-	{ _TEXT("话单使用量"),
+	{ BILL_VOLUME,
 		{ _TEXT("10"),nullptr ,FALSE , }
 	},
-	{ _TEXT("截止本条话单前的总是用量"),
+	{ CUR_TOTAL_USED_VOLUME,
 		{ _TEXT("100"),nullptr ,FALSE , }
 	},
-	{ _TEXT("用户总的基础量"),
+	{ BASE_VOLUME,
 		{ _TEXT("200"),nullptr , FALSE , }
 	},
-	{ _TEXT("信控分发文件入口"),
+	{ FILE_IN,
 		{ _TEXT("/home/chengl/src/soCreditDispatch/data/in"),nullptr , FALSE , }
 	}
 };

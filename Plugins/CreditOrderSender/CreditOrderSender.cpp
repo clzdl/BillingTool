@@ -164,8 +164,8 @@ bool BuildCreditOrder(ModuleContext *ctx, CString userId, CString tradeTypeCode)
 
 void TriggerStartUp(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("生成开机指令"));
-	if (!BuildCreditOrder(ctx , ctx->m_funcGetProperty(_common, _TEXT("用户ID")) , _TEXT("1100")))
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common,TEST_NUMBER), _TEXT("生成开机指令"));
+	if (!BuildCreditOrder(ctx , ctx->m_funcGetProperty(_common, USER_ID) , _TEXT("1100")))
 	{
 		resultViewData.PushMsg( _TEXT("触发失败."));
 	}
@@ -179,8 +179,8 @@ void TriggerStartUp(ModuleContext *ctx, void *ptr)
 
 void TriggerOnWayStop(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("生成单停指令"));
-	if (!BuildCreditOrder(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")), _TEXT("3120")))
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common,TEST_NUMBER), _TEXT("生成单停指令"));
+	if (!BuildCreditOrder(ctx, ctx->m_funcGetProperty(_common, USER_ID), _TEXT("3120")))
 	{
 		resultViewData.PushMsg(_TEXT("触发失败."));
 	}
@@ -193,8 +193,8 @@ void TriggerOnWayStop(ModuleContext *ctx, void *ptr)
 }
 void TriggerDoubleStop(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("生成双停指令"));
-	if (!BuildCreditOrder(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")), _TEXT("3110")))
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common,TEST_NUMBER), _TEXT("生成双停指令"));
+	if (!BuildCreditOrder(ctx, ctx->m_funcGetProperty(_common, USER_ID), _TEXT("3110")))
 	{
 		resultViewData.PushMsg(_TEXT("触发失败."));
 	}

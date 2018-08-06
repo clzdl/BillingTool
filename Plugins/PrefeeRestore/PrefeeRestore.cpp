@@ -67,42 +67,59 @@ BOOL CPrefeeRestoreApp::InitInstance()
 }
 
 
+const CString ACTIVITY_ID = _TEXT("活动ID");
+const CString RULE_TYPE = _TEXT("规则类型");
+const CString RULE_TYPE_AVG = _TEXT("均分");
+const CString RULE_TYPE_CUSTOM = _TEXT("自定义");
+const CString CUSTOM_RULE_ID = _TEXT("自定义规则ID");
+const CString PRESENT_FEE = _TEXT("返还费用");
+const CString PRESENT_CYCLE = _TEXT("返还周期");
+const CString PRESENT_CYCLE_DAY = _TEXT("按天");
+const CString PRESENT_CYCLE_NATURALDAY = _TEXT("按自然天");
+const CString PRESENT_CYCLE_MONTH = _TEXT("按月");
+const CString PRESENT_CYCLE_NATURALMONTH = _TEXT("按自然月");
+const CString VALID_RULE = _TEXT("校验规则");
+const CString VALID_RULE_NOCHECK = _TEXT("不校验强制返费");
+const CString VALID_RULE_NOPASS_DISCARD = _TEXT("校验不通过废弃");
+const CString VALID_RULE_NOPASS_DELAY = _TEXT("校验不通过顺延");
+const CString PRESENT_BALANCE = _TEXT("预存返还账本");
+
 
 static std::map<CString, PropertyGrid> modulePropertys = {
-	{ _TEXT("活动ID"),
+	{ ACTIVITY_ID,
 		{ _TEXT("1111111000"),nullptr , FALSE , }
 	},
-	{ _TEXT("规则类型"),
-		{ _TEXT("均分"),nullptr , TRUE ,{
-				{ _TEXT("均分"),_TEXT("0") },
-				{ _TEXT("自定义"),_TEXT("1") }
+	{ RULE_TYPE,
+		{ RULE_TYPE_AVG,nullptr , TRUE ,{
+				{ RULE_TYPE_AVG,_TEXT("0") },
+				{ RULE_TYPE_CUSTOM,_TEXT("1") }
 			}
 		}
 	},
-	{ _TEXT("自定义规则ID"),
+	{ CUSTOM_RULE_ID,
 		{ _TEXT("1101111000"),nullptr , FALSE , }
 	},
-	{ _TEXT("返还费用"),
+	{ PRESENT_FEE,
 		{ _TEXT("10000"),nullptr , FALSE , }
 	},
-	{ _TEXT("返还周期"),
-		{ _TEXT("按天"),nullptr , TRUE ,{
-				{ _TEXT("按天"),_TEXT("0") },
-				{ _TEXT("按自然甜"),_TEXT("1") },
-				{ _TEXT("按月"),_TEXT("2") },
-				{ _TEXT("按自然月"),_TEXT("3") }
+	{ PRESENT_CYCLE,
+		{ PRESENT_CYCLE_DAY,nullptr , TRUE ,{
+				{ PRESENT_CYCLE_DAY,_TEXT("0") },
+				{ PRESENT_CYCLE_NATURALDAY,_TEXT("1") },
+				{ PRESENT_CYCLE_MONTH,_TEXT("2") },
+				{ PRESENT_CYCLE_NATURALMONTH,_TEXT("3") }
 			}
 		}
 	},
-	{ _TEXT("校验规则"),
-		{ _TEXT("不校验强制返费"),nullptr , TRUE ,{
-				{ _TEXT("不校验强制返费"),_TEXT("0") },
-				{ _TEXT("校验不通过废弃"),_TEXT("1") },
-				{ _TEXT("校验不通过顺延"),_TEXT("2") }
+	{ VALID_RULE,
+		{ VALID_RULE_NOCHECK,nullptr , TRUE ,{
+				{ VALID_RULE_NOCHECK,_TEXT("0") },
+				{ VALID_RULE_NOPASS_DISCARD,_TEXT("1") },
+				{ VALID_RULE_NOPASS_DELAY,_TEXT("2") }
 			}
 		}
 	},
-	{ _TEXT("预存返还账本"),
+	{ PRESENT_BALANCE,
 		{ _TEXT("2111111010130"),nullptr , FALSE , }
 	}
 };
@@ -231,15 +248,15 @@ bool BuildPrefee(ModuleContext *ctx, CString userId, CString activityId,CString 
 
 void TriggerPrefee(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("预存返回功能"));
-	if (!BuildPrefee(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-						ctx->m_funcGetProperty(_prefee_restore, _TEXT("活动ID")),
-						ctx->m_funcGetProperty(_prefee_restore, _TEXT("规则类型")),
-						ctx->m_funcGetProperty(_prefee_restore, _TEXT("自定义规则ID")),
-						ctx->m_funcGetProperty(_prefee_restore, _TEXT("返还费用")),
-						ctx->m_funcGetProperty(_prefee_restore, _TEXT("返还周期")),
-						ctx->m_funcGetProperty(_prefee_restore, _TEXT("校验规则")),
-						ctx->m_funcGetProperty(_prefee_restore, _TEXT("预存返还账本")) ))
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("预存返还功能"));
+	if (!BuildPrefee(ctx, ctx->m_funcGetProperty(_common, USER_ID),
+						ctx->m_funcGetProperty(_prefee_restore, ACTIVITY_ID),
+						ctx->m_funcGetProperty(_prefee_restore, RULE_TYPE),
+						ctx->m_funcGetProperty(_prefee_restore, CUSTOM_RULE_ID),
+						ctx->m_funcGetProperty(_prefee_restore, PRESENT_FEE),
+						ctx->m_funcGetProperty(_prefee_restore, PRESENT_CYCLE),
+						ctx->m_funcGetProperty(_prefee_restore, VALID_RULE),
+						ctx->m_funcGetProperty(_prefee_restore, PRESENT_BALANCE) ))
 	{
 		resultViewData.PushMsg(_TEXT("触发失败."));
 	}

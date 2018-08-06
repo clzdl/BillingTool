@@ -16,12 +16,13 @@
 #include "Poco/StreamCopier.h"
 #include "../UtilDll/UtilDll.h"
 #include "../UtilDll/SshCmdExecutor.h"
+#include "../../BillingTool/PluginInterface.h"
 
 
 
 void BusiFunc::TriggerStartUp(ModuleContext *ctx,void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("触发信控开机"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(0, TEST_NUMBER), _TEXT("触发信控开机"));
 	try{
 		std::string sql = "insert into ACC_JFTOCREDIT(acc_id, "
 			"	user_id, "
@@ -43,8 +44,8 @@ void BusiFunc::TriggerStartUp(ModuleContext *ctx,void *ptr)
 		otlStm.open(1, sql.c_str(), *(ctx->m_dbConn));
 		otlStm.set_commit(0);
 		
-		otlStm << CommonUtil::CStringToString(ctx->m_funcGetProperty(0, _TEXT("账户ID")), CP_ACP).c_str()
-			<< CommonUtil::CStringToString(ctx->m_funcGetProperty(0, _TEXT("用户ID")), CP_ACP).c_str()
+		otlStm << CommonUtil::CStringToString(ctx->m_funcGetProperty(0, ACCT_ID), CP_ACP).c_str()
+			<< CommonUtil::CStringToString(ctx->m_funcGetProperty(0, USER_ID), CP_ACP).c_str()
 		    << CommonUtil::CStringToString(CommonUtil::GetSysTime(), CP_ACP).c_str();
 
 		ctx->m_dbConn->commit();
@@ -129,17 +130,17 @@ static int SendCreditPkg(ModuleContext *ctx,std::string srvIp , UINT port , std:
 
 void BusiFunc::TriggerStopByNet(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发信控停机【NET】"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("触发信控停机【NET】"));
 
-	std::string jsonString = CreateCreditJsonData(ctx->m_funcGetProperty(_common, _TEXT("账户ID")) ,
-												ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-												ctx->m_funcGetProperty(_credit_dispatch, _TEXT("话单费用")));
+	std::string jsonString = CreateCreditJsonData(ctx->m_funcGetProperty(_common, ACCT_ID) ,
+												ctx->m_funcGetProperty(_common, USER_ID),
+												ctx->m_funcGetProperty(_credit_dispatch, BILL_FEE));
 	
 	TRACE(CommonUtil::StringToCString(jsonString, CP_ACP));
 	
-	int result = SendCreditPkg(ctx, CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")),CP_ACP),
-					   _wtoi(ctx->m_funcGetProperty(_common, _TEXT("端口号"))),
-						CommonUtil::CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("触发停机服务地址")), CP_ACP), jsonString);
+	int result = SendCreditPkg(ctx, CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR),CP_ACP),
+					   _wtoi(ctx->m_funcGetProperty(_common, IP_PORT)),
+						CommonUtil::CStringToString(ctx->m_funcGetProperty(_credit_dispatch,CREDIT_SERVICE), CP_ACP), jsonString);
 
 	if (SUCCESS != result)
 	{
@@ -189,7 +190,7 @@ std::vector<std::string> GetFiles(ModuleContext *ctx ,CString testNumber)
 { 
 	std::vector<std::string> result;
 
-	CString inPath = ctx->m_funcGetProperty(_credit_dispatch, _TEXT("信控分发文件入口"));
+	CString inPath = ctx->m_funcGetProperty(_credit_dispatch, FILE_IN);
 	
 	result.push_back(CommonUtil::CStringToString(inPath, CP_ACP) + "/../tempCreditFile.dat");
 
@@ -202,13 +203,13 @@ std::vector<std::string> GetFiles(ModuleContext *ctx ,CString testNumber)
 
 void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发信控停机【FILE】"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("触发信控停机【FILE】"));
 
 
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
 
 	UINT port = 22;
 	std::vector<std::string>  files = GetFiles(ctx , testNumber);
@@ -233,8 +234,8 @@ void BusiFunc::TriggerStopByFile(ModuleContext *ctx, void *ptr)
 		}
 
 		std::vector<std::string> creditContent = BuildCreditFileContents(
-			CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("账户ID")), CP_ACP),
-			CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户ID")), CP_ACP));
+			CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, ACCT_ID), CP_ACP),
+			CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, USER_ID), CP_ACP));
 
 		
 
@@ -312,12 +313,12 @@ static std::vector<std::string> BuildRemindFileContents(std::string acctId, std:
 
 void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("触发信控停机【FILE】"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("触发信控停机【FILE】"));
 
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
 	UINT port = 22;
 
 	std::vector<std::string>  files = GetFiles(ctx, testNumber);
@@ -344,8 +345,8 @@ void BusiFunc::TriggerRemindByFile(ModuleContext *ctx, void *ptr)
 		}
 
 		std::vector<std::string> creditContent = BuildRemindFileContents(
-			CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("账户ID")), CP_ACP),
-			CommonUtil::CStringToString(ctx->m_funcGetProperty(-_common, _TEXT("用户ID")), CP_ACP),
+			CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, ACCT_ID), CP_ACP),
+			CommonUtil::CStringToString(ctx->m_funcGetProperty(-_common, USER_ID), CP_ACP),
 			CommonUtil::CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("话单使用量")), CP_ACP),
 			CommonUtil::CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("截止本条话单前的总是用量")), CP_ACP),
 			CommonUtil::CStringToString(ctx->m_funcGetProperty(_credit_dispatch, _TEXT("用户总的基础量")), CP_ACP) );

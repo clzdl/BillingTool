@@ -69,20 +69,27 @@ BOOL CSecPriceApp::InitInstance()
 }
 
 
+const CString FILE_IN = _TEXT("文件入口");
+const CString PEER_NUMBER = _TEXT("对端号码");
+const CString DURATION = _TEXT("时长");
+const CString DOWNLOAD_VALUE = _TEXT("下行流量");
+const CString UPLOAD_VALUE = _TEXT("上行流量");
+
+
 static std::map<CString, PropertyGrid> modulePropertys = {
-	{ _TEXT("文件入口"),
+	{ FILE_IN,
 		{ _TEXT("/home/chengl/src/BillRate/data/in"),nullptr , FALSE , }
 	},
-	{ _TEXT("对端号码"),
+	{ PEER_NUMBER,
 		{ _TEXT("18645005420"),nullptr , FALSE , }
 	},
-	{ _TEXT("时长"),
+	{ DURATION,
 		{ _TEXT("1000"),nullptr , FALSE , }
 	},
-	{ _TEXT("下行流量"),
+	{ DOWNLOAD_VALUE,
 		{ _TEXT("102400"),nullptr , FALSE , }
 	},
-	{ _TEXT("上行流量"),
+	{ UPLOAD_VALUE,
 		{ _TEXT("102400"),nullptr , FALSE , }
 	}
 };
@@ -316,7 +323,7 @@ std::vector<std::string> BuildCdrContent(CString cdrTag,CString callType,CString
 std::vector<std::string> GetFiles(ModuleContext *ctx,CString testNumber,CString providerCode)
 {
 	std::vector<std::string> result;
-	CString inPath = ctx->m_funcGetProperty(_sec_price, _TEXT("文件入口"));
+	CString inPath = ctx->m_funcGetProperty(_sec_price, FILE_IN);
 	result.push_back(CommonUtil::CStringToString(inPath, CP_ACP) + "/../tmpFX_ONE.dat");
 	CString csInFile = inPath + _TEXT("/FX_ONE_") + CommonUtil::GetSysYMDTime() + _TEXT("_") + CommonUtil::GetSerial() + _TEXT(".") + providerCode
 		+ _TEXT(".") + testNumber.Left(7) + _TEXT(".dat");
@@ -329,11 +336,11 @@ std::vector<std::string> GetFiles(ModuleContext *ctx,CString testNumber,CString 
 
 void TriggerVcLocalCdr(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -361,14 +368,14 @@ void TriggerVcLocalCdr(ModuleContext *ctx, void *ptr)
 
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 								testNumber, providerCode,
-								ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-								ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-								ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-								ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+								ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+								ctx->m_funcGetProperty(_sec_price, DURATION),
+								ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+								ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 								_TEXT("R_LOCAL"),_TEXT("T_LOCAL"),FALSE,_TEXT("CHN"),_TEXT("40"),
-								ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-								ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-								ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+								ctx->m_funcGetProperty(_common, USER_IMSI),
+								ctx->m_funcGetProperty(_common, USER_IMEI),
+								ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 			);
 
 		for (auto it : contents)
@@ -397,11 +404,11 @@ void TriggerVcLocalCdr(ModuleContext *ctx, void *ptr)
 }
 void TriggerVcLongCdr(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -429,14 +436,14 @@ void TriggerVcLongCdr(ModuleContext *ctx, void *ptr)
 
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_LOCAL"), _TEXT("T_BT_PROVINCE"), FALSE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)
@@ -465,11 +472,11 @@ void TriggerVcLongCdr(ModuleContext *ctx, void *ptr)
 }
 void TriggerVcRoamInProviceCdr(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -497,14 +504,14 @@ void TriggerVcRoamInProviceCdr(ModuleContext *ctx, void *ptr)
 
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_IN_PROVINCE"), _TEXT("T_BT_PROVINCE"), FALSE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)
@@ -533,11 +540,11 @@ void TriggerVcRoamInProviceCdr(ModuleContext *ctx, void *ptr)
 }
 void TriggerVcRoamProviceCdr(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -565,14 +572,14 @@ void TriggerVcRoamProviceCdr(ModuleContext *ctx, void *ptr)
 
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_PROVINCE"), _TEXT("T_BT_PROVINCE"), FALSE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)
@@ -601,11 +608,11 @@ void TriggerVcRoamProviceCdr(ModuleContext *ctx, void *ptr)
 }
 void TriggerVcLongInterCdr(ModuleContext *ctx, void *ptr) 
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -633,14 +640,14 @@ void TriggerVcLongInterCdr(ModuleContext *ctx, void *ptr)
 
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_LOCAL"), _TEXT("T_INTERNATIONAL"), FALSE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)
@@ -669,11 +676,11 @@ void TriggerVcLongInterCdr(ModuleContext *ctx, void *ptr)
 }
 void TriggerVcRoamInterCdr(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -701,14 +708,14 @@ void TriggerVcRoamInterCdr(ModuleContext *ctx, void *ptr)
 
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_OUT_INTERNATIONAL"), _TEXT("T_LOCAL"), FALSE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)
@@ -737,11 +744,11 @@ void TriggerVcRoamInterCdr(ModuleContext *ctx, void *ptr)
 }
 void TriggerVcIpCallCdr(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -769,14 +776,14 @@ void TriggerVcIpCallCdr(ModuleContext *ctx, void *ptr)
 		
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_LOCAL"), _TEXT("T_LOCAL"), TRUE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)
@@ -805,11 +812,11 @@ void TriggerVcIpCallCdr(ModuleContext *ctx, void *ptr)
 }
 void TriggerVcDivertCdr(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -837,14 +844,14 @@ void TriggerVcDivertCdr(ModuleContext *ctx, void *ptr)
 		
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("DIVERTING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_LOCAL"), _TEXT("T_LOCAL"), TRUE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)
@@ -874,11 +881,11 @@ void TriggerVcDivertCdr(ModuleContext *ctx, void *ptr)
 
 void TriggerVcCalledCdr(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -906,14 +913,14 @@ void TriggerVcCalledCdr(ModuleContext *ctx, void *ptr)
 	
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLED"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_LOCAL"), _TEXT("T_LOCAL"), TRUE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)
@@ -943,11 +950,11 @@ void TriggerVcCalledCdr(ModuleContext *ctx, void *ptr)
 
 void TriggerSmsChnCdr(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -975,14 +982,14 @@ void TriggerSmsChnCdr(ModuleContext *ctx, void *ptr)
 		
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_SMS"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_LOCAL"), _TEXT("T_LOCAL"), FALSE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)
@@ -1011,11 +1018,11 @@ void TriggerSmsChnCdr(ModuleContext *ctx, void *ptr)
 }
 void TriggerSmsInterCdr(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -1043,14 +1050,14 @@ void TriggerSmsInterCdr(ModuleContext *ctx, void *ptr)
 		
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_SMS"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_LOCAL"), _TEXT("T_INTERNATIONAL"), FALSE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)
@@ -1081,11 +1088,11 @@ void TriggerSmsInterCdr(ModuleContext *ctx, void *ptr)
 
 void TriggerSmsRoamCdr(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -1113,14 +1120,14 @@ void TriggerSmsRoamCdr(ModuleContext *ctx, void *ptr)
 	
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_SMS"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_OUT_INTERNATIONAL"), _TEXT("T_LOCAL"), FALSE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)
@@ -1150,11 +1157,11 @@ void TriggerSmsRoamCdr(ModuleContext *ctx, void *ptr)
 
 void TriggerSmsCalledCdr(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -1182,14 +1189,14 @@ void TriggerSmsCalledCdr(ModuleContext *ctx, void *ptr)
 		
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_SMS"), _TEXT("CALLED"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_LOCAL"), _TEXT("T_LOCAL"), FALSE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)
@@ -1219,11 +1226,11 @@ void TriggerSmsCalledCdr(ModuleContext *ctx, void *ptr)
 
 void TriggerDataInProvinceCdr(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -1251,14 +1258,14 @@ void TriggerDataInProvinceCdr(ModuleContext *ctx, void *ptr)
 		
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_NET"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_LOCAL"), _TEXT("T_LOCAL"), FALSE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)
@@ -1287,11 +1294,11 @@ void TriggerDataInProvinceCdr(ModuleContext *ctx, void *ptr)
 }
 void TriggerDataProvinceCdr(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -1319,14 +1326,14 @@ void TriggerDataProvinceCdr(ModuleContext *ctx, void *ptr)
 	
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_NET"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_PROVINCE"), _TEXT("T_LOCAL"), FALSE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)
@@ -1356,11 +1363,11 @@ void TriggerDataProvinceCdr(ModuleContext *ctx, void *ptr)
 void TriggerDataInterCdr(ModuleContext *ctx, void *ptr)
 {
 
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -1388,14 +1395,14 @@ void TriggerDataInterCdr(ModuleContext *ctx, void *ptr)
 		
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_NET"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_sec_price, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("时长")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_sec_price, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_sec_price, PEER_NUMBER),
+			ctx->m_funcGetProperty(_sec_price, DURATION),
+			ctx->m_funcGetProperty(_sec_price, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_sec_price, UPLOAD_VALUE),
 			_TEXT("R_OUT_INTERNATIONAL"), _TEXT("T_LOCAL"), FALSE, _TEXT("CHN"), _TEXT("40"),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户归属地"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_HOME_CODE)
 		);
 
 		for (auto it : contents)

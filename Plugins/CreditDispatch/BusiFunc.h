@@ -19,3 +19,11 @@ private:
 	BusiFunc();
 
 };
+
+
+const CString CREDIT_SERVICE = _TEXT("触发停机服务地址");
+const CString BILL_FEE = _TEXT("话单费用");
+const CString BILL_VOLUME = _TEXT("话单使用量");
+const CString CUR_TOTAL_USED_VOLUME = _TEXT("截止本条话单前的总是用量");
+const CString BASE_VOLUME = _TEXT("用户总的基础量");
+const CString FILE_IN = _TEXT("信控分发文件入口");

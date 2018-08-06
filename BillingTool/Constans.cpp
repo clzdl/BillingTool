@@ -7,49 +7,52 @@
 #include "ViewTree.h"
 #include "PluginInterface.h"
 
+
+
+
 void cbTestPhoneChg(CPropertiesWnd *propWnd, std::map<CString, PropertyGrid> &modProp, CString newValue);
 
 
 std::map<int, std::map<CString, PropertyGrid> > gProperties = {
 	{ _common /*公共属性*/,
 		{
-			{ _TEXT("IP地址"),
+			{ IP_ADDR,
 				{ _TEXT("192.168.88.150"),nullptr,FALSE, }
 			},
-			{ _TEXT("端口号"),
+			{ IP_PORT,
 				{ _TEXT("4444"),nullptr,FALSE, }
 			},
-			{ _TEXT("测试号码"),
+			{ TEST_NUMBER,
 				{ _TEXT("17001818555"),cbTestPhoneChg,FALSE, }
 			},
-			{ _TEXT("账户ID"),
+			{ ACCT_ID,
 				{ _TEXT("320150105718968"),nullptr , FALSE, }
 			},
-			{ _TEXT("用户ID"),
+			{ USER_ID,
 				{ _TEXT("120150105199770"),nullptr , FALSE , }
 			},
-			{ _TEXT("用户IMSI"),
+			{ USER_IMSI,
 				{ _TEXT("4600121321301023010"),nullptr , FALSE , }
 			},
-			{ _TEXT("用户IMEI"),
+			{ USER_IMEI,
 				{ _TEXT("4600121321301023010"),nullptr , FALSE , }
 			},
-			{ _TEXT("用户归属地"),
+			{ USER_HOME_CODE,
 				{ _TEXT("311"),nullptr , FALSE , }
 			},
-			{ _TEXT("归属运营商"),
+			{ USER_PROVIDER_CODE,
 				{ _TEXT("CMCC"),nullptr , FALSE , }
 			},
-			{ _TEXT("客户ID"),
+			{ CUST_ID,
 				{ _TEXT("220150105192242"),nullptr , FALSE , }
 			},
-			{ _TEXT("数据库连接串"),
+			{ DB_CONN_STRING,
 				{ _TEXT("cmcc/CMCC@fxzn"),nullptr, FALSE , }
 			},
-			{ _TEXT("用户名"),
+			{ HOST_USERNAME,
 				{ _TEXT("chengl"),nullptr, FALSE , }
 			},
-			{ _TEXT("密码"),
+			{ HOST_USERPWD ,
 				{ _TEXT("chengl123"),nullptr , FALSE , }
 			}
 		}
@@ -92,9 +95,9 @@ void cbTestPhoneChg(CPropertiesWnd *propWnd, std::map<CString, PropertyGrid> &mo
 		}
 
 	
-		modProp.at(_TEXT("账户ID")).propertyValue = CommonUtil::StringToCString(acctId, CP_ACP);
-		modProp.at(_TEXT("用户ID")).propertyValue = CommonUtil::StringToCString(userId, CP_ACP);
-		modProp.at(_TEXT("客户ID")).propertyValue = CommonUtil::StringToCString(custId, CP_ACP);
+		modProp.at(ACCT_ID).propertyValue = CommonUtil::StringToCString(acctId, CP_ACP);
+		modProp.at(USER_ID).propertyValue = CommonUtil::StringToCString(userId, CP_ACP);
+		modProp.at(CUST_ID).propertyValue = CommonUtil::StringToCString(custId, CP_ACP);
 		propWnd->Refresh(_common);
 	}
 	catch (otl_exception &e)

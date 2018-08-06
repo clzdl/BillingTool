@@ -86,10 +86,10 @@ CMFCPropertyGridProperty* CPropertiesWnd::BuildPropertyGridGroup(CString groupNa
 	CMFCPropertyGridProperty *pCreditDispatchGroup = new CMFCPropertyGridProperty(groupName);
 	CMFCPropertyGridProperty *pProp = nullptr;
 	CString value;
-	for (auto comm : gProperties.at(module))
+	for (auto &comm : gProperties.at(module))
 	{
 		value = theApp.GetString(GetRigistryKey(module, comm.first), comm.second.propertyValue);
-		
+		comm.second.propertyValue = value;
 		pProp = new CMFCPropertyGridProperty(comm.first, value, comm.first);
 		pProp->SetData(module);
 		if (comm.second.isCombox)

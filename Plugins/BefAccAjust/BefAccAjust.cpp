@@ -66,18 +66,24 @@ BOOL CBefAccAjustApp::InitInstance()
 	return TRUE;
 }
 
+const CString ADJUST_VALUE = _TEXT("调账金额/比例");
+const CString ITEM_CODE = _TEXT("账目编码");
+const CString VALID_TAG = _TEXT("生效标识");
+const CString VALID_TAG_AT_ONCE = _TEXT("立即生效");
+const CString VALID_TAG_MONTH_END = _TEXT("月末生效");
+
 
 static std::map<CString, PropertyGrid> modulePropertys = {
-	{ _TEXT("调账金额/比例"),
+	{ ADJUST_VALUE ,
 		{ _TEXT("1000"),nullptr , FALSE , }
 	},
-	{ _TEXT("账目编码"),
+	{ ITEM_CODE,
 		{ _TEXT("110000"),nullptr , FALSE , }
 	},
-	{ _TEXT("生效标识"),
-		{ _TEXT("立即生效"),nullptr , TRUE ,{
-				{ _TEXT("立即生效"),_TEXT("0") } ,
-				{ _TEXT("月末生效"),_TEXT("1") }
+	{ VALID_TAG,
+		{ VALID_TAG_AT_ONCE,nullptr , TRUE ,{
+				{ VALID_TAG_AT_ONCE,_TEXT("0") } ,
+				{ VALID_TAG_MONTH_END,_TEXT("1") }
 			}
 		}
 	}
@@ -204,14 +210,14 @@ bool BuildBefAccChk(ModuleContext *ctx, CString userId, CString acctId,CString s
 
 void IncrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("账前调账-按金额调增"));
-	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-							ctx->m_funcGetProperty(_common, _TEXT("账户ID")),
-							ctx->m_funcGetProperty(_common, _TEXT("测试号码")),
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common,TEST_NUMBER), _TEXT("账前调账-按金额调增"));
+	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(_common, USER_ID),
+							ctx->m_funcGetProperty(_common, ACCT_ID),
+							ctx->m_funcGetProperty(_common,TEST_NUMBER),
 							_TEXT("2"),_TEXT("1"),
-							ctx->m_funcGetProperty(_bef_adjust, _TEXT("账目编码")),
-							ctx->m_funcGetProperty(_bef_adjust, _TEXT("调账金额/比例")),
-							ctx->m_funcGetProperty(_bef_adjust, _TEXT("生效标识"))))
+							ctx->m_funcGetProperty(_bef_adjust, ITEM_CODE),
+							ctx->m_funcGetProperty(_bef_adjust, ADJUST_VALUE),
+							ctx->m_funcGetProperty(_bef_adjust, VALID_TAG)))
 	{
 		resultViewData.PushMsg( _TEXT("调账失败."));
 	}
@@ -225,15 +231,15 @@ void IncrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 }
 void IncrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("账前调账-按比例调增"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common,TEST_NUMBER), _TEXT("账前调账-按比例调增"));
 	
-	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-		ctx->m_funcGetProperty(_common, _TEXT("账户ID")),
-		ctx->m_funcGetProperty(_common, _TEXT("测试号码")),
+	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(_common, USER_ID),
+		ctx->m_funcGetProperty(_common, ACCT_ID),
+		ctx->m_funcGetProperty(_common,TEST_NUMBER),
 		_TEXT("2"), _TEXT("2"),
-		ctx->m_funcGetProperty(_bef_adjust, _TEXT("账目编码")),
-		ctx->m_funcGetProperty(_bef_adjust, _TEXT("调账金额/比例")),
-		ctx->m_funcGetProperty(_bef_adjust, _TEXT("生效标识"))))
+		ctx->m_funcGetProperty(_bef_adjust, ITEM_CODE),
+		ctx->m_funcGetProperty(_bef_adjust, ADJUST_VALUE),
+		ctx->m_funcGetProperty(_bef_adjust, VALID_TAG)))
 	{
 		resultViewData.PushMsg(_TEXT("调账失败."));
 	}
@@ -247,15 +253,15 @@ void IncrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 }
 void DecrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("账前调账-按金额调减"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common,TEST_NUMBER), _TEXT("账前调账-按金额调减"));
 	
-	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-		ctx->m_funcGetProperty(_common, _TEXT("账户ID")),
-		ctx->m_funcGetProperty(_common, _TEXT("测试号码")),
+	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(_common, USER_ID),
+		ctx->m_funcGetProperty(_common, ACCT_ID),
+		ctx->m_funcGetProperty(_common,TEST_NUMBER),
 		_TEXT("1"), _TEXT("1"),
-		ctx->m_funcGetProperty(_bef_adjust, _TEXT("账目编码")),
-		ctx->m_funcGetProperty(_bef_adjust, _TEXT("调账金额/比例")),
-		ctx->m_funcGetProperty(_bef_adjust, _TEXT("生效标识"))))
+		ctx->m_funcGetProperty(_bef_adjust, ITEM_CODE),
+		ctx->m_funcGetProperty(_bef_adjust, ADJUST_VALUE),
+		ctx->m_funcGetProperty(_bef_adjust, VALID_TAG)))
 	{
 		resultViewData.PushMsg(_TEXT("调账失败."));
 	}
@@ -269,15 +275,15 @@ void DecrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 }
 void DecrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("账前调账-按比例调减"));
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common,TEST_NUMBER), _TEXT("账前调账-按比例调减"));
 	
-	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-		ctx->m_funcGetProperty(_common, _TEXT("账户ID")),
-		ctx->m_funcGetProperty(_common, _TEXT("测试号码")),
+	if (!BuildBefAccChk(ctx, ctx->m_funcGetProperty(_common, USER_ID),
+		ctx->m_funcGetProperty(_common, ACCT_ID),
+		ctx->m_funcGetProperty(_common,TEST_NUMBER),
 		_TEXT("1"), _TEXT("2"),
-		ctx->m_funcGetProperty(_bef_adjust, _TEXT("账目编码")),
-		ctx->m_funcGetProperty(_bef_adjust, _TEXT("调账金额/比例")),
-		ctx->m_funcGetProperty(_bef_adjust, _TEXT("生效标识"))))
+		ctx->m_funcGetProperty(_bef_adjust, ITEM_CODE),
+		ctx->m_funcGetProperty(_bef_adjust, ADJUST_VALUE),
+		ctx->m_funcGetProperty(_bef_adjust, VALID_TAG)))
 	{
 		resultViewData.PushMsg(_TEXT("调账失败."));
 	}

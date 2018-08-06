@@ -70,26 +70,34 @@ BOOL CAggBillApp::InitInstance()
 }
 
 
+const CString FILE_IN = _TEXT("文件入口");
+const CString PEER_NUMBER = _TEXT("对端号码");
+const CString DURATION = _TEXT("时长");
+const CString DOWNLOAD_VALUE = _TEXT("下行流量");
+const CString UPLOAD_VALUE = _TEXT("上行流量");
+const CString RATE_ID = _TEXT("费率ID");
+const CString MAIN_DISCNT_ID = _TEXT("主资费ID");
+
 static std::map<CString, PropertyGrid> modulePropertys = {
-	{ _TEXT("文件入口"),
+	{ FILE_IN,
 		{ _TEXT("/home/chengl/src/soAggBill/data/in"),nullptr , FALSE , }
 	},
-	{ _TEXT("对端号码"),
+	{ PEER_NUMBER,
 		{ _TEXT("18645005420"),nullptr , FALSE , }
 	},
-	{ _TEXT("时长"),
+	{ DURATION,
 		{ _TEXT("1000"),nullptr , FALSE , }
 	},
-	{ _TEXT("下行流量"),
+	{ DOWNLOAD_VALUE,
 		{ _TEXT("102400"),nullptr , FALSE , }
 	},
-	{ _TEXT("上行流量"),
+	{ UPLOAD_VALUE,
 		{ _TEXT("102400"),nullptr , FALSE , }
 	},
-	{ _TEXT("费率ID"),
+	{ RATE_ID,
 		{ _TEXT("600000012"),nullptr , FALSE , }
 	},
-	{ _TEXT("主资费ID"),
+	{ MAIN_DISCNT_ID,
 		{ _TEXT("50000255"),nullptr , FALSE , }
 	}
 };
@@ -248,7 +256,7 @@ std::vector<std::string> BuildCdrContent(CString cdrTag, CString callType, CStri
 std::vector<std::string> GetFiles(ModuleContext *ctx,CString testNumber , CString providerCode)
 {
 	std::vector<std::string> result;
-	CString inPath = ctx->m_funcGetProperty(_agg_bill, _TEXT("文件入口"));
+	CString inPath = ctx->m_funcGetProperty(_agg_bill, FILE_IN);
 	///临时文件  0
 	result.push_back(CommonUtil::CStringToString(inPath, CP_ACP) + "/../tmpFX_BILL.dat");
 
@@ -262,11 +270,11 @@ std::vector<std::string> GetFiles(ModuleContext *ctx,CString testNumber , CStrin
 
 void AggVc(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
 	std::string tmpInFile = files.at(0);
@@ -292,17 +300,17 @@ void AggVc(ModuleContext *ctx, void *ptr)
 
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_CALL"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("时长")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_agg_bill, PEER_NUMBER),
+			ctx->m_funcGetProperty(_agg_bill, DURATION),
+			ctx->m_funcGetProperty(_agg_bill, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_agg_bill, UPLOAD_VALUE),
 			_TEXT("R_LOCAL"), _TEXT("T_BT_PROVINCE"), FALSE,
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-			ctx->m_funcGetProperty(_common, _TEXT("账户ID")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("费率ID")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("主资费ID"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_ID),
+			ctx->m_funcGetProperty(_common, ACCT_ID),
+			ctx->m_funcGetProperty(_agg_bill, RATE_ID),
+			ctx->m_funcGetProperty(_agg_bill, MAIN_DISCNT_ID)
 		);
 
 		for (auto it : contents)
@@ -330,11 +338,11 @@ void AggVc(ModuleContext *ctx, void *ptr)
 }
 void AggSms(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	UINT port = 22;
 	
 	std::vector<std::string> files = GetFiles(ctx, testNumber, providerCode);
@@ -364,17 +372,17 @@ void AggSms(ModuleContext *ctx, void *ptr)
 
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_SMS"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("时长")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_agg_bill, PEER_NUMBER),
+			ctx->m_funcGetProperty(_agg_bill, DURATION),
+			ctx->m_funcGetProperty(_agg_bill, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_agg_bill, UPLOAD_VALUE),
 			_TEXT("R_LOCAL"), _TEXT("T_BT_PROVINCE"), FALSE,
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-			ctx->m_funcGetProperty(_common, _TEXT("账户ID")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("费率ID")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("主资费ID"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_ID),
+			ctx->m_funcGetProperty(_common, ACCT_ID),
+			ctx->m_funcGetProperty(_agg_bill, RATE_ID),
+			ctx->m_funcGetProperty(_agg_bill, MAIN_DISCNT_ID)
 		);
 
 		for (auto it : contents)
@@ -403,11 +411,11 @@ void AggSms(ModuleContext *ctx, void *ptr)
 }
 void AggData(ModuleContext *ctx, void *ptr)
 {
-	CString testNumber = ctx->m_funcGetProperty(_common, _TEXT("测试号码"));
-	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("IP地址")), CP_ACP);
-	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("用户名")), CP_ACP);
-	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, _TEXT("密码")), CP_ACP);
-	CString providerCode = ctx->m_funcGetProperty(_common, _TEXT("归属运营商"));
+	CString testNumber = ctx->m_funcGetProperty(_common, TEST_NUMBER);
+	std::string hostName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, IP_ADDR), CP_ACP);
+	std::string userName = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERNAME), CP_ACP);
+	std::string userPwd = CommonUtil::CStringToString(ctx->m_funcGetProperty(_common, HOST_USERPWD), CP_ACP);
+	CString providerCode = ctx->m_funcGetProperty(_common, USER_PROVIDER_CODE);
 	
 	UINT port = 22;
 
@@ -437,17 +445,17 @@ void AggData(ModuleContext *ctx, void *ptr)
 
 		std::vector<std::string> contents = BuildCdrContent(_TEXT("CDR_NET"), _TEXT("CALLING"),
 			testNumber, providerCode,
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("对端号码")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("时长")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("下行流量")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("上行流量")),
+			ctx->m_funcGetProperty(_agg_bill, PEER_NUMBER),
+			ctx->m_funcGetProperty(_agg_bill, DURATION),
+			ctx->m_funcGetProperty(_agg_bill, DOWNLOAD_VALUE),
+			ctx->m_funcGetProperty(_agg_bill, UPLOAD_VALUE),
 			_TEXT("R_LOCAL"), _TEXT("T_BT_PROVINCE"), FALSE,
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMSI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户IMEI")),
-			ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-			ctx->m_funcGetProperty(_common, _TEXT("账户ID")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("费率ID")),
-			ctx->m_funcGetProperty(_agg_bill, _TEXT("主资费ID"))
+			ctx->m_funcGetProperty(_common, USER_IMSI),
+			ctx->m_funcGetProperty(_common, USER_IMEI),
+			ctx->m_funcGetProperty(_common, USER_ID),
+			ctx->m_funcGetProperty(_common, ACCT_ID),
+			ctx->m_funcGetProperty(_agg_bill, RATE_ID),
+			ctx->m_funcGetProperty(_agg_bill, MAIN_DISCNT_ID)
 		);
 
 		for (auto it : contents)

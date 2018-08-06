@@ -65,16 +65,18 @@ BOOL CCreditDegreeApp::InitInstance()
 
 	return TRUE;
 }
-
+const CString VIPCLASS = _TEXT("VIP-CLASS");
+const CString CREDIT_VALUE = _TEXT("信用度值");
+const CString CREDIT_GRADE = _TEXT("信用度等级");
 
 static std::map<CString, PropertyGrid> modulePropertys = {
-	{ _TEXT("VIP-CLASS"),
+	{ VIPCLASS,
 		{ _TEXT("10"),nullptr , FALSE , }
 	},
-	{ _TEXT("信用度值"),
+	{ CREDIT_VALUE,
 		{ _TEXT("1000"),nullptr , FALSE , }
 	},
-	{ _TEXT("信用度等级"),
+	{ CREDIT_GRADE,
 		{ _TEXT("A"),nullptr , FALSE , }
 	}
 };
@@ -218,11 +220,11 @@ static bool BuildUserCredit(ModuleContext *ctx, CString userId, CString creditVa
 
 void CreateInitCreditDegree(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("初始信用度评估"));
-	if (!BuildInitCredit(ctx, ctx->m_funcGetProperty(_common, _TEXT("测试号码")),
-		ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-		ctx->m_funcGetProperty(_common, _TEXT("客户ID")),
-		ctx->m_funcGetProperty(_credit_degree, _TEXT("VIP-CLASS"))))
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("初始信用度评估"));
+	if (!BuildInitCredit(ctx, ctx->m_funcGetProperty(_common, TEST_NUMBER),
+		ctx->m_funcGetProperty(_common, USER_ID),
+		ctx->m_funcGetProperty(_common, CUST_ID),
+		ctx->m_funcGetProperty(_credit_degree, VIPCLASS)))
 	{
 		resultViewData.PushMsg(_TEXT("触发失败."));
 	}
@@ -236,10 +238,10 @@ void CreateInitCreditDegree(ModuleContext *ctx, void *ptr)
 }
 void ActiveTempCreditDegree(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("临时信用度生效"));
-	if (!BuildUserCredit(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-		ctx->m_funcGetProperty(_credit_degree, _TEXT("信用度值")),
-		ctx->m_funcGetProperty(_credit_degree, _TEXT("信用度等级")),
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("临时信用度生效"));
+	if (!BuildUserCredit(ctx, ctx->m_funcGetProperty(_common, USER_ID),
+		ctx->m_funcGetProperty(_credit_degree, CREDIT_VALUE),
+		ctx->m_funcGetProperty(_credit_degree, CREDIT_GRADE),
 		_TEXT("3")))
 	{
 		resultViewData.PushMsg(_TEXT("触发失败."));
@@ -254,10 +256,10 @@ void ActiveTempCreditDegree(ModuleContext *ctx, void *ptr)
 }
 void ActiveDynamicCreditDegree(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("动态信用度生效"));
-	if (!BuildUserCredit(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-		ctx->m_funcGetProperty(_credit_degree, _TEXT("信用度值")),
-		ctx->m_funcGetProperty(_credit_degree, _TEXT("信用度等级")),
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("动态信用度生效"));
+	if (!BuildUserCredit(ctx, ctx->m_funcGetProperty(_common, USER_ID),
+		ctx->m_funcGetProperty(_credit_degree, CREDIT_VALUE),
+		ctx->m_funcGetProperty(_credit_degree, CREDIT_GRADE),
 		_TEXT("2")))
 	{
 		resultViewData.PushMsg(_TEXT("触发失败."));
@@ -272,10 +274,10 @@ void ActiveDynamicCreditDegree(ModuleContext *ctx, void *ptr)
 
 void ActiveInitCreditDegree(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("初始信用度生效"));
-	if (!BuildUserCredit(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-		ctx->m_funcGetProperty(_credit_degree, _TEXT("信用度值")),
-		ctx->m_funcGetProperty(_credit_degree, _TEXT("信用度等级")),
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("初始信用度生效"));
+	if (!BuildUserCredit(ctx, ctx->m_funcGetProperty(_common, USER_ID),
+		ctx->m_funcGetProperty(_credit_degree, CREDIT_VALUE),
+		ctx->m_funcGetProperty(_credit_degree, CREDIT_GRADE),
 		_TEXT("1")))
 	{
 		resultViewData.PushMsg(_TEXT("触发失败."));

@@ -68,26 +68,35 @@ BOOL CAftAcctAdjustApp::InitInstance()
 	return TRUE;
 }
 
+const CString BILL_ID = _TEXT("账单ID");
+const CString ADJUST_VALUE = _TEXT("调账金额/比例");
+const CString ITEM_CODE = _TEXT("账目编码");
+const CString BILL_FEE = _TEXT("账单费用");
+const CString BILL_BALANCE = _TEXT("账单余额");
+const CString DEC_ADJUST_TYPE = _TEXT("调减余额处理方式");
+const CString DEC_ADJUST_TYPE_DISCARD = _TEXT("作废");
+const CString DEC_ADJUST_TYPE_PRESENT = _TEXT("转赠款");
+
 static std::map<CString, PropertyGrid> modulePropertys = {
-		{ _TEXT("账单ID"),
+		{ BILL_ID,
 			{ _TEXT("1111111000"),nullptr , FALSE , }
 		},
-		{ _TEXT("调账金额/比例"),
+		{ ADJUST_VALUE ,
 			{ _TEXT("1000"),nullptr , FALSE , }
 		},
-		{ _TEXT("账目编码"),
+		{ ITEM_CODE,
 			{ _TEXT("110000"),nullptr , FALSE , }
 		},
-		{ _TEXT("账单费用"),
+		{ BILL_FEE,
 			{ _TEXT("10000"),nullptr , FALSE , }
 		},
-		{ _TEXT("账单余额"),
+		{ BILL_BALANCE,
 			{ _TEXT("100"),nullptr , FALSE , }
 		},
-		{ _TEXT("调减余额处理方式"),
-			{ _TEXT("作废"),nullptr , TRUE ,{
-				{ _TEXT("作废"),_TEXT("1") },
-				{ _TEXT("转赠款"),_TEXT("2") }
+		{ DEC_ADJUST_TYPE,
+			{ DEC_ADJUST_TYPE_DISCARD,nullptr , TRUE ,{
+				{ DEC_ADJUST_TYPE_DISCARD ,_TEXT("1") },
+				{ DEC_ADJUST_TYPE_PRESENT ,_TEXT("2") }
 				}
 			}
 		}
@@ -223,17 +232,17 @@ bool BuildAftAccChk(ModuleContext *ctx, CString userId, CString acctId, CString 
 
 void IncrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("账后调账-按金额调增"));
-	if (!BuildAftAccChk(ctx, ctx->m_funcGetProperty(0, _TEXT("用户ID")),
-		ctx->m_funcGetProperty(0, _TEXT("账户ID")),
-		ctx->m_funcGetProperty(0, _TEXT("测试号码")),
+	ListViewData resultViewData(ctx->m_funcGetProperty(0, TEST_NUMBER), _TEXT("账后调账-按金额调增"));
+	if (!BuildAftAccChk(ctx, ctx->m_funcGetProperty(0, USER_ID),
+		ctx->m_funcGetProperty(0, ACCT_ID),
+		ctx->m_funcGetProperty(0, TEST_NUMBER),
 		_TEXT("2"), _TEXT("1"),
-		ctx->m_funcGetProperty(3, _TEXT("账单ID")),
-		ctx->m_funcGetProperty(3, _TEXT("账目编码")),
-		ctx->m_funcGetProperty(3, _TEXT("调账金额/比例")),
-		ctx->m_funcGetProperty(3, _TEXT("账单费用")),
-		ctx->m_funcGetProperty(3, _TEXT("账单余额")),
-		ctx->m_funcGetProperty(3, _TEXT("调减余额处理方式"))))
+		ctx->m_funcGetProperty(3, BILL_ID),
+		ctx->m_funcGetProperty(3, ITEM_CODE),
+		ctx->m_funcGetProperty(3,ADJUST_VALUE),
+		ctx->m_funcGetProperty(3, BILL_FEE),
+		ctx->m_funcGetProperty(3, BILL_BALANCE),
+		ctx->m_funcGetProperty(3, DEC_ADJUST_TYPE)))
 	{
 		resultViewData.PushMsg(_TEXT("调账失败."));
 	}
@@ -247,17 +256,17 @@ void IncrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 }
 void IncrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(0, _TEXT("测试号码")), _TEXT("账后调账-按比例调增"));
-	if (!BuildAftAccChk(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-		ctx->m_funcGetProperty(_common, _TEXT("账户ID")),
-		ctx->m_funcGetProperty(_common, _TEXT("测试号码")),
+	ListViewData resultViewData(ctx->m_funcGetProperty(0, TEST_NUMBER), _TEXT("账后调账-按比例调增"));
+	if (!BuildAftAccChk(ctx, ctx->m_funcGetProperty(_common, USER_ID),
+		ctx->m_funcGetProperty(_common, ACCT_ID),
+		ctx->m_funcGetProperty(_common, TEST_NUMBER),
 		_TEXT("2"), _TEXT("2"),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("账单ID")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("账目编码")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("调账金额/比例")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("账单费用")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("账单余额")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("调减余额处理方式"))))
+		ctx->m_funcGetProperty(_aft_adjust, BILL_ID),
+		ctx->m_funcGetProperty(_aft_adjust, ITEM_CODE),
+		ctx->m_funcGetProperty(_aft_adjust,ADJUST_VALUE),
+		ctx->m_funcGetProperty(_aft_adjust, BILL_FEE),
+		ctx->m_funcGetProperty(_aft_adjust, BILL_BALANCE),
+		ctx->m_funcGetProperty(_aft_adjust, DEC_ADJUST_TYPE)))
 	{
 		resultViewData.PushMsg(_TEXT("调账失败."));
 	}
@@ -271,17 +280,17 @@ void IncrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 }
 void DecrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("账后调账-按金额调减"));
-	if (!BuildAftAccChk(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-		ctx->m_funcGetProperty(_common, _TEXT("账户ID")),
-		ctx->m_funcGetProperty(_common, _TEXT("测试号码")),
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("账后调账-按金额调减"));
+	if (!BuildAftAccChk(ctx, ctx->m_funcGetProperty(_common, USER_ID),
+		ctx->m_funcGetProperty(_common, ACCT_ID),
+		ctx->m_funcGetProperty(_common, TEST_NUMBER),
 		_TEXT("1"), _TEXT("1"),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("账单ID")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("账目编码")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("调账金额/比例")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("账单费用")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("账单余额")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("调减余额处理方式"))))
+		ctx->m_funcGetProperty(_aft_adjust, BILL_ID),
+		ctx->m_funcGetProperty(_aft_adjust, ITEM_CODE),
+		ctx->m_funcGetProperty(_aft_adjust,ADJUST_VALUE),
+		ctx->m_funcGetProperty(_aft_adjust, BILL_FEE),
+		ctx->m_funcGetProperty(_aft_adjust, BILL_BALANCE),
+		ctx->m_funcGetProperty(_aft_adjust, DEC_ADJUST_TYPE)))
 	{
 		resultViewData.PushMsg(_TEXT("调账失败."));
 	}
@@ -294,17 +303,17 @@ void DecrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 }
 void DecrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 {
-	ListViewData resultViewData(ctx->m_funcGetProperty(_common, _TEXT("测试号码")), _TEXT("账后调账-按比例调减"));
-	if (!BuildAftAccChk(ctx, ctx->m_funcGetProperty(_common, _TEXT("用户ID")),
-		ctx->m_funcGetProperty(_common, _TEXT("账户ID")),
-		ctx->m_funcGetProperty(_common, _TEXT("测试号码")),
+	ListViewData resultViewData(ctx->m_funcGetProperty(_common, TEST_NUMBER), _TEXT("账后调账-按比例调减"));
+	if (!BuildAftAccChk(ctx, ctx->m_funcGetProperty(_common, USER_ID),
+		ctx->m_funcGetProperty(_common, ACCT_ID),
+		ctx->m_funcGetProperty(_common, TEST_NUMBER),
 		_TEXT("1"), _TEXT("2"),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("账单ID")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("账目编码")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("调账金额/比例")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("账单费用")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("账单余额")),
-		ctx->m_funcGetProperty(_aft_adjust, _TEXT("调减余额处理方式"))))
+		ctx->m_funcGetProperty(_aft_adjust, BILL_ID),
+		ctx->m_funcGetProperty(_aft_adjust, ITEM_CODE),
+		ctx->m_funcGetProperty(_aft_adjust,ADJUST_VALUE),
+		ctx->m_funcGetProperty(_aft_adjust, BILL_FEE),
+		ctx->m_funcGetProperty(_aft_adjust, BILL_BALANCE),
+		ctx->m_funcGetProperty(_aft_adjust, DEC_ADJUST_TYPE)))
 	{
 		resultViewData.PushMsg(_TEXT("调账失败."));
 	}
