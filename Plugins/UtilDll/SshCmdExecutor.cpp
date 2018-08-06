@@ -2,6 +2,7 @@
 
 #include "SshCmdExecutor.h"
 #include "UtilDll.h"
+#include "Poco/Exception.h"
 SshCmdExecutor::SshCmdExecutor()
 {
 }
@@ -14,7 +15,15 @@ bool SshCmdExecutor::ConnectAndInit(std::string hostName, int  port, std::string
 {
 	LIBSSH2_KNOWNHOSTS *nh;
 	const char *fingerprint;
-	m_streamSocket.connect(Poco::Net::SocketAddress(hostName, port));
+	try
+	{
+		m_streamSocket.connect(Poco::Net::SocketAddress(hostName, port));
+	}
+	catch (Poco::Exception &e)
+	{
+		m_errMsg = _TEXT("连接服务器异常");
+		return false;
+	}
 	SOCKET socket = m_streamSocket.impl()->sockfd();
 
 	int rc = libssh2_init(0);
@@ -162,13 +171,16 @@ bool SshCmdExecutor::ExecuteCmd(std::string commandline)
 
 void SshCmdExecutor::DisconnectAndFree()
 {
-	int rc = 0;
-	libssh2_session_disconnect(m_session, "Normal Shutdown, Thank you for playing");
-	libssh2_session_free(m_session);
-	m_session = NULL;
-	m_streamSocket.close();
+	if (m_session)
+	{
+	
+		libssh2_session_disconnect(m_session, "Normal Shutdown, Thank you for playing");
+		libssh2_session_free(m_session);
+		m_session = NULL;
+		m_streamSocket.close();
+		
+	}
 	libssh2_exit();
-
 }
 
 CString SshCmdExecutor::GetErrMsg()
