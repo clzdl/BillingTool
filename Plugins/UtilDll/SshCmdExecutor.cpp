@@ -2,7 +2,7 @@
 
 #include "SshCmdExecutor.h"
 #include "UtilDll.h"
-#include "Poco/Exception.h"
+#include "Poco/Net/NetException.h"
 SshCmdExecutor::SshCmdExecutor()
 {
 }
@@ -19,9 +19,9 @@ bool SshCmdExecutor::ConnectAndInit(std::string hostName, int  port, std::string
 	{
 		m_streamSocket.connect(Poco::Net::SocketAddress(hostName, port));
 	}
-	catch (Poco::Exception &e)
+	catch (Poco::Net::NetException &e)
 	{
-		m_errMsg = _TEXT("连接服务器异常");
+		m_errMsg.Format(_TEXT("连接服务器[%s,%d]异常."), CommonUtil::StringToCString(hostName, CP_ACP), port);
 		return false;
 	}
 	SOCKET socket = m_streamSocket.impl()->sockfd();
