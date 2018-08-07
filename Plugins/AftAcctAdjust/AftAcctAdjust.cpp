@@ -72,6 +72,7 @@ const CString BILL_ID = _TEXT("账单ID");
 const CString ADJUST_VALUE = _TEXT("调账金额/比例");
 const CString ITEM_CODE = _TEXT("账目编码");
 const CString BILL_FEE = _TEXT("账单费用");
+const CString BILL_MONTH = _TEXT("帐期");
 const CString BILL_BALANCE = _TEXT("账单余额");
 const CString DEC_ADJUST_TYPE = _TEXT("调减余额处理方式");
 const CString DEC_ADJUST_TYPE_DISCARD = _TEXT("作废");
@@ -92,6 +93,9 @@ static std::map<CString, PropertyGrid> modulePropertys = {
 		},
 		{ BILL_BALANCE,
 			{ _TEXT("100"),nullptr , FALSE , }
+		},
+		{ BILL_MONTH,
+			{ _TEXT("201808"),nullptr , FALSE , }
 		},
 		{ DEC_ADJUST_TYPE,
 			{ DEC_ADJUST_TYPE_DISCARD,nullptr , TRUE ,{
@@ -144,7 +148,7 @@ void Initilize(CWnd *mainWnd, CViewTree *viewTree)
 
 bool BuildAftAccChk(ModuleContext *ctx, CString userId, CString acctId, CString serialNumber,
 	CString adjustType, CString adjustMode,CString billId, CString itemCode, CString moneyOrRatio,
-	CString fee, CString balance,CString recvTag)
+	CString fee, CString balance,CString recvTag, CString cycleId)
 {
 	try {
 		std::string sql = "insert into acc_adjust_after_chk("
@@ -204,7 +208,7 @@ bool BuildAftAccChk(ModuleContext *ctx, CString userId, CString acctId, CString 
 			<< CommonUtil::CStringToString(serialNumber, CP_ACP).c_str()
 			<< CommonUtil::CStringToString(userId, CP_ACP).c_str()
 			<< CommonUtil::CStringToString(acctId, CP_ACP).c_str()
-			<< CommonUtil::CStringToString(CommonUtil::GetSysYMTime(), CP_ACP).c_str()
+			<< CommonUtil::CStringToString(cycleId, CP_ACP).c_str()
 			<< CommonUtil::CStringToString(adjustType, CP_ACP).c_str()
 			<< CommonUtil::CStringToString(adjustMode, CP_ACP).c_str()
 			<< CommonUtil::CStringToString(moneyOrRatio, CP_ACP).c_str()
@@ -213,6 +217,7 @@ bool BuildAftAccChk(ModuleContext *ctx, CString userId, CString acctId, CString 
 			<< CommonUtil::CStringToString(fee, CP_ACP).c_str()
 			<< CommonUtil::CStringToString(balance, CP_ACP).c_str()
 			<< CommonUtil::CStringToString(recvTag, CP_ACP).c_str();
+		
 
 		ctx->m_dbConn->commit();
 	}
@@ -234,15 +239,16 @@ void IncrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 {
 	ListViewData resultViewData(ctx->m_funcGetProperty(0, TEST_NUMBER), _TEXT("账后调账-按金额调增"));
 	if (!BuildAftAccChk(ctx, ctx->m_funcGetProperty(0, USER_ID),
-		ctx->m_funcGetProperty(0, ACCT_ID),
-		ctx->m_funcGetProperty(0, TEST_NUMBER),
+		ctx->m_funcGetProperty(_common, ACCT_ID),
+		ctx->m_funcGetProperty(_common, TEST_NUMBER),
 		_TEXT("2"), _TEXT("1"),
-		ctx->m_funcGetProperty(3, BILL_ID),
-		ctx->m_funcGetProperty(3, ITEM_CODE),
-		ctx->m_funcGetProperty(3,ADJUST_VALUE),
-		ctx->m_funcGetProperty(3, BILL_FEE),
-		ctx->m_funcGetProperty(3, BILL_BALANCE),
-		ctx->m_funcGetProperty(3, DEC_ADJUST_TYPE)))
+		ctx->m_funcGetProperty(_aft_adjust, BILL_ID),
+		ctx->m_funcGetProperty(_aft_adjust, ITEM_CODE),
+		ctx->m_funcGetProperty(_aft_adjust,ADJUST_VALUE),
+		ctx->m_funcGetProperty(_aft_adjust, BILL_FEE),
+		ctx->m_funcGetProperty(_aft_adjust, BILL_BALANCE),
+		ctx->m_funcGetProperty(_aft_adjust, DEC_ADJUST_TYPE),
+		ctx->m_funcGetProperty(_aft_adjust, BILL_MONTH)))
 	{
 		resultViewData.PushMsg(_TEXT("调账失败."));
 	}
@@ -266,7 +272,8 @@ void IncrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 		ctx->m_funcGetProperty(_aft_adjust,ADJUST_VALUE),
 		ctx->m_funcGetProperty(_aft_adjust, BILL_FEE),
 		ctx->m_funcGetProperty(_aft_adjust, BILL_BALANCE),
-		ctx->m_funcGetProperty(_aft_adjust, DEC_ADJUST_TYPE)))
+		ctx->m_funcGetProperty(_aft_adjust, DEC_ADJUST_TYPE),
+		ctx->m_funcGetProperty(_aft_adjust, BILL_MONTH)))
 	{
 		resultViewData.PushMsg(_TEXT("调账失败."));
 	}
@@ -290,7 +297,8 @@ void DecrementAjdustByMoney(ModuleContext *ctx, void *ptr)
 		ctx->m_funcGetProperty(_aft_adjust,ADJUST_VALUE),
 		ctx->m_funcGetProperty(_aft_adjust, BILL_FEE),
 		ctx->m_funcGetProperty(_aft_adjust, BILL_BALANCE),
-		ctx->m_funcGetProperty(_aft_adjust, DEC_ADJUST_TYPE)))
+		ctx->m_funcGetProperty(_aft_adjust, DEC_ADJUST_TYPE),
+		ctx->m_funcGetProperty(_aft_adjust, BILL_MONTH)))
 	{
 		resultViewData.PushMsg(_TEXT("调账失败."));
 	}
@@ -313,7 +321,8 @@ void DecrementAjdustByRatio(ModuleContext *ctx, void *ptr)
 		ctx->m_funcGetProperty(_aft_adjust,ADJUST_VALUE),
 		ctx->m_funcGetProperty(_aft_adjust, BILL_FEE),
 		ctx->m_funcGetProperty(_aft_adjust, BILL_BALANCE),
-		ctx->m_funcGetProperty(_aft_adjust, DEC_ADJUST_TYPE)))
+		ctx->m_funcGetProperty(_aft_adjust, DEC_ADJUST_TYPE),
+		ctx->m_funcGetProperty(_aft_adjust, BILL_MONTH)))
 	{
 		resultViewData.PushMsg(_TEXT("调账失败."));
 	}
